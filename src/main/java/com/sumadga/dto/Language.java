@@ -19,7 +19,7 @@ public class Language implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="language_id", unique=true, nullable=false)
-	private int languageId;
+	private Integer languageId;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_time", nullable=false)
@@ -41,11 +41,11 @@ public class Language implements Serializable {
 	public Language() {
 	}
 
-	public int getLanguageId() {
+	public Integer getLanguageId() {
 		return this.languageId;
 	}
 
-	public void setLanguageId(int languageId) {
+	public void setLanguageId(Integer languageId) {
 		this.languageId = languageId;
 	}
 

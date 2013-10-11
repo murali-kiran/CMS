@@ -19,7 +19,7 @@ public class Tag implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="tag_id", unique=true, nullable=false)
-	private int tagId;
+	private Integer tagId;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_time", nullable=false)
@@ -38,11 +38,11 @@ public class Tag implements Serializable {
 	public Tag() {
 	}
 
-	public int getTagId() {
+	public Integer getTagId() {
 		return this.tagId;
 	}
 
-	public void setTagId(int tagId) {
+	public void setTagId(Integer tagId) {
 		this.tagId = tagId;
 	}
 

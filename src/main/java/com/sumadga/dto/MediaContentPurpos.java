@@ -19,7 +19,7 @@ public class MediaContentPurpos implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="media_content_purpose_id", unique=true, nullable=false)
-	private int mediaContentPurposeId;
+	private Integer mediaContentPurposeId;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_time", nullable=false)
@@ -38,11 +38,11 @@ public class MediaContentPurpos implements Serializable {
 	public MediaContentPurpos() {
 	}
 
-	public int getMediaContentPurposeId() {
+	public Integer getMediaContentPurposeId() {
 		return this.mediaContentPurposeId;
 	}
 
-	public void setMediaContentPurposeId(int mediaContentPurposeId) {
+	public void setMediaContentPurposeId(Integer mediaContentPurposeId) {
 		this.mediaContentPurposeId = mediaContentPurposeId;
 	}
 

@@ -19,7 +19,7 @@ public class Media implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="media_id", unique=true, nullable=false)
-	private int mediaId;
+	private Integer mediaId;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_time", nullable=false)
@@ -36,6 +36,14 @@ public class Media implements Serializable {
 
 	@Column(name="modified_time", nullable=false)
 	private Timestamp modifiedTime;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="media_start_time", nullable=false)
+	private Date mediaStartTime;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="media_end_time", nullable=false)
+	private Date mediaEndTime;
 
 	//bi-directional many-to-one association to Language
 	@ManyToOne
@@ -52,11 +60,7 @@ public class Media implements Serializable {
 	@JoinColumn(name="media_process_state_id", nullable=false)
 	private MediaProcessState mediaProcessState;
 
-	//bi-directional many-to-one association to MediaServiceProvider
-	@ManyToOne
-	@JoinColumn(name="media_service_provider_id", nullable=false)
-	private MediaServiceProvider mediaServiceProvider;
-
+	
 	//bi-directional many-to-one association to MediaType
 	@ManyToOne
 	@JoinColumn(name="media_type_id", nullable=false)
@@ -77,11 +81,11 @@ public class Media implements Serializable {
 	public Media() {
 	}
 
-	public int getMediaId() {
+	public Integer getMediaId() {
 		return this.mediaId;
 	}
 
-	public void setMediaId(int mediaId) {
+	public void setMediaId(Integer mediaId) {
 		this.mediaId = mediaId;
 	}
 
@@ -149,13 +153,6 @@ public class Media implements Serializable {
 		this.mediaProcessState = mediaProcessState;
 	}
 
-	public MediaServiceProvider getMediaServiceProvider() {
-		return this.mediaServiceProvider;
-	}
-
-	public void setMediaServiceProvider(MediaServiceProvider mediaServiceProvider) {
-		this.mediaServiceProvider = mediaServiceProvider;
-	}
 
 	public MediaType getMediaType() {
 		return this.mediaType;
@@ -230,6 +227,22 @@ public class Media implements Serializable {
 
 		return mediaTag;
 	}
+	
+	public Date getMediaStartTime() {
+		return mediaStartTime;
+	}
+
+	public void setMediaStartTime(Date mediaStartTime) {
+		this.mediaStartTime = mediaStartTime;
+	}
+
+	public Date getMediaEndTime() {
+		return mediaEndTime;
+	}
+
+	public void setMediaEndTime(Date mediaEndTime) {
+		this.mediaEndTime = mediaEndTime;
+	}
 
 	@Override
 	public String toString() {
@@ -238,10 +251,11 @@ public class Media implements Serializable {
 				+ ", mediaTitle=" + mediaTitle + ", modifiedTime="
 				+ modifiedTime + ", language=" + language + ", mediaCycle="
 				+ mediaCycle + ", mediaProcessState=" + mediaProcessState
-				+ ", mediaServiceProvider=" + mediaServiceProvider
 				+ ", mediaType=" + mediaType + ", mediaContents="
 				+ mediaContents + ", mediaGroupMedias=" + mediaGroupMedias
-				+ ", mediaTags=" + mediaTags + "]";
+				+ ", mediaTags=" + mediaTags 
+				+ ", mediaStartTime=" + mediaStartTime 
+				+ ", mediaEndTime="+mediaEndTime+"]";
 	}
 
 }

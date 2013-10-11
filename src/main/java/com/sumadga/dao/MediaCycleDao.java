@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sumadga.dto.MediaCycle;
 
 @Repository
-public class MediaCycleDao implements GenericDao<MediaCycle>{
+public class MediaCycleDao {
 
 	private static final Logger logger = Logger.getLogger(MediaCycleDao.class);
 

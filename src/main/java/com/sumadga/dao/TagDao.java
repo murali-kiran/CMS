@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sumadga.dto.Tag;
 
 @Repository
-public class TagDao implements GenericDao<Tag>{
+public class TagDao {
 
 	private static final Logger logger = Logger.getLogger(TagDao.class);
 

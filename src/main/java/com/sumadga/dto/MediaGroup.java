@@ -19,7 +19,7 @@ public class MediaGroup implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="media_group_id", unique=true, nullable=false)
-	private int mediaGroupId;
+	private Integer mediaGroupId;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_time", nullable=false)
@@ -32,7 +32,7 @@ public class MediaGroup implements Serializable {
 	private String mediaGroupName;
 
 	@Column(name="media_group_preview_id", nullable=false)
-	private int mediaGroupPreviewId;
+	private Integer mediaGroupPreviewId;
 
 	@Column(name="media_group_title", nullable=false, length=20)
 	private String mediaGroupTitle;
@@ -47,11 +47,11 @@ public class MediaGroup implements Serializable {
 	public MediaGroup() {
 	}
 
-	public int getMediaGroupId() {
+	public Integer getMediaGroupId() {
 		return this.mediaGroupId;
 	}
 
-	public void setMediaGroupId(int mediaGroupId) {
+	public void setMediaGroupId(Integer mediaGroupId) {
 		this.mediaGroupId = mediaGroupId;
 	}
 
@@ -79,11 +79,11 @@ public class MediaGroup implements Serializable {
 		this.mediaGroupName = mediaGroupName;
 	}
 
-	public int getMediaGroupPreviewId() {
+	public Integer getMediaGroupPreviewId() {
 		return this.mediaGroupPreviewId;
 	}
 
-	public void setMediaGroupPreviewId(int mediaGroupPreviewId) {
+	public void setMediaGroupPreviewId(Integer mediaGroupPreviewId) {
 		this.mediaGroupPreviewId = mediaGroupPreviewId;
 	}
 

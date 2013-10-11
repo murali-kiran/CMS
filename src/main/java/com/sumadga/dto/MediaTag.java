@@ -18,7 +18,7 @@ public class MediaTag implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="media_tag_id", unique=true, nullable=false)
-	private int mediaTagId;
+	private Integer mediaTagId;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_time", nullable=false)
@@ -40,11 +40,11 @@ public class MediaTag implements Serializable {
 	public MediaTag() {
 	}
 
-	public int getMediaTagId() {
+	public Integer getMediaTagId() {
 		return this.mediaTagId;
 	}
 
-	public void setMediaTagId(int mediaTagId) {
+	public void setMediaTagId(Integer mediaTagId) {
 		this.mediaTagId = mediaTagId;
 	}
 

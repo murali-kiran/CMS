@@ -17,36 +17,35 @@ public class MediaSpecification implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="media_specification_id", unique=true, nullable=false)
-	private int mediaSpecificationId;
+	private Integer mediaSpecificationId;
 
 	@Column(nullable=false)
-	private int duration;
+	private Integer duration;
 
 	@Column(nullable=false)
-	private int height;
+	private Integer height;
 
 	@Column(name="is_source", nullable=false)
-	private byte isSource;
+	private Boolean isSource;
 
 	@Column(name="media_location", nullable=false)
-	private byte mediaLocation;
+	private Boolean mediaLocation;
 
 	@Column(name="media_specifications_name", nullable=false, length=45)
 	private String mediaSpecificationsName;
 
 	@Column(name="parent_specification_id", nullable=false)
-	private int parentSpecificationId;
+	private Integer parentSpecificationId;
 
 	@Column(nullable=false)
-	private int width;
+	private Integer width;
+	
+	@Column(nullable=false)
+	private Integer bitrate=0;
 
 	//bi-directional many-to-one association to MediaContent
 	@OneToMany(mappedBy="mediaSpecification")
 	private List<MediaContent> mediaContents;
-
-	//bi-directional many-to-one association to MediaServiceOwnerSpecfication
-	@OneToMany(mappedBy="mediaSpecification")
-	private List<MediaServiceOwnerSpecfication> mediaServiceOwnerSpecfications;
 
 	//bi-directional many-to-one association to MediaContentPurpos
 	@ManyToOne
@@ -66,43 +65,43 @@ public class MediaSpecification implements Serializable {
 	public MediaSpecification() {
 	}
 
-	public int getMediaSpecificationId() {
+	public Integer getMediaSpecificationId() {
 		return this.mediaSpecificationId;
 	}
 
-	public void setMediaSpecificationId(int mediaSpecificationId) {
+	public void setMediaSpecificationId(Integer mediaSpecificationId) {
 		this.mediaSpecificationId = mediaSpecificationId;
 	}
 
-	public int getDuration() {
+	public Integer getDuration() {
 		return this.duration;
 	}
 
-	public void setDuration(int duration) {
+	public void setDuration(Integer duration) {
 		this.duration = duration;
 	}
 
-	public int getHeight() {
+	public Integer getHeight() {
 		return this.height;
 	}
 
-	public void setHeight(int height) {
+	public void setHeight(Integer height) {
 		this.height = height;
 	}
 
-	public byte getIsSource() {
+	public Boolean getIsSource() {
 		return this.isSource;
 	}
 
-	public void setIsSource(byte isSource) {
+	public void setIsSource(Boolean isSource) {
 		this.isSource = isSource;
 	}
 
-	public byte getMediaLocation() {
+	public Boolean getMediaLocation() {
 		return this.mediaLocation;
 	}
 
-	public void setMediaLocation(byte mediaLocation) {
+	public void setMediaLocation(Boolean mediaLocation) {
 		this.mediaLocation = mediaLocation;
 	}
 
@@ -114,19 +113,19 @@ public class MediaSpecification implements Serializable {
 		this.mediaSpecificationsName = mediaSpecificationsName;
 	}
 
-	public int getParentSpecificationId() {
+	public Integer getParentSpecificationId() {
 		return this.parentSpecificationId;
 	}
 
-	public void setParentSpecificationId(int parentSpecificationId) {
+	public void setParentSpecificationId(Integer parentSpecificationId) {
 		this.parentSpecificationId = parentSpecificationId;
 	}
 
-	public int getWidth() {
+	public Integer getWidth() {
 		return this.width;
 	}
 
-	public void setWidth(int width) {
+	public void setWidth(Integer width) {
 		this.width = width;
 	}
 
@@ -152,27 +151,6 @@ public class MediaSpecification implements Serializable {
 		return mediaContent;
 	}
 
-	public List<MediaServiceOwnerSpecfication> getMediaServiceOwnerSpecfications() {
-		return this.mediaServiceOwnerSpecfications;
-	}
-
-	public void setMediaServiceOwnerSpecfications(List<MediaServiceOwnerSpecfication> mediaServiceOwnerSpecfications) {
-		this.mediaServiceOwnerSpecfications = mediaServiceOwnerSpecfications;
-	}
-
-	public MediaServiceOwnerSpecfication addMediaServiceOwnerSpecfication(MediaServiceOwnerSpecfication mediaServiceOwnerSpecfication) {
-		getMediaServiceOwnerSpecfications().add(mediaServiceOwnerSpecfication);
-		mediaServiceOwnerSpecfication.setMediaSpecification(this);
-
-		return mediaServiceOwnerSpecfication;
-	}
-
-	public MediaServiceOwnerSpecfication removeMediaServiceOwnerSpecfication(MediaServiceOwnerSpecfication mediaServiceOwnerSpecfication) {
-		getMediaServiceOwnerSpecfications().remove(mediaServiceOwnerSpecfication);
-		mediaServiceOwnerSpecfication.setMediaSpecification(null);
-
-		return mediaServiceOwnerSpecfication;
-	}
 
 	public MediaContentPurpos getMediaContentPurpos() {
 		return this.mediaContentPurpos;
@@ -198,6 +176,15 @@ public class MediaSpecification implements Serializable {
 		this.mediaType = mediaType;
 	}
 
+	public Integer getBitrate() {
+		return bitrate;
+	}
+
+	public void setBitrate(Integer bitrate) {
+		this.bitrate = bitrate;
+	}
+
+
 	@Override
 	public String toString() {
 		return "MediaSpecification [mediaSpecificationId="
@@ -208,9 +195,9 @@ public class MediaSpecification implements Serializable {
 				+ parentSpecificationId + ", width=" + width
 				+ ", mediaContents=" + mediaContents
 				+ ", mediaServiceOwnerSpecfications="
-				+ mediaServiceOwnerSpecfications + ", mediaContentPurpos="
 				+ mediaContentPurpos + ", mimeType=" + mimeType
-				+ ", mediaType=" + mediaType + "]";
+				+ ", mediaType=" + mediaType 
+				+ ", bitrate=" +bitrate + "]";
 	}
 
 }

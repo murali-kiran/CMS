@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sumadga.dto.Language;
 
 @Repository
-public class LanguageDao implements GenericDao<Language>{
+public class LanguageDao {
 
 	private static final Logger logger = Logger.getLogger(LanguageDao.class);
 

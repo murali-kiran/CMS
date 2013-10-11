@@ -19,7 +19,7 @@ public class MediaType implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="media_type_id", unique=true, nullable=false)
-	private int mediaTypeId;
+	private Integer mediaTypeId;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_time", nullable=false)
@@ -45,11 +45,11 @@ public class MediaType implements Serializable {
 	public MediaType() {
 	}
 
-	public int getMediaTypeId() {
+	public Integer getMediaTypeId() {
 		return this.mediaTypeId;
 	}
 
-	public void setMediaTypeId(int mediaTypeId) {
+	public void setMediaTypeId(Integer mediaTypeId) {
 		this.mediaTypeId = mediaTypeId;
 	}
 

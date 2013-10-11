@@ -16,7 +16,7 @@ public class MediaContent implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="media_content_id", unique=true, nullable=false)
-	private int mediaContentId;
+	private Integer mediaContentId;
 
 	@Column(nullable=false, length=45)
 	private String md5;
@@ -37,11 +37,11 @@ public class MediaContent implements Serializable {
 	public MediaContent() {
 	}
 
-	public int getMediaContentId() {
+	public Integer getMediaContentId() {
 		return this.mediaContentId;
 	}
 
-	public void setMediaContentId(int mediaContentId) {
+	public void setMediaContentId(Integer mediaContentId) {
 		this.mediaContentId = mediaContentId;
 	}
 

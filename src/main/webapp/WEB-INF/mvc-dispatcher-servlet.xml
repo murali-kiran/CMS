@@ -51,13 +51,54 @@
 
 	<bean id="emf"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<property name="persistenceUnitName" value="appPU" />
+		<property name="persistenceUnitName" value="sumadgaPU" />
 		<property name="dataSource" ref="dataSource" />
 		<property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
 	</bean>
 
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="emf" />
+	</bean>
+	
+	
+	<bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+          
+     <bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="UploadFile" />
+	</bean>
+	
+	<!-- <bean id="applicationProperties" class="com.ayansys.climb.model.ApplicationProperties" >
+		            
+          <property name="thumbnailBaseDir" value="/home/ayansys123/Desktop/climb-content/thumbnails/" />
+          <property name="thumbnailDirPrefix" value="/CLIMB/images/thumbnails/" />
+          <property name="contentBaseDir" value="/home/ayansys123/Desktop/climb-content/content/" />
+          <property name="contentDirPrefix" value="/CLIMB/images/thumbnails/content/"/>
+          <property name="climbRootPrefix" value="/CLIMB2/" />
+          <property name="maxSubdirs" value="10000" />
+	   
+	</bean> -->
+	
+	<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+	   <property name="definitions">
+	     <list>
+	       <value>/WEB-INF/tiles.xml</value>
+	     </list>
+	   </property>
+	 </bean>
+	
+	 <bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+	  <property name="viewClass" value="org.springframework.web.servlet.view.tiles2.TilesView"/>
+	 </bean>
+	
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+			<property name="prefix">
+				<value>/WEB-INF/jsp/</value>
+			</property>
+			<property name="suffix">
+				<value>.jsp</value>
+			</property>
 	</bean>
 	
 </beans>

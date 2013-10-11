@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sumadga.dto.MediaGroup;
 
 @Repository
-public class MediaGroupDao implements GenericDao<MediaGroup>{
+public class MediaGroupDao  {
 
 	private static final Logger logger = Logger.getLogger(MediaGroupDao.class);
 

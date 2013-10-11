@@ -19,7 +19,7 @@ public class MimeType implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="mime_type_id", unique=true, nullable=false)
-	private int mimeTypeId;
+	private Integer mimeTypeId;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_time", nullable=false)
@@ -41,11 +41,11 @@ public class MimeType implements Serializable {
 	public MimeType() {
 	}
 
-	public int getMimeTypeId() {
+	public Integer getMimeTypeId() {
 		return this.mimeTypeId;
 	}
 
-	public void setMimeTypeId(int mimeTypeId) {
+	public void setMimeTypeId(Integer mimeTypeId) {
 		this.mimeTypeId = mimeTypeId;
 	}
 

@@ -19,7 +19,7 @@ public class MediaCycle implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="media_cycle_id", unique=true, nullable=false)
-	private int mediaCycleId;
+	private Integer mediaCycleId;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_time", nullable=false)
@@ -38,11 +38,11 @@ public class MediaCycle implements Serializable {
 	public MediaCycle() {
 	}
 
-	public int getMediaCycleId() {
+	public Integer getMediaCycleId() {
 		return this.mediaCycleId;
 	}
 
-	public void setMediaCycleId(int mediaCycleId) {
+	public void setMediaCycleId(Integer mediaCycleId) {
 		this.mediaCycleId = mediaCycleId;
 	}
 

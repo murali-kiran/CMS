@@ -19,7 +19,7 @@ public class MediaProcessState implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="media_process_state_id", unique=true, nullable=false)
-	private int mediaProcessStateId;
+	private Integer mediaProcessStateId;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_time", nullable=false)
@@ -41,11 +41,11 @@ public class MediaProcessState implements Serializable {
 	public MediaProcessState() {
 	}
 
-	public int getMediaProcessStateId() {
+	public Integer getMediaProcessStateId() {
 		return this.mediaProcessStateId;
 	}
 
-	public void setMediaProcessStateId(int mediaProcessStateId) {
+	public void setMediaProcessStateId(Integer mediaProcessStateId) {
 		this.mediaProcessStateId = mediaProcessStateId;
 	}
 

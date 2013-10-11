@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sumadga.dto.MediaProcessState;
 
 @Repository
-public class MediaProcessStateDao implements GenericDao<MediaProcessState>{
+public class MediaProcessStateDao  {
 
 	private static final Logger logger = Logger.getLogger(MediaProcessStateDao.class);
 
