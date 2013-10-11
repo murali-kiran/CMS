@@ -27,7 +27,7 @@ public class MediaUploadService {
 		
         MediaUploadModel mediaUploadModel = new MediaUploadModel();
         
-		model.addAttribute("mediaUploadModel", mediaUploadModel);
+		model.addAttribute("uploadFile", mediaUploadModel);
 		
 	}
 

@@ -4,23 +4,23 @@
        "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
 <tiles-definitions>
     <definition name="base.definition"
-        template="/WEB-INF/jsp/baseLayout.jsp">
+        template="/WEB-INF/jsp/tiles/baseLayout.jsp">
         <put-attribute name="title" value="" />
-        <put-attribute name="header" value="/WEB-INF/jsp/header.jsp" />
-        <put-attribute name="menu" value="/WEB-INF/jsp/menu.jsp" />
+        <put-attribute name="header" value="/WEB-INF/jsp/tiles/header.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/jsp/tiles/menu.jsp" />
         <put-attribute name="body" value="" />
-        <put-attribute name="footer" value="/WEB-INF/jsp/footer.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/jsp/tiles/footer.jsp" />
     </definition>
     
       
      <definition name="uploadFile" extends="base.definition">
         <put-attribute name="title" value="Upload" />
-        <put-attribute name="body" value="/WEB-INF/jsp/uploadFile.jsp" />
+        <put-attribute name="body" value="/WEB-INF/jsp/media/uploadFile.jsp" />
      </definition>
      
       <definition name="display" extends="base.definition">
         <put-attribute name="title" value="search" />
-        <put-attribute name="body" value="/WEB-INF/jsp/search/display.jsp" />
+        <put-attribute name="body" value="/WEB-INF/jsp/search/media/display.jsp" />
       </definition>
        
     </tiles-definitions>
