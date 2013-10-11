@@ -7,34 +7,25 @@
  $(document).ready(function(){
 	 
 
-  $("#contentTypeId , #isRemote").change(function(){
+  $("#mediaTypeId").change(function(){
 	  		    
 	    /* $("#fileTable").find("tr").remove(); */
 	    $("#fileTable").empty();
-	      var cpid = $('#contentProviderId').val();
-		  var cpoid = $('#copyrightOwnerId').val();
-		  var ctype = $('#contentTypeId').val();
-		  
-		  if(cpid == null || cpid == -1){
-			  alert('Please select ContentProvider'); return;  
+	    
+		  var mtype = $('#mediaTypeId').val();
+		  		  
+		  if(mtype == null || mtype == -1){
+			  alert('Please select Media Type');return;
 		  }
-		  
-		  if(cpoid == null || cpoid == -1){
-			  alert('Please select CopyrightOwner');return;
-			   }
-		  
-		  if(ctype == null || ctype == -1){
-			  alert('Please select ContentType');return;
-		  }
-		  var isRemote = document.getElementById('isRemote').checked; 
-		 
+		 		 
 		  $("#fileTable").html("<div align='center'>loading<div>");
-		  
+		  alert("before calling ${pageContext.servletContext.contextPath}/getFiles?mediaTypeId=" + mtype);
 		  var data =  $.ajax({
-	             url: "/CLIMB3/getFiles?contentProviderId=" + cpid + "&copyrightOwnerId=" + cpoid+ "&contentTypeId=" + ctype+ "&isRemote=" + isRemote,
+	             url: "${pageContext.servletContext.contextPath}/getFiles?mediaTypeId=" + mtype,
 	             type: "GET",
 	             async: false
 	           }).responseText;
+		  alert("after calling" + data);
 		           $('#fileTable').html(data); 
 	    
 	  });
@@ -77,7 +68,7 @@
 
 
 <tr>
-<td>MediaType : </td>
+<td>MediaType </td>
 <td><div class="styled-select">
 <form:select path="mediaTypeId" id="mediaTypeId" class="validate">
 <form:option value="-1" label="--- Select ---"/>
@@ -88,19 +79,19 @@
 </tr>
 
 <tr>
-<td>Title : </td>
+<td>Media Title </td>
 <td><form:input path="mediaTitle" class="validate" /></td>
 <td><form:errors path="mediaTitle" cssClass="error" /></td>
 </tr>
 
 <tr>
-<td>Short Title : </td>
+<td>Media Name<br>(for internal purpose) </td>
 <td><form:input path="mediaName" class="validate"/></td>
 <td><form:errors path="mediaName" cssClass="error" /></td>
 </tr>
 
 <tr>
-<td>Media State : </td>
+<td>Media State </td>
 <td><div class="styled-select">
 <form:select path="mediaCycleId" id="mediaCycleId" class="validate">
 <form:option value="-1" label="--- Select ---"/>
@@ -111,7 +102,7 @@
 </tr>
 
 <tr>
-<td>Language : </td>
+<td>Language </td>
 <td><div class="styled-select">
 <form:select path="languageId" id="languageId" class="validate">
 <form:option value="-1" label="--- Select ---"/>
@@ -122,22 +113,22 @@
 </tr>
 
 <tr>
-<td>Description : </td>
+<td>Description   </td>
 <td><form:textarea path="description" /></td>
 <td><form:errors path="description" cssClass="error" /></td>
 </tr>
 
 <tr>
-<td>Tags : </td>
+<td>Tags  </td>
 <td><form:textarea path="tags" /></td>
 <td><form:errors path="tags" cssClass="error" /></td>
 </tr>
 
-<tr><td>MediaStartTime : </td>
+<tr><td>Media StartTime  </td>
 <td><form:input path="mediaStartTime" class="datepicker calender validate" /></td>
 <td><form:errors path="mediaStartTime" cssClass="error" /></td></tr>
 
-<tr><td>MediaEndTime : </td>
+<tr><td>Media EndTime  </td>
 <td><form:input path="mediaEndTime" class="datepicker calender validate" /></td>
 <td><form:errors path="mediaEndTime" cssClass="error" /></tr>
 

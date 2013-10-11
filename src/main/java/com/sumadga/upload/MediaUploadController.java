@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -34,19 +36,15 @@ public class MediaUploadController {
 		
 	}
 	
-/*		
+		
 	@RequestMapping(value = "/getFiles",  method=RequestMethod.GET)
 	//@ResponseBody
-	public String getFiles(@RequestParam("contentProviderId") Integer contentProviderId,
-			@RequestParam("copyrightOwnerId") Integer copyrightOwnerId,@RequestParam("contentTypeId") Integer contentTypeId,
-			@RequestParam("isRemote") Boolean isRemote,ModelMap model){
+	public String getFiles(@RequestParam("mediaTypeId") Integer mediaTypeId,ModelMap model){
 		
+		mediaUploadService.getFiles(model, mediaTypeId);
 		
-		List<ContentBuild> contentBuilds = 
-				mediaUploadService.getFiles(model, contentProviderId, copyrightOwnerId, contentTypeId, isRemote);
+		return "showFile";//MediaContentModelList;
 		
-		return "showFile";//contentBuilds;
-		
-	}*/
+	}
 	
 }

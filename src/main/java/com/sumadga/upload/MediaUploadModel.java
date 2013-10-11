@@ -1,6 +1,7 @@
 package com.sumadga.upload;
 
 import java.util.Date;
+import java.util.List;
 
 public class MediaUploadModel {
 	
@@ -14,6 +15,8 @@ public class MediaUploadModel {
 	private Date mediaEndTime;
 	private Date publishFrom;
 	private Integer mediaId;
+	private List<MediaContentModel> mediaContentModelList;
+	
 	public Integer getMediaTypeId() {
 		return mediaTypeId;
 	}
@@ -79,6 +82,13 @@ public class MediaUploadModel {
 	}
 	public void setMediaId(Integer mediaId) {
 		this.mediaId = mediaId;
+	}
+	public List<MediaContentModel> getMediaContentModelList() {
+		return mediaContentModelList;
+	}
+	public void setMediaContentModelList(
+			List<MediaContentModel> mediaContentModelList) {
+		this.mediaContentModelList = mediaContentModelList;
 	}	
 	
 }
