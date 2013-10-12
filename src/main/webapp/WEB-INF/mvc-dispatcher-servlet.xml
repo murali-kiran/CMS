@@ -100,5 +100,9 @@
 				<value>.jsp</value>
 			</property>
 	</bean>
-	
+	<bean id="applicationProperties" class="com.sumadga.utils.ApplicationProperties">
+		<property name="maxSubFolders" value="20000"/>
+		<property name="mediaCompletePath" value="/home/kumar/mms/"/>
+		<property name="mediaAbsolutePath" value="/resources/mms/"/>
+	</bean>
 </beans>

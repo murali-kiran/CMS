@@ -26,6 +26,7 @@ public class MediaSpecificationDao {
 	public void save(MediaSpecification entity) {
 		logger.info("saving MediaSpecification instance");
 		try {
+			
 			entityManager.persist(entity);
 			logger.info("save successful");
 		} catch (RuntimeException re) {

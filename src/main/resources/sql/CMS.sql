@@ -23,13 +23,13 @@ DROP TABLE IF EXISTS `languages`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `languages` (
-  `language_id` int(11) NOT NULL,
+  `language_id` int(11) NOT NULL AUTO_INCREMENT,
   `language_name` varchar(45) NOT NULL,
   `description` varchar(256) NOT NULL DEFAULT '',
   `created_time` datetime NOT NULL,
   `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`language_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,6 +38,7 @@ CREATE TABLE `languages` (
 
 LOCK TABLES `languages` WRITE;
 /*!40000 ALTER TABLE `languages` DISABLE KEYS */;
+INSERT INTO `languages` VALUES (1,'English','english','2013-10-11 22:32:08','2013-10-11 17:02:08');
 /*!40000 ALTER TABLE `languages` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -49,7 +50,7 @@ DROP TABLE IF EXISTS `media`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `media` (
-  `media_id` int(11) NOT NULL COMMENT 'media id',
+  `media_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'media id',
   `media_name` varchar(100) NOT NULL COMMENT 'media name for internal purpose',
   `media_title` varchar(75) NOT NULL COMMENT 'media title for service purpose',
   `description` varchar(256) NOT NULL DEFAULT '',
@@ -60,14 +61,17 @@ CREATE TABLE `media` (
   `media_process_state_id` int(11) NOT NULL,
   `media_start_time` datetime NOT NULL,
   `media_end_time` datetime NOT NULL,
+  `language_id` int(11) NOT NULL,
   PRIMARY KEY (`media_id`),
   KEY `fk_media_media_cycles_idx` (`media_cycle_id`),
   KEY `fk_media_media_process_states_idx` (`media_process_state_id`),
   KEY `fk_media_media_types_idx` (`media_type_id`),
+  KEY `fk_media_language_idx` (`language_id`),
+  CONSTRAINT `fk_media_language` FOREIGN KEY (`language_id`) REFERENCES `languages` (`language_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_media_media_cycles` FOREIGN KEY (`media_cycle_id`) REFERENCES `media_cycles` (`media_cycle_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_media_media_process_states` FOREIGN KEY (`media_process_state_id`) REFERENCES `media_process_states` (`media_process_state_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_media_media_types` FOREIGN KEY (`media_type_id`) REFERENCES `media_types` (`media_type_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table stores information about media';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='This table stores information about media';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -76,6 +80,7 @@ CREATE TABLE `media` (
 
 LOCK TABLES `media` WRITE;
 /*!40000 ALTER TABLE `media` DISABLE KEYS */;
+INSERT INTO `media` VALUES (1,'test2','test1','test','2013-10-12 19:00:35','2013-10-12 13:30:35',2,1,2,'2013-10-09 00:00:00','2013-10-17 00:00:00',1),(2,'test2','test1','test','2013-10-12 19:07:17','2013-10-12 13:37:17',2,1,2,'2013-10-09 00:00:00','2013-10-18 00:00:00',1);
 /*!40000 ALTER TABLE `media` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -87,12 +92,12 @@ DROP TABLE IF EXISTS `media_content_purposes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `media_content_purposes` (
-  `media_content_purpose_id` int(11) NOT NULL,
+  `media_content_purpose_id` int(11) NOT NULL AUTO_INCREMENT,
   `media_content_purpose` varchar(45) NOT NULL,
   `created_time` datetime NOT NULL,
   `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`media_content_purpose_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,6 +106,7 @@ CREATE TABLE `media_content_purposes` (
 
 LOCK TABLES `media_content_purposes` WRITE;
 /*!40000 ALTER TABLE `media_content_purposes` DISABLE KEYS */;
+INSERT INTO `media_content_purposes` VALUES (1,'preview','2013-10-12 12:35:38','2013-10-12 07:05:38'),(2,'media','2013-10-12 12:35:38','2013-10-12 07:06:09');
 /*!40000 ALTER TABLE `media_content_purposes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -112,7 +118,7 @@ DROP TABLE IF EXISTS `media_contents`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `media_contents` (
-  `media_content_id` int(11) NOT NULL,
+  `media_content_id` int(11) NOT NULL AUTO_INCREMENT,
   `media_id` int(11) NOT NULL,
   `media_specification_id` int(11) NOT NULL,
   `storage_path` varchar(1024) NOT NULL,
@@ -142,12 +148,12 @@ DROP TABLE IF EXISTS `media_cycles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `media_cycles` (
-  `media_cycle_id` int(11) NOT NULL,
+  `media_cycle_id` int(11) NOT NULL AUTO_INCREMENT,
   `media_cycle_state` varchar(45) NOT NULL COMMENT 'stores info about media cycle state',
   `created_time` datetime NOT NULL COMMENT 'stores  created time',
   `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'stores last modified time',
   PRIMARY KEY (`media_cycle_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='stores info about media cycle';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='stores info about media cycle';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -156,6 +162,7 @@ CREATE TABLE `media_cycles` (
 
 LOCK TABLES `media_cycles` WRITE;
 /*!40000 ALTER TABLE `media_cycles` DISABLE KEYS */;
+INSERT INTO `media_cycles` VALUES (1,'Initial','2013-10-11 22:33:52','2013-10-11 17:03:52'),(2,'Transcoded','2013-10-11 22:34:37','2013-10-11 17:07:20'),(3,'Published','2013-10-11 22:35:35','2013-10-11 17:05:35'),(4,'Removed','2013-10-11 22:36:11','2013-10-11 17:06:11');
 /*!40000 ALTER TABLE `media_cycles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -167,7 +174,7 @@ DROP TABLE IF EXISTS `media_group_media`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `media_group_media` (
-  `media_group_media_id` int(11) NOT NULL,
+  `media_group_media_id` int(11) NOT NULL AUTO_INCREMENT,
   `media_id` int(11) NOT NULL,
   `media_group_id` int(11) NOT NULL,
   `media_order` int(11) NOT NULL DEFAULT '0',
@@ -198,7 +205,7 @@ DROP TABLE IF EXISTS `media_groups`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `media_groups` (
-  `media_group_id` int(11) NOT NULL,
+  `media_group_id` int(11) NOT NULL AUTO_INCREMENT,
   `media_group_name` varchar(45) NOT NULL,
   `media_group_title` varchar(20) NOT NULL,
   `media_group_description` varchar(256) NOT NULL DEFAULT '',
@@ -226,13 +233,13 @@ DROP TABLE IF EXISTS `media_process_states`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `media_process_states` (
-  `media_process_state_id` int(11) NOT NULL,
+  `media_process_state_id` int(11) NOT NULL AUTO_INCREMENT,
   `media_process_state_name` varchar(45) NOT NULL,
   `description` varchar(100) NOT NULL DEFAULT '',
   `created_time` datetime NOT NULL,
   `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`media_process_state_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table stores info about media process states';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='This table stores info about media process states';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -241,6 +248,7 @@ CREATE TABLE `media_process_states` (
 
 LOCK TABLES `media_process_states` WRITE;
 /*!40000 ALTER TABLE `media_process_states` DISABLE KEYS */;
+INSERT INTO `media_process_states` VALUES (1,'not started','Transcode not started','2013-10-12 15:17:47','2013-10-12 09:47:47'),(2,'started','Transcode started','2013-10-12 15:18:11','2013-10-12 09:48:11'),(3,'completed','Transcode completed','2013-10-12 15:21:07','2013-10-12 09:51:07');
 /*!40000 ALTER TABLE `media_process_states` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -252,7 +260,7 @@ DROP TABLE IF EXISTS `media_specifications`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `media_specifications` (
-  `media_specification_id` int(11) NOT NULL,
+  `media_specification_id` int(11) NOT NULL AUTO_INCREMENT,
   `media_specifications_name` varchar(45) NOT NULL,
   `media_type_id` int(11) NOT NULL,
   `mime_type_id` int(11) NOT NULL,
@@ -271,7 +279,7 @@ CREATE TABLE `media_specifications` (
   CONSTRAINT `fk_media_specifications_content_purpose` FOREIGN KEY (`media_content_purpose_id`) REFERENCES `media_content_purposes` (`media_content_purpose_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_media_specifications_mime_types` FOREIGN KEY (`mime_type_id`) REFERENCES `mime_types` (`mime_type_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_media_specifications_types` FOREIGN KEY (`media_type_id`) REFERENCES `media_types` (`media_type_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='this table for media specification';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='this table for media specification';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -280,6 +288,7 @@ CREATE TABLE `media_specifications` (
 
 LOCK TABLES `media_specifications` WRITE;
 /*!40000 ALTER TABLE `media_specifications` DISABLE KEYS */;
+INSERT INTO `media_specifications` VALUES (1,'Videos',1,2,1,100,100,0,0,0,1,-1),(2,'Videos',1,5,2,720,480,320,0,0,1,-1);
 /*!40000 ALTER TABLE `media_specifications` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -291,7 +300,7 @@ DROP TABLE IF EXISTS `media_tags`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `media_tags` (
-  `media_tag_id` int(11) NOT NULL,
+  `media_tag_id` int(11) NOT NULL AUTO_INCREMENT,
   `media_id` int(11) NOT NULL,
   `tag_id` int(11) NOT NULL,
   `created_time` datetime NOT NULL,
@@ -321,13 +330,13 @@ DROP TABLE IF EXISTS `media_types`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `media_types` (
-  `media_type_id` int(11) NOT NULL,
+  `media_type_id` int(11) NOT NULL AUTO_INCREMENT,
   `media_type_name` varchar(45) NOT NULL COMMENT 'stores information about media types for internal purpose',
   `media_type_title` varchar(45) NOT NULL COMMENT 'this column used for title which will be displayed external',
   `created_time` datetime NOT NULL COMMENT 'stores created time',
   `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'stores last modified time',
   PRIMARY KEY (`media_type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='This table stores information about media types';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='This table stores information about media types';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -348,13 +357,13 @@ DROP TABLE IF EXISTS `mime_types`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mime_types` (
-  `mime_type_id` int(11) NOT NULL,
+  `mime_type_id` int(11) NOT NULL AUTO_INCREMENT,
   `mime_type` varchar(45) NOT NULL,
   `media_extension` varchar(45) NOT NULL,
   `created_time` datetime NOT NULL,
   `modified_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`mime_type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -363,7 +372,7 @@ CREATE TABLE `mime_types` (
 
 LOCK TABLES `mime_types` WRITE;
 /*!40000 ALTER TABLE `mime_types` DISABLE KEYS */;
-INSERT INTO `mime_types` VALUES (1,'img/jpeg','.jpg','2013-10-10 23:21:41','2013-10-10 17:51:41'),(2,'img/gif','.gif','2013-10-10 23:21:41','2013-10-10 17:51:41'),(3,'img/png','.png','2013-10-10 23:21:41','2013-10-10 17:51:41'),(4,'video/3gpp','.3gp','2013-10-10 23:21:41','2013-10-10 17:51:41'),(5,'video/mp4','.mp4','2013-10-10 23:21:41','2013-10-10 17:51:41');
+INSERT INTO `mime_types` VALUES (1,'img/jpeg','jpg','2013-10-10 23:21:41','2013-10-12 07:04:42'),(2,'img/gif','gif','2013-10-10 23:21:41','2013-10-12 07:04:42'),(3,'img/png','png','2013-10-10 23:21:41','2013-10-12 07:04:42'),(4,'video/3gpp','3gp','2013-10-10 23:21:41','2013-10-12 07:04:42'),(5,'video/mp4','mp4','2013-10-10 23:21:41','2013-10-12 07:04:42');
 /*!40000 ALTER TABLE `mime_types` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -401,4 +410,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-10-11 20:02:55
+-- Dump completed on 2013-10-12 19:54:30

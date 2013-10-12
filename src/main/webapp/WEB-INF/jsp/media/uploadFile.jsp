@@ -19,41 +19,17 @@
 		  }
 		 		 
 		  $("#fileTable").html("<div align='center'>loading<div>");
-		  alert("before calling ${pageContext.servletContext.contextPath}/getFiles?mediaTypeId=" + mtype);
+		 
 		  var data =  $.ajax({
 	             url: "${pageContext.servletContext.contextPath}/getFiles?mediaTypeId=" + mtype,
 	             type: "GET",
 	             async: false
 	           }).responseText;
-		  alert("after calling" + data);
 		           $('#fileTable').html(data); 
 	    
 	  });
   
- 
-  $("#isLang").change(function(){
-	   var isLang = document.getElementById('isLang').checked;
-	  
-	  if(isLang == true){
-		  
-		  var data =  $.ajax({
-	             url: "/CLIMB3/getLanguages",
-	             type: "GET",
-	             async: false
-	           }).responseText;
-		           $('#lang').html(data); 
-	    
-	  }else{
-		  $("#lang").empty();
-	  }		 
-	  });
-  
-  
    
-  
-  
-  
-  
 }); 
 
 </script>

@@ -13,6 +13,16 @@ public class MediaContentModel {
 	private Integer height ; 
 	private Boolean isLocal=false;
 	private String remoteUrl;
+	private Integer id;
+	
+	
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
 	public MultipartFile getFile() {
 		return file;
 	}

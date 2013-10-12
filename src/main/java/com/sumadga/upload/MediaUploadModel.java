@@ -13,7 +13,6 @@ public class MediaUploadModel {
 	private String description,tags;
 	private Date mediaStartTime;
 	private Date mediaEndTime;
-	private Date publishFrom;
 	private Integer mediaId;
 	private List<MediaContentModel> mediaContentModelList;
 	
@@ -70,12 +69,6 @@ public class MediaUploadModel {
 	}
 	public void setMediaEndTime(Date mediaEndTime) {
 		this.mediaEndTime = mediaEndTime;
-	}
-	public Date getPublishFrom() {
-		return publishFrom;
-	}
-	public void setPublishFrom(Date publishFrom) {
-		this.publishFrom = publishFrom;
 	}
 	public Integer getMediaId() {
 		return mediaId;

@@ -1,5 +1,7 @@
 package com.sumadga.dao;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -26,6 +28,8 @@ public class LanguageDao {
 	public void save(Language entity) {
 		logger.info("saving Language instance");
 		try {
+			entity.setCreatedTime(new Date());
+			entity.setModifiedTime(new Timestamp(new Date().getTime()));
 			entityManager.persist(entity);
 			logger.info("save successful");
 		} catch (RuntimeException re) {
@@ -52,6 +56,7 @@ public class LanguageDao {
 	public Language update(Language entity) {
 		logger.info("updating Language instance");
 		try {
+			entity.setModifiedTime(new Timestamp(new Date().getTime()));
 			Language result = entityManager.merge(entity);
 			logger.info("update successful");
 			return result;

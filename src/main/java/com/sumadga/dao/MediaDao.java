@@ -1,5 +1,7 @@
 package com.sumadga.dao;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -26,6 +28,8 @@ public class MediaDao  {
 	public void save(Media entity) {
 		logger.info("saving Media instance");
 		try {
+			entity.setCreatedTime(new Date());
+			entity.setModifiedTime(new Timestamp(new Date().getTime()));
 			entityManager.persist(entity);
 			logger.info("save successful");
 		} catch (RuntimeException re) {
@@ -52,6 +56,7 @@ public class MediaDao  {
 	public Media update(Media entity) {
 		logger.info("updating Media instance");
 		try {
+			entity.setModifiedTime(new Timestamp(new Date().getTime()));
 			Media result = entityManager.merge(entity);
 			logger.info("update successful");
 			return result;
