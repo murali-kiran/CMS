@@ -79,8 +79,11 @@ public class MediaSpecificationDao {
 		logger.info("finding MediaSpecification instance with property: " + propertyName
 				+ ", value: " + value);
 		try {
-			final String queryString = "select model from MediaSpecification model where model."
+			 String queryString = "select model from MediaSpecification model where model."
 					+ propertyName + "= " + value;
+			if(value.getClass().getName().equals("java.lang.String"))
+				queryString = "select model from MediaSpecification model where model."
+						+ propertyName + "= '" + value+"'";
 			Query query = entityManager
 					.createQuery(queryString, MediaSpecification.class);
 			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {

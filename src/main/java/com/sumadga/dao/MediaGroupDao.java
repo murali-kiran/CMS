@@ -83,8 +83,11 @@ public class MediaGroupDao  {
 		logger.info("finding MediaGroup instance with property: " + propertyName
 				+ ", value: " + value);
 		try {
-			final String queryString = "select model from MediaGroup model where model."
+			 String queryString = "select model from MediaGroup model where model."
 					+ propertyName + "= " + value;
+			if(value.getClass().getName().equals("java.lang.String"))
+				queryString = "select model from MediaGroup model where model."
+						+ propertyName + "= '" + value+"'";
 			Query query = entityManager
 					.createQuery(queryString, MediaGroup.class);
 			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {

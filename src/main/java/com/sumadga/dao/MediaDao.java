@@ -83,8 +83,11 @@ public class MediaDao  {
 		logger.info("finding Media instance with property: " + propertyName
 				+ ", value: " + value);
 		try {
-			final String queryString = "select model from Media model where model."
+			 String queryString = "select model from Media model where model."
 					+ propertyName + "= " + value;
+			if(value.getClass().getName().equals("java.lang.String"))
+				queryString = "select model from Media model where model."
+						+ propertyName + "= '" + value+"'";
 			Query query = entityManager
 					.createQuery(queryString, Media.class);
 			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {

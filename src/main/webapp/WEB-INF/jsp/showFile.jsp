@@ -4,7 +4,7 @@
        
 			 
 		 <fieldset>
-	       <legend>Content Files </legend>
+	       <legend>Media Content </legend>
 			<table> 
 		
 			  <c:forEach items="${uploadFile.mediaContentModelList}" var="fileContent" varStatus="fileStatus">
