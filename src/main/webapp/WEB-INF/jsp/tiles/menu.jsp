@@ -2,7 +2,7 @@
 <HTML>
 <HEAD>
 <script type="text/javascript"
-	src="<%=request.getContextPath()%>/resources/easyui/jquery-1.8.0.min.js"></script>
+	src="<%=request.getContextPath()%>/resources/script/jquery-1.4.4.min.js"></script>
 <TITLE>Menu</TITLE>
 <STYLE>
 body, input{
