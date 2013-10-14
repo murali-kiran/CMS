@@ -14,9 +14,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.sumadga.dao.LanguageDao;
 import com.sumadga.dao.MediaCycleDao;
+import com.sumadga.dao.MediaDao;
 import com.sumadga.dao.MediaSpecificationDao;
 import com.sumadga.dao.MediaTypeDao;
 import com.sumadga.dto.Language;
+import com.sumadga.dto.Media;
 import com.sumadga.dto.MediaCycle;
 import com.sumadga.dto.MediaType;
 
@@ -29,6 +31,9 @@ public class MediaUtils {
     
     @Autowired
     MediaTypeDao mediaTypeDao;
+    
+    @Autowired
+    MediaDao mediaDao;
     
     @Autowired
     MediaCycleDao mediaCycleDao;
@@ -135,4 +140,7 @@ public class MediaUtils {
 			return fileName.substring(0, dotIndex )+ newName.toString()+ fileName.substring(dotIndex );	
 
 	} 
+	 public List<Media> getMediaList(){
+	    	return mediaDao.findAll();
+	    }
 }
