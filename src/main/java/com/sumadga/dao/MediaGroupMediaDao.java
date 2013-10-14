@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sumadga.dto.Media;
 import com.sumadga.dto.MediaGroupMedia;
 
 @Repository
@@ -50,6 +51,41 @@ public class MediaGroupMediaDao  {
 			logger.error("delete failed", re);
 			throw re;
 		}
+	}
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataAccessException.class)
+	public List<MediaGroupMedia> findMappedMedia(Integer mediaId, Integer mediaGroupId) {
+		logger.info("find MediaGroupMedia instance");
+		List<MediaGroupMedia> mediagm = null;
+		try {
+			String strquery = "from MediaGroupMedia where media.mediaId="+mediaId+" and mediaGroup.mediaGroupId="+mediaGroupId;
+			
+			Query query = entityManager
+					.createQuery(strquery, MediaGroupMedia.class);
+			mediagm = (List<MediaGroupMedia>) query.getResultList();
+			logger.info("find successful");
+		} catch (RuntimeException re) {
+			logger.error("find failed", re);
+			throw re;
+		}
+		return mediagm;
+	}
+	
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataAccessException.class)
+	public List<MediaGroupMedia> findMappedMedia(Integer mediaGroupId) {
+		logger.info("find MediaGroupMedia instance");
+		List<MediaGroupMedia> mediagm = null;
+		try {
+			String strquery = "from MediaGroupMedia where mediaGroup.mediaGroupId="+mediaGroupId;
+			
+			Query query = entityManager
+					.createQuery(strquery, MediaGroupMedia.class);
+			mediagm = (List<MediaGroupMedia>) query.getResultList();
+			logger.info("find successful");
+		} catch (RuntimeException re) {
+			logger.error("find failed", re);
+			throw re;
+		}
+		return mediagm;
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataAccessException.class)
