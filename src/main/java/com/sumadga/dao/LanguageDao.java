@@ -83,8 +83,12 @@ public class LanguageDao {
 		logger.info("finding Language instance with property: " + propertyName
 				+ ", value: " + value);
 		try {
-			final String queryString = "select model from Language model where model."
+						
+			String queryString = "select model from Language model where model."
 					+ propertyName + "= " + value;
+			if(value.getClass().getName().equals("java.lang.String"))
+				queryString = "select model from Language model where model."
+						+ propertyName + "= '" + value+"'";
 			Query query = entityManager
 					.createQuery(queryString, Language.class);
 			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {

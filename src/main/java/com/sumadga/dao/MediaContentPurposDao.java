@@ -83,8 +83,11 @@ public class MediaContentPurposDao {
 		logger.info("finding MediaContentPurpos instance with property: " + propertyName
 				+ ", value: " + value);
 		try {
-			final String queryString = "select model from MediaContentPurpos model where model."
+			 String queryString = "select model from MediaContentPurpos model where model."
 					+ propertyName + "= " + value;
+			if(value.getClass().getName().equals("java.lang.String"))
+				queryString = "select model from MediaContentPurpos model where model."
+						+ propertyName + "= '" + value+"'";
 			Query query = entityManager
 					.createQuery(queryString, MediaContentPurpos.class);
 			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
