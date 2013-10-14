@@ -107,13 +107,41 @@
 <tr><td>Media EndTime  </td>
 <td><form:input path="mediaEndTime" class="datepicker calender validate" /></td>
 <td><form:errors path="mediaEndTime" cssClass="error" /></tr>
-
+<c:if test="${ empty mediaId}">
+  <form:hidden  path="mediaId" />
+</c:if>
 </table>
 </td>
 <td  style="width: 50%;vertical-align: top;">
 
 <table>
 <tr><td id="fileTable">
+<c:if test="${ empty mediaId} ">
+ <fieldset>
+	       <legend>Media Content </legend>
+			<table> 
+		
+			  <c:forEach items="${uploadFile.mediaContentModelList}" var="fileContent" varStatus="fileStatus">
+		
+			 <tr>
+			
+				 <td>${fileContent.label} :</td><td>
+				 <form:input type="file" path="uploadFile.mediaContentModelList[${fileContent.id}].file" /></td>
+				<td><form:errors path="uploadFile.mediaContentModelList[${fileContent.id}].file" cssClass="error" /></td>
+			
+				<form:hidden path="uploadFile.mediaContentModelList[${fileContent.id}].mediaSpecificationId"  />
+				<form:hidden path="uploadFile.mediaContentModelList[${fileContent.id}].mimeType"  />
+				<form:hidden path="uploadFile.mediaContentModelList[${fileContent.id}].bitRate"  />
+				<form:hidden path="uploadFile.mediaContentModelList[${fileContent.id}].width"  />
+				<form:hidden path="uploadFile.mediaContentModelList[${fileContent.id}].height"  />
+				<form:hidden path="uploadFile.mediaContentModelList[${fileContent.id}].purpose"  />
+				
+				
+				
+			</tr>
+				
+                	</c:forEach></table></fieldset>
+</c:if>
 </td></tr>
 
 </table>

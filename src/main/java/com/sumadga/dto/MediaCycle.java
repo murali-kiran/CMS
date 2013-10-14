@@ -31,9 +31,9 @@ public class MediaCycle implements Serializable {
 	@Column(name="modified_time", nullable=false)
 	private Timestamp modifiedTime;
 
-	//bi-directional many-to-one association to Media
+	/*//bi-directional many-to-one association to Media
 	@OneToMany(mappedBy="mediaCycle")
-	private List<Media> medias;
+	private List<Media> medias;*/
 
 	public MediaCycle() {
 	}
@@ -70,15 +70,15 @@ public class MediaCycle implements Serializable {
 		this.modifiedTime = modifiedTime;
 	}
 
-	public List<Media> getMedias() {
+	/*public List<Media> getMedias() {
 		return this.medias;
 	}
 
 	public void setMedias(List<Media> medias) {
 		this.medias = medias;
-	}
+	}*/
 
-	public Media addMedia(Media media) {
+	/*public Media addMedia(Media media) {
 		getMedias().add(media);
 		media.setMediaCycle(this);
 
@@ -90,13 +90,13 @@ public class MediaCycle implements Serializable {
 		media.setMediaCycle(null);
 
 		return media;
-	}
+	}*/
 
 	@Override
 	public String toString() {
 		return "MediaCycle [mediaCycleId=" + mediaCycleId + ", createdTime="
 				+ createdTime + ", mediaCycleState=" + mediaCycleState
-				+ ", modifiedTime=" + modifiedTime + ", medias=" + medias + "]";
+				+ ", modifiedTime=" + modifiedTime + ", medias=" + /*medias +*/ "]";
 	}
 
 }

@@ -11,8 +11,8 @@ public class MediaUploadModel {
 	private String mediaTitle;
 	private String mediaName;
 	private String description,tags;
-	private Date mediaStartTime;
-	private Date mediaEndTime;
+	private String mediaStartTime;
+	private String mediaEndTime;
 	private Integer mediaId;
 	private List<MediaContentModel> mediaContentModelList;
 	
@@ -58,16 +58,16 @@ public class MediaUploadModel {
 	public void setTags(String tags) {
 		this.tags = tags;
 	}
-	public Date getMediaStartTime() {
+	public String getMediaStartTime() {
 		return mediaStartTime;
 	}
-	public void setMediaStartTime(Date mediaStartTime) {
+	public void setMediaStartTime(String mediaStartTime) {
 		this.mediaStartTime = mediaStartTime;
 	}
-	public Date getMediaEndTime() {
+	public String getMediaEndTime() {
 		return mediaEndTime;
 	}
-	public void setMediaEndTime(Date mediaEndTime) {
+	public void setMediaEndTime(String mediaEndTime) {
 		this.mediaEndTime = mediaEndTime;
 	}
 	public Integer getMediaId() {

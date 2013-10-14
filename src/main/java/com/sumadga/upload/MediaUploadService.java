@@ -1,6 +1,7 @@
 package com.sumadga.upload;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -80,6 +81,83 @@ public class MediaUploadService {
         
 		model.addAttribute("uploadFile", mediaUploadModel);
 		
+	}
+	
+public void edit(ModelMap model,Integer mediaId){
+		
+		logger.info("upload service");
+		
+		model.addAttribute("mediaTypeList",mediaUtils.getMediaTypeList());
+		model.addAttribute("mediaCycleList",mediaUtils.getMediaCycleList());
+		model.addAttribute("languageList",mediaUtils.getLanguageList());
+		
+		
+        MediaUploadModel mediaUploadModel = new MediaUploadModel();
+        
+        Media media=mediaDao.findById(mediaId);
+        
+        if(media!=null){
+        	mediaUploadModel.setMediaId(media.getMediaId());
+        	mediaUploadModel.setMediaName(media.getMediaName());
+        	mediaUploadModel.setMediaTitle(media.getMediaTitle());
+        	mediaUploadModel.setMediaCycleId(media.getMediaCycle().getMediaCycleId());
+        	mediaUploadModel.setMediaTypeId(media.getMediaType().getMediaTypeId());
+        	mediaUploadModel.setLanguageId(media.getLanguage().getLanguageId());
+        	try{
+        	SimpleDateFormat dateFormat=new SimpleDateFormat("MM/dd/yyyy");
+        	/*SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");*/
+        	/*Date date1 = originalFormat.parse(media.getMediaStartTime().toString());
+        	Date date2 = originalFormat.parse(media.getMediaEndTime().toString());*/
+        	 mediaUploadModel.setMediaStartTime(dateFormat.format(media.getMediaStartTime()));
+        	mediaUploadModel.setMediaEndTime(dateFormat.format(media.getMediaStartTime()));
+        	}catch(Exception e){logger.error("error", e);}
+        	mediaUploadModel.setDescription(media.getDescription());
+        	
+        	String tags="";
+        	List<MediaTag> mediaTagList=mediaTagDao.findByProperty("media", media.getMediaId());
+        	for (MediaTag mediaTag : mediaTagList) {
+				tags=tags+mediaTag.getTag().getTagName();
+				if(mediaTagList.indexOf(mediaTag) != (mediaTagList.size()-1))
+					tags=tags+",";
+			}
+        	if(mediaTagList!=null && !mediaTagList.isEmpty())
+        		mediaUploadModel.setTags(tags);
+        }
+        
+        List<MediaSpecification> mediaSpecificationList = null;
+		List<MediaContentModel> mediaContentModelList = new ArrayList<MediaContentModel>();
+
+			mediaSpecificationList=mediaSpecificationDao.
+				findByProperty("mediaType", media.getMediaId());
+
+            int i=0;
+			for (MediaSpecification mediaSpecification : mediaSpecificationList) {
+				MediaContentModel mediaContentModel = new MediaContentModel();
+
+				mediaContentModel.setBitRate(mediaSpecification.getBitrate());
+				mediaContentModel.setWidth(mediaSpecification.getWidth());
+				mediaContentModel.setHeight(mediaSpecification.getHeight());
+				mediaContentModel.setMimeType(mediaSpecification.getMimeType().getMimeType());
+				mediaContentModel.setPurpose(mediaSpecification.getMediaContentPurpos().getMediaContentPurpose());
+				if(mediaSpecification.getMimeType().getMimeType().contains("image"))
+				mediaContentModel.setLabel(mediaContentModel.getWidth()+
+						"x"+mediaContentModel.getHeight()+" size "+
+						mediaSpecification.getMimeType().getMediaExtension()+ " image");
+				else
+					mediaContentModel.setLabel(mediaContentModel.getWidth()+
+							"x"+mediaContentModel.getHeight()+" size "+
+							mediaSpecification.getBitrate()+ " bitrate Video");
+				/*mediaContentModel.setIsLocal(mediaSpecification.get);*/
+				mediaContentModel.setMediaSpecificationId(mediaSpecification.getMediaSpecificationId());
+				mediaContentModel.setId(i);
+				mediaContentModelList.add(mediaContentModel);
+				    i=i+1;	
+			} 
+			mediaUploadModel.setMediaContentModelList(mediaContentModelList);
+        
+        model.addAttribute("uploadFile", mediaUploadModel);
+        
+        
 	}
 
 
@@ -172,8 +250,9 @@ public void saveUpload(MediaUploadModel mediaUploadModel) throws Exception{
 		media.setMediaName(mediaUploadModel.getMediaName());
 		
 		Date fromPublishDate=null,toPublishDate=null;
-		fromPublishDate = mediaUploadModel.getMediaStartTime();
-		toPublishDate = mediaUploadModel.getMediaEndTime();
+		SimpleDateFormat sdf=new SimpleDateFormat("MM/dd/yyyy");
+		fromPublishDate = sdf.parse(mediaUploadModel.getMediaStartTime());
+		toPublishDate = sdf.parse(mediaUploadModel.getMediaEndTime());
 		
 		if(fromPublishDate == null)
 			fromPublishDate = mediaUtils.parseDate("01-01-1970");
@@ -207,6 +286,8 @@ public void saveUpload(MediaUploadModel mediaUploadModel) throws Exception{
 	   /*getting content builds*/	
 	  List<MediaContentModel> mediaContentModelList = mediaUploadModel.getMediaContentModelList();
 	  
+	  if(mediaContentModelList!=null){
+	 
 	  for (MediaContentModel mediaContentModel : mediaContentModelList) {
 		    
 		  /*getting uploaded files to save and convert*/
@@ -217,7 +298,7 @@ public void saveUpload(MediaUploadModel mediaUploadModel) throws Exception{
 			throw new Exception("Upload Failed");
 		}
 		}//for	
-		
+	  }// mediaContentModelList	
 	 
 	}
 
