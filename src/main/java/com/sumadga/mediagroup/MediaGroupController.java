@@ -103,4 +103,11 @@ public class MediaGroupController {
 		mediaGroupService.listGroup(model);
 		return "mediaGroupList";
 	}
+	@RequestMapping("/welcome")
+	public String welcome(ModelMap model){
+		
+		logger.info("upload");
+		return "welcome";
+		
+	}
 }
