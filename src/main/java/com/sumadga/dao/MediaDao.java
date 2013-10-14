@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sumadga.dto.Media;
+import com.sumadga.upload.MediaUploadModel;
 
 @Repository
 public class MediaDao  {
@@ -135,5 +136,30 @@ public class MediaDao  {
 			logger.error("find all failed", re);
 			throw re;
 		}
+	}
+
+	public List<Media> search(MediaUploadModel mediaUploadModel) {
+		// TODO Auto-generated method stub
+		logger.info("search media");
+		StringBuffer queryString = new StringBuffer("select model from Media model where 1=1 ");
+		if(mediaUploadModel != null){
+			if(mediaUploadModel.getLanguageId() != null && mediaUploadModel.getLanguageId() != -1)
+				queryString.append(" and model.language="+mediaUploadModel.getLanguageId());
+			if(mediaUploadModel.getDescription() != null && !mediaUploadModel.getDescription().equals(""))
+				queryString.append(" and model.description like '%"+mediaUploadModel.getDescription()+"%'");
+			if(mediaUploadModel.getMediaCycleId() != null && mediaUploadModel.getMediaCycleId() != -1)
+				queryString.append(" and model.mediaCycle="+mediaUploadModel.getMediaCycleId());
+			if(mediaUploadModel.getMediaName() != null && !mediaUploadModel.getMediaName().equals(""));
+				queryString.append(" and model.mediaName like '%"+mediaUploadModel.getMediaName()+"%'");
+			if(mediaUploadModel.getMediaTitle() != null && !mediaUploadModel.getMediaTitle().equals(""))
+				queryString.append(" and model.mediaTitle like '%"+mediaUploadModel.getMediaTitle()+"%'");
+			if(mediaUploadModel.getMediaTypeId() != null && mediaUploadModel.getMediaTypeId() != -1)
+				queryString.append(" and model.mediaType="+mediaUploadModel.getMediaTypeId());
+		}
+		
+		Query query = entityManager
+				.createQuery(queryString.toString(), Media.class);
+		
+		return query.getResultList();
 	}
 }

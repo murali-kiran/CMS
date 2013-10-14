@@ -37,5 +37,12 @@
         <put-attribute name="title" value="Upload" />
         <put-attribute name="body" value="/WEB-INF/jsp/mediagroup/selectMedia.jsp" />
      </definition>
-     
+       <definition name="showSearch" extends="base.definition">
+        <put-attribute name="title" value="Upload" />
+        <put-attribute name="body" value="/WEB-INF/jsp/media/showSearch.jsp" />
+     </definition>
+      <definition name="searchList" extends="base.definition">
+        <put-attribute name="title" value="Upload" />
+        <put-attribute name="body" value="/WEB-INF/jsp/media/searchList.jsp" />
+     </definition>
     </tiles-definitions>
