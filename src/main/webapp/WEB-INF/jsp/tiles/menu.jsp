@@ -1,10 +1,10 @@
-
+<%-- 
 <HTML>
 <HEAD>
 <script type="text/javascript"
 	src="<%=request.getContextPath()%>/resources/easyui/jquery-1.8.0.min.js"></script>
-<TITLE>Menu</TITLE>
-<STYLE>
+<TITLE>Menu</TITLE> --%>
+<!-- <STYLE>
 body, input{
 	font-family: Calibri, Arial;
 }
@@ -47,9 +47,9 @@ body, input{
 	text-decoration: underline;
 }
 
-</STYLE>
-</HEAD>
-<BODY>
+</STYLE> -->
+<!-- </HEAD>
+<BODY> -->
 
 <ul id="accordion">
 	<li>Upload</li>
@@ -66,7 +66,7 @@ body, input{
 </ul>
 
 
-</BODY>
+<!-- </BODY> -->
 <SCRIPT>
 $("#accordion > li").click(function(){
 
@@ -79,4 +79,4 @@ $("#accordion > li").click(function(){
 //$('#accordion > ul:eq(0)').show();
 
 </SCRIPT>
-</HTML>
+<!-- </HTML> -->
