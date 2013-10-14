@@ -26,6 +26,7 @@ import com.sumadga.dto.MediaContent;
 import com.sumadga.dto.MediaSpecification;
 import com.sumadga.dto.MediaTag;
 import com.sumadga.dto.Tag;
+import com.sumadga.mediagroup.MediaModel;
 import com.sumadga.utils.ApplicationProperties;
 import com.sumadga.utils.MediaUtils;
 
@@ -159,8 +160,7 @@ public void edit(ModelMap model,Integer mediaId){
         
         
 	}
-
-
+	
 	public List<MediaContentModel> getFiles(ModelMap model,Integer mediaTypeId){
 
 		logger.info("upload service");
@@ -364,6 +364,38 @@ public void saveUpload(MediaUploadModel mediaUploadModel) throws Exception{
 			mediaTagDao.save(mediaTag);
 		}
 		
+	}
+	public void search(ModelMap model){
+		
+		logger.info("upload service");
+		
+		model.addAttribute("mediaTypeList",mediaUtils.getMediaTypeList());
+		model.addAttribute("mediaCycleList",mediaUtils.getMediaCycleList());
+		model.addAttribute("languageList",mediaUtils.getLanguageList());
+		
+		
+        MediaUploadModel mediaUploadModel = new MediaUploadModel();
+        
+		model.addAttribute("searchMedia", mediaUploadModel);
+		
+	}
+	public void searchMedia(ModelMap model,MediaUploadModel mediaUploadModel) {
+		// TODO Auto-generated method stub
+		/*model.addAttribute("mediaTypeList",mediaUtils.getMediaTypeList());
+		model.addAttribute("mediaCycleList",mediaUtils.getMediaCycleList());
+		model.addAttribute("languageList",mediaUtils.getLanguageList());
+		model.addAttribute("searchMedia", mediaUploadModel);*/
+		List<Media> mediaModels = mediaDao.search(mediaUploadModel);
+		/*List<MediaModel> mediaModels2 = new ArrayList<MediaModel>();
+		for (Media media : mediaModels) {
+			MediaModel mediaModel = new MediaModel();
+			mediaModel.setMediaName(media.getMediaName());
+			mediaModel.setMediaTitle(media.getMediaTitle());
+			mediaModel.setDescription(media.getDescription());
+			mediaModel.setMediaId(media.getMediaId());
+			mediaModels2.add(mediaModel);
+		}*/
+		model.addAttribute("mediaList",mediaModels);
 	}
 	
 }

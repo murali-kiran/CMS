@@ -93,4 +93,27 @@ public class MediaUploadController {
 		
 	}
 	
+	@RequestMapping("/showSearch")
+	public String showSearch(ModelMap model){
+		
+		logger.info("upload");
+		
+		mediaUploadService.search(model);
+		
+		return "showSearch";
+		
+	}
+	@RequestMapping(value="/searchMedia",  method=RequestMethod.POST)
+	public String searchMedia(@ModelAttribute("searchMedia") MediaUploadModel mediaUploadModel,
+			BindingResult result, SessionStatus status,ModelMap model){
+	
+        String message = null;		
+		logger.info("uploadfile "+mediaUploadModel.toString()+""+mediaUploadModel.getMediaId());
+		mediaUploadService.searchMedia(model,mediaUploadModel);
+		
+		
+		return "searchList";
+	}
 }
+
+
