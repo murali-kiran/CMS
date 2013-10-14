@@ -1,4 +1,14 @@
 @CHARSET "UTF-8";
+body
+{
+background-color: #B467CF;
+font:normal 14px Arial, Helvetica, sans-serif;
+border-collapse: collapse;
+border: 0ex;
+padding: 0px;
+ margin:0;
+ 
+}
 .styled-select select {
    background: transparent;
    width: 143px;

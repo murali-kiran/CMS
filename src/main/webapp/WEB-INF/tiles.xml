@@ -22,5 +22,17 @@
         <put-attribute name="title" value="search" />
         <put-attribute name="body" value="/WEB-INF/jsp/search/media/display.jsp" />
       </definition>
-       
+      <definition name="addGroup" extends="base.definition">
+        <put-attribute name="title" value="Upload" />
+        <put-attribute name="body" value="/WEB-INF/jsp/mediagroup/createEditMediaGroup.jsp" />
+     </definition>
+      <definition name="mediaGroupList" extends="base.definition">
+        <put-attribute name="title" value="Upload" />
+        <put-attribute name="body" value="/WEB-INF/jsp/mediagroup/mediaGroupList.jsp" />
+     </definition>
+      <definition name="selectMedia" extends="base.definition">
+        <put-attribute name="title" value="Upload" />
+        <put-attribute name="body" value="/WEB-INF/jsp/mediagroup/selectMedia.jsp" />
+     </definition>
+     
     </tiles-definitions>
