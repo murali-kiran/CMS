@@ -4,6 +4,9 @@ public class ApplicationProperties {
 	private String mediaAbsolutePath;
 	private String mediaCompletePath;
 	private Integer maxSubFolders;
+	private Boolean isVideoTranscodingEnabled;
+	private String videoTranscodingScriptPath;
+
 	
 	public String getMediaAbsolutePath() {
 		return mediaAbsolutePath;
@@ -22,6 +25,19 @@ public class ApplicationProperties {
 	}
 	public void setMaxSubFolders(Integer maxSubFolders) {
 		this.maxSubFolders = maxSubFolders;
+	}
+	
+	public Boolean getIsVideoTranscodingEnabled() {
+		return isVideoTranscodingEnabled;
+	}
+	public void setIsVideoTranscodingEnabled(Boolean isVideoTranscodingEnabled) {
+		this.isVideoTranscodingEnabled = isVideoTranscodingEnabled;
+	}
+	public String getVideoTranscodingScriptPath() {
+		return videoTranscodingScriptPath;
+	}
+	public void setVideoTranscodingScriptPath(String videoTranscodingScriptPath) {
+		this.videoTranscodingScriptPath = videoTranscodingScriptPath;
 	}
 
 }

@@ -7,9 +7,65 @@
 
 <meta http-equiv="Cache-Control" content="no-cache"/>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<STYLE>
+body, input{
+	font-family: Calibri, Arial;
+}
+#accordion {
+	list-style: none;
+	padding: 0 0 0 0;
+	width: 170px;
+}
+#accordion li{
+	display: block;
+	background-color: #371746;
+	font-weight: bold;
+	margin: 1px;
+	cursor: pointer;
+	padding: 5 5 5 7px;
+	list-style: circle;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	color : white;
+	font-size: 15px;
+}
+#accordion ul {
+	list-style: none;
+	padding: 0 0 0 0;
+	display: none;
+}
+#accordion ul li{
+	font-weight: normal;
+	cursor: auto;
+	background-color: #662E85;
+	padding: 0 0 0 7px;
+	color : white;
+}
+#accordion a {
+	text-decoration: none;
+	color: white;
+}
+#accordion a:hover {
+	text-decoration: underline;
+}
 
+</STYLE>
 <title><tiles:insertAttribute name="title" ignore="true" /></title>
 <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/css/climb3.css">
+	<link rel="stylesheet" href="<%=request.getContextPath()%>/resources/css/jquery-ui.css" />
+	
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/css/easyui.css">
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/css/icon.css">
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/css/demo.css">
+	
+	<%-- <script type="text/javascript" src="<%=request.getContextPath()%>/resources/script/climb3.js"></script> --%>
+	<script type="text/javascript" src="<%=request.getContextPath()%>/resources/script/jquery-1.10.2.js"></script> 
+     <script src="<%=request.getContextPath()%>/resources/script/jquery-ui.js"></script>
+     
+     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/css/formwizard.css" />
+	<script type='text/javascript' src='http://code.jquery.com/jquery-1.4.4.min.js'></script>
+	<script src="<%=request.getContextPath()%>/resources/script/formwizard.js" type="text/javascript"></script>
 	
 	<script src="<%=request.getContextPath()%>/resources/script/formwizard.js" type="text/javascript"></script>
     <script type="text/javascript">
