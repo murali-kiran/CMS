@@ -62,6 +62,7 @@ public class MediaUploadController {
 		
 		if (result.hasErrors()) {
 			//if validator failed
+			message="";
 			mediaUploadService.upload(model);
 			return "uploadFile";
 		} else {
