@@ -4,7 +4,7 @@
 	<li>Upload</li>
 	<ul>
 		<li><a href="upload">Upload</a></li>
-		<li><a href="#">List</a></li>
+		<li><a href="showSearch">List</a></li>
 	</ul>
 	<li>Media Group</li>
 	<ul>

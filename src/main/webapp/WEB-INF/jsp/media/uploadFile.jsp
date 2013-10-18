@@ -10,7 +10,7 @@
   $("#mediaTypeId").change(function(){
 	  		    
 	    /* $("#fileTable").find("tr").remove(); */
-	    $("#fileTable").empty();
+	    
 	    
 		  var mtype = $('#mediaTypeId').val();
 		  		  
@@ -25,6 +25,7 @@
 	             type: "GET",
 	             async: false
 	           }).responseText;
+		  $("#fileTable").empty();
 		           $('#fileTable').html(data); 
 	    
 	  });
@@ -121,20 +122,20 @@
 	       <legend>Media Content </legend>
 			<table> 
 		
-			  <c:forEach items="${uploadFile.mediaContentModelList}" var="fileContent" varStatus="fileStatus">
+			  <c:forEach items="${mediaContentModelList}" var="fileContent" varStatus="fileStatus">
 		
 			 <tr>
 			
 				 <td>${fileContent.label} :</td><td>
-				 <form:input type="file" path="uploadFile.mediaContentModelList[${fileContent.id}].file" /></td>
-				<td><form:errors path="uploadFile.mediaContentModelList[${fileContent.id}].file" cssClass="error" /></td>
+				 <form:input type="file" path="mediaContentModelList[${fileContent.id}].file" /></td>
+				<td><form:errors path="mediaContentModelList[${fileContent.id}].file" cssClass="error" /></td>
 			
-				<form:hidden path="uploadFile.mediaContentModelList[${fileContent.id}].mediaSpecificationId"  />
-				<form:hidden path="uploadFile.mediaContentModelList[${fileContent.id}].mimeType"  />
-				<form:hidden path="uploadFile.mediaContentModelList[${fileContent.id}].bitRate"  />
-				<form:hidden path="uploadFile.mediaContentModelList[${fileContent.id}].width"  />
-				<form:hidden path="uploadFile.mediaContentModelList[${fileContent.id}].height"  />
-				<form:hidden path="uploadFile.mediaContentModelList[${fileContent.id}].purpose"  />
+				<form:hidden path="mediaContentModelList[${fileContent.id}].mediaSpecificationId"  />
+				<form:hidden path="mediaContentModelList[${fileContent.id}].mimeType"  />
+				<form:hidden path="mediaContentModelList[${fileContent.id}].bitRate"  />
+				<form:hidden path="mediaContentModelList[${fileContent.id}].width"  />
+				<form:hidden path="mediaContentModelList[${fileContent.id}].height"  />
+				<form:hidden path="mediaContentModelList[${fileContent.id}].purpose"  />
 				
 				
 				

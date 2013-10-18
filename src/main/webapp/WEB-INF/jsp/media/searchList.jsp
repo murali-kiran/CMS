@@ -21,6 +21,7 @@
 	<th>Media Language</th>
 	<th>Media Type</th>
 	<th>Media Description</th>
+	<th> Edit </th>
 </tr>
 <c:forEach items="${mediaList}" var="media">
 	<tr>
@@ -31,7 +32,7 @@
 		 <td><c:out value="${media.language.languageName}" /></td>
 		 <td><c:out value="${media.mediaType.mediaTypeName}" /></td>
 		<td><c:out value="${media.description}" /></td>
-		
+		<td><a href="editMedia?mediaId=<c:out value="${media.mediaId}" />">Edit </a></td>
 	</tr>
 </c:forEach>
 </table>
