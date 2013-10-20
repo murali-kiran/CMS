@@ -3,6 +3,7 @@ package com.sumadga.mediagroup;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,6 +30,22 @@ public class MediaGroupController {
 		
 		logger.info("log4j");
 	}*/
+	
+	@RequestMapping(value="/",method = RequestMethod.GET)
+	public String welcomePage(Model model){
+		return "forward:/login";
+	}
+	
+	@RequestMapping(value="/login",method = RequestMethod.GET)
+	public String login(Model model){
+		return "login";
+	}
+	
+	@RequestMapping(value="/loginfailed", method = RequestMethod.GET)
+	public String loginerror(ModelMap model) {
+		model.addAttribute("error", "true");
+		return "login";
+	}
 	
 	@RequestMapping("/addGroup")
 	public String createGroup(ModelMap model){
