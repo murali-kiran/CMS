@@ -42,6 +42,9 @@ public class MediaSpecification implements Serializable {
 	
 	@Column(nullable=false)
 	private Integer bitrate=0;
+	
+	@Column(nullable=false)
+	private String transcodingCommand="";
 
 	//bi-directional many-to-one association to MediaContent
 	@OneToMany(mappedBy="mediaSpecification")
@@ -129,7 +132,7 @@ public class MediaSpecification implements Serializable {
 		this.width = width;
 	}
 
-	public List<MediaContent> getMediaContents() {
+	/*public List<MediaContent> getMediaContents() {
 		return this.mediaContents;
 	}
 
@@ -150,7 +153,7 @@ public class MediaSpecification implements Serializable {
 
 		return mediaContent;
 	}
-
+*/
 
 	public MediaContentPurpos getMediaContentPurpos() {
 		return this.mediaContentPurpos;
@@ -184,6 +187,14 @@ public class MediaSpecification implements Serializable {
 		this.bitrate = bitrate;
 	}
 
+
+	public String getTranscodingCommand() {
+		return transcodingCommand;
+	}
+
+	public void setTranscodingCommand(String transcodingCommand) {
+		this.transcodingCommand = transcodingCommand;
+	}
 
 	@Override
 	public String toString() {

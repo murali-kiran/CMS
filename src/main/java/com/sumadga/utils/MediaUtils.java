@@ -1,6 +1,7 @@
 package com.sumadga.utils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -100,6 +101,42 @@ public class MediaUtils {
 			}
 		}
 		return MD5;
+	}
+	public String getMd5(File file){
+		String md5="";
+		InputStream is=null;
+		try{
+			logger.info("in getCheckSum method ");
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			is = new FileInputStream(file);
+
+			int length=512;
+			byte bt[] = new byte[length];
+			int read=0;
+
+			while((read=is.read(bt, 0, length)) != -1) {
+				md.update(bt, 0, read);
+			}
+			md5 = new BigInteger(1,md.digest()).toString(16);
+			if(md5.length() < 32)
+			{
+				int l=32-md5.length();
+				for (int i = 0; i < l; i++) {
+					md5="0"+md5;
+				}
+			}
+			logger.info("check sum from file is "+md5);
+		}catch (Exception e) {
+			logger.info("Error "+e.toString());
+		}finally{
+			try{
+				if(is!=null)
+					is.close();
+			}catch (Exception e) {
+				logger.info("Error "+e.toString());
+			}
+		}
+		return md5;
 	}
 	private Integer getFolderNumber(Integer mediaId) {
 		return (int) (mediaId / applicationProperties.getMaxSubFolders());

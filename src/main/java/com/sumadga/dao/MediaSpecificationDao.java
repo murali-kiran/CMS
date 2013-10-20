@@ -132,4 +132,65 @@ public class MediaSpecificationDao {
 			throw re;
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MediaSpecification> findByMediaTypeIdAndIsSource(Integer mediaTypeId,Boolean isSource , final int... rowStartIdxAndCount) {
+		logger.info("finding MediaSpecification instance with mediaTypeId and : isSource values"+mediaTypeId +", "+isSource);
+		try {
+			 String queryString = "select model from MediaSpecification model where " +
+			 		"model.mimeType= " + mediaTypeId + " and model.isSource="+isSource;
+			
+			Query query = entityManager
+					.createQuery(queryString, MediaSpecification.class);
+			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
+				int rowStartIdx = Math.max(0, rowStartIdxAndCount[0]);
+				if (rowStartIdx > 0) {
+					query.setFirstResult(rowStartIdx);
+				}
+
+				if (rowStartIdxAndCount.length > 1) {
+					int rowCount = Math.max(0, rowStartIdxAndCount[1]);
+					if (rowCount > 0) {
+						query.setMaxResults(rowCount);
+					}
+				}
+			}
+			return query.getResultList();
+		} catch (RuntimeException re) {
+			logger.error("finding MediaSpecification instance with mediaTypeId and " +
+					"isSource values"+mediaTypeId +", "+isSource, re);
+			throw re;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MediaSpecification> findByMediaTypeIdAndIsSourceAndParentSpecId(Integer mediaTypeId,Boolean isSource ,Integer parentSpecificationId , final int... rowStartIdxAndCount) {
+		logger.info("finding MediaSpecification instance with mediaTypeId , isSource  and parentSpecificationId values"+mediaTypeId +", "+isSource +", "+parentSpecificationId);
+		try {
+			 String queryString = "select model from MediaSpecification model where " +
+			 		"model.mimeType= " + mediaTypeId + " and model.isSource="+isSource + 
+			 		" and model.parentSpecificationId = "+parentSpecificationId;
+			
+			Query query = entityManager
+					.createQuery(queryString, MediaSpecification.class);
+			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
+				int rowStartIdx = Math.max(0, rowStartIdxAndCount[0]);
+				if (rowStartIdx > 0) {
+					query.setFirstResult(rowStartIdx);
+				}
+
+				if (rowStartIdxAndCount.length > 1) {
+					int rowCount = Math.max(0, rowStartIdxAndCount[1]);
+					if (rowCount > 0) {
+						query.setMaxResults(rowCount);
+					}
+				}
+			}
+			return query.getResultList();
+		} catch (RuntimeException re) {
+			logger.error("finding MediaSpecification instance with mediaTypeId and " +
+					"isSource values"+mediaTypeId +", "+isSource, re);
+			throw re;
+		}
+	}
 }
