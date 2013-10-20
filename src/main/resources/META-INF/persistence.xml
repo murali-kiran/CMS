@@ -4,8 +4,8 @@
 	version="2.0">
 
 	<persistence-unit name="sumadgaPU">
-	 <properties>
+	<!--  <properties>
 	<property name = "hibernate.show_sql" value = "true" />
-	</properties>
+	</properties> -->
 	</persistence-unit>
 </persistence>

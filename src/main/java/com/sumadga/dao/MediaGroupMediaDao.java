@@ -145,6 +145,37 @@ public class MediaGroupMediaDao  {
 			throw re;
 		}
 	}
+	@SuppressWarnings("unchecked")
+	public List<MediaGroupMedia> findMediaByOrder(String propertyName,
+			final Object value, final int... rowStartIdxAndCount) {
+		logger.info("finding MediaGroupMedia instance with property: " + propertyName
+				+ ", value: " + value);
+		try {
+			
+			
+			String queryString = "select model from MediaGroupMedia model where model."
+					+ propertyName + "= " + value+" order by model.mediaOrder";
+			Query query = entityManager
+					.createQuery(queryString, MediaGroupMedia.class);
+			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
+				int rowStartIdx = Math.max(0, rowStartIdxAndCount[0]);
+				if (rowStartIdx > 0) {
+					query.setFirstResult(rowStartIdx);
+				}
+
+				if (rowStartIdxAndCount.length > 1) {
+					int rowCount = Math.max(0, rowStartIdxAndCount[1]);
+					if (rowCount > 0) {
+						query.setMaxResults(rowCount);
+					}
+				}
+			}
+			return query.getResultList();
+		} catch (RuntimeException re) {
+			logger.error("find by property name failed", re);
+			throw re;
+		}
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<MediaGroupMedia> findAll(final int... rowStartIdxAndCount) {

@@ -99,6 +99,23 @@ public class MediaGroupController {
 		model.addAttribute("mgid", mediaGroupId);
 		return "selectMedia";
 	}
+	@RequestMapping(value = "/showMappedGroup",  method=RequestMethod.GET)
+	//@ResponseBody
+	public String getGroups(@RequestParam("mgid") Integer mediaGroupId,ModelMap model){
+		mediaGroupService.getGroups(model, mediaGroupId);
+		model.addAttribute("mgid", mediaGroupId);
+		return "selectMediaGroup";
+	}
+	@RequestMapping(value = "/showGroupSearch",  method=RequestMethod.GET)
+	//@ResponseBody
+	public String showGroupSearch(@RequestParam("mgid") Integer mediaGroupId,ModelMap model){
+		//mediaGroupService.getGroups(model, mediaGroupId);
+		//model.addAttribute("mgid", mediaGroupId);
+		MediaGroupModel mediaGroupModel = new MediaGroupModel();
+		model.addAttribute("searchMediaGroup", mediaGroupModel);
+		model.addAttribute("mgid", mediaGroupId);
+		return "showGroupSearch";
+	}
 	@RequestMapping(value="/showRemMedia",  method=RequestMethod.POST)
 	public String searchMedia(@ModelAttribute("searchMedia") MediaUploadModel mediaUploadModel,
 			BindingResult result, SessionStatus status,ModelMap model){
@@ -108,7 +125,15 @@ public class MediaGroupController {
 		return "selectMedia";//MediaContentModelList;
 		
 	}
-	
+	@RequestMapping(value="/showRemMediaGroup",  method=RequestMethod.POST)
+	public String searchRemMediaGroup(@ModelAttribute("searchMediaGroup") MediaGroupModel mediaGroupModel,
+			BindingResult result, SessionStatus status,ModelMap model){
+		mediaGroupService.getGroups(model, mediaGroupModel.getParentmgId());
+		mediaGroupService.getRemainingMediaGroup(mediaGroupModel, model);
+		
+		return "selectMediaGroup";//MediaContentModelList;
+		
+	}
 	@RequestMapping(value="/remAddOrderMedia",  method=RequestMethod.POST)
 	public String remAddOrderMedia(@ModelAttribute("mediaList") MediaModel mediaModel,
 			BindingResult result, SessionStatus status,ModelMap model){

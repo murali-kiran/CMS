@@ -11,7 +11,7 @@ import java.util.Date;
  * 
  */
 @Entity
-@Table(name="media_subgroup")
+@Table(name="media_subgroups")
 public class MediaSubGroup implements Serializable {
 	private static final long serialVersionUID = 1L;
 

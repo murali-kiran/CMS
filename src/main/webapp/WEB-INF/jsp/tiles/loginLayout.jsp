@@ -41,7 +41,7 @@
 </div>
 <div style="width: 100%;height: 20px;float: left;background-image: url('/CMS/resources/images/headbg1.jpg');width: 100%;background-repeat: repeat-x;position:fixed;
    left:0px;
-   bottom:0px;">
+   bottom:0px;font-family: verdana;font-style: italic;font-size: 12px;">
 	<tiles:insertAttribute name="footer" />
 </div>
 </div>

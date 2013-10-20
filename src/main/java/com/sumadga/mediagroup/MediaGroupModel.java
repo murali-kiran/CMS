@@ -21,6 +21,33 @@ public class MediaGroupModel implements Serializable {
 	private String mediaGroupTitle;
 	private Timestamp modifiedTime;
 	private List<MediaGroupMediaModel> mediaGroupMedias;
+	private boolean checkStatus;
+	private String[] selectedMediaGroup;
+	private Integer parentmgId;
+
+	public Integer getParentmgId() {
+		return parentmgId;
+	}
+
+	public void setParentmgId(Integer parentmgId) {
+		this.parentmgId = parentmgId;
+	}
+
+	public String[] getSelectedMediaGroup() {
+		return selectedMediaGroup;
+	}
+
+	public void setSelectedMediaGroup(String[] selectedMediaGroup) {
+		this.selectedMediaGroup = selectedMediaGroup;
+	}
+
+	public boolean isCheckStatus() {
+		return checkStatus;
+	}
+
+	public void setCheckStatus(boolean checkStatus) {
+		this.checkStatus = checkStatus;
+	}
 
 	public MediaGroupModel() {
 	}

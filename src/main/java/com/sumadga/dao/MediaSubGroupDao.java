@@ -15,8 +15,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sumadga.dto.Media;
+import com.sumadga.dto.MediaGroup;
 import com.sumadga.dto.MediaGroupMedia;
 import com.sumadga.dto.MediaSubGroup;
+import com.sumadga.mediagroup.MediaGroupModel;
 
 @Repository
 public class MediaSubGroupDao  {
@@ -172,5 +174,38 @@ public class MediaSubGroupDao  {
 			logger.error("find all failed", re);
 			throw re;
 		}
+	}
+
+	public List<MediaSubGroup> findMediaGroupByOrder(Integer mediaGroupId) {
+		// TODO Auto-generated method stub
+		try {
+			String queryString = "select model from MediaSubGroup model where model.parentMediaGroup.mediaGroupId="
+					 + mediaGroupId+" order by model.groupOrder";
+			Query query = entityManager
+					.createQuery(queryString, MediaSubGroup.class);
+			return query.getResultList();
+		} catch (RuntimeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	public List<MediaGroup> findRemainingMediaGroup(MediaGroupModel mediaGroupModel) {
+		// TODO Auto-generated method stub
+		try {
+			String queryString = "select model from MediaGroup model where 1=1 "
+					 +" and model.mediaGroupId not in(select msb.childMediaGroup.mediaGroupId from MediaSubGroup msb"
+					 +" where msb.parentMediaGroup.mediaGroupId="
+					 + mediaGroupModel.getParentmgId()+")";
+			Query query = entityManager
+					.createQuery(queryString, MediaGroup.class);
+			return query.getResultList();
+		} catch (RuntimeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+		//return null;
 	}
 }
