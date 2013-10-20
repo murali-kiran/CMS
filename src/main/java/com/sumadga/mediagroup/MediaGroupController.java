@@ -75,24 +75,50 @@ public class MediaGroupController {
 		
 	}
 	
-	@RequestMapping(value = "/mapMedia",  method=RequestMethod.GET)
+	@RequestMapping(value = "/showSearchMap",  method=RequestMethod.GET)
 	//@ResponseBody
 	public String getFiles(@RequestParam("mgid") Integer mediaGroupId,ModelMap model){
-		
 		mediaGroupService.getMedia(model, mediaGroupId);
+		model.addAttribute("mgid", mediaGroupId);
+		return "selectMedia";
+	}
+	@RequestMapping(value="/showRemMedia",  method=RequestMethod.POST)
+	public String searchMedia(@ModelAttribute("searchMedia") MediaUploadModel mediaUploadModel,
+			BindingResult result, SessionStatus status,ModelMap model){
+		mediaGroupService.getMedia(model, mediaUploadModel.getMgid());
+		mediaGroupService.getRemainingMedia(mediaUploadModel, model);
 		
 		return "selectMedia";//MediaContentModelList;
 		
 	}
 	
-	@RequestMapping(value="/saveMappedMedia",  method=RequestMethod.POST)
-	public String saveMappedMedia(@ModelAttribute("mediaList") MediaModel mediaModel,
+	@RequestMapping(value="/remAddOrderMedia",  method=RequestMethod.POST)
+	public String remAddOrderMedia(@ModelAttribute("mediaList") MediaModel mediaModel,
 			BindingResult result, SessionStatus status,ModelMap model){
 		String message = null;
 			//System.out.println("mm"+mediaModel.getSelectedMedia().length);
 		if(mediaModel != null && mediaModel.getSelectedMedia() != null && mediaModel.getSelectedMedia().length > 0){
 		try {
 			mediaGroupService.mapMedia(mediaModel);
+			message = "mapping success";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			message = "mapping failed";
+		}
+		}
+		mediaGroupService.getMedia(model, mediaModel.getMgid());
+		model.addAttribute("mgid", mediaModel.getMgid());
+		return "selectMedia";
+	}
+	@RequestMapping(value="/saveMappedMedia",  method=RequestMethod.POST)
+	public String saveMappedMedia(@ModelAttribute("remMediaList") MediaModel mediaModel,
+			BindingResult result, SessionStatus status,ModelMap model){
+		String message = null;
+			//System.out.println("mm"+mediaModel.getSelectedMedia().length);
+		if(mediaModel != null && mediaModel.getSelectedMedia() != null && mediaModel.getSelectedMedia().length > 0){
+		try {
+			mediaGroupService.addMedia(mediaModel);
 			message = "mapping success";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

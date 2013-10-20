@@ -21,6 +21,7 @@ import com.sumadga.dto.Media;
 import com.sumadga.dto.MediaGroup;
 import com.sumadga.dto.MediaGroupMedia;
 import com.sumadga.dto.MediaSpecification;
+import com.sumadga.upload.MediaUploadModel;
 import com.sumadga.utils.MediaUtils;
 
 
@@ -83,12 +84,13 @@ public class MediaGroupService {
 	public void getMedia(ModelMap model, Integer mediaGroupId) {
 		// TODO Auto-generated method stub
 		try {
-			List<Media> mediaList1 = mediaDao.findAll();
+			//List<Media> mediaList1 = mediaDao.findAll();
 			List<MediaModel> mediaList = new ArrayList<MediaModel>();
 			//List<MediaGroupMedia> mediaGroupMedias = new ArrayList<MediaGroupMedia>();
 			List<MediaGroupMedia> mediaGroupMedias = mediaGroupMediaDao.findByProperty("mediaGroup", mediaGroupId);
 			//BeanUtils.copyProperties(mediaList, mediaList1);
-			for (Media media : mediaList1) {
+			for (MediaGroupMedia mediaGroupMedia : mediaGroupMedias) {
+				Media media = mediaGroupMedia.getMedia();
 				MediaModel mediaModel2 = new MediaModel();
 				mediaModel2.setDescription(media.getDescription());
 				mediaModel2.setMediaId(media.getMediaId());
@@ -96,10 +98,8 @@ public class MediaGroupService {
 				mediaModel2.setMediaTitle(media.getMediaTitle());
 				mediaModel2.setMediaCycle(media.getMediaCycle());
 				mediaModel2.setMgid(mediaGroupId);
-				for (MediaGroupMedia mediaGroupMedia : mediaGroupMedias) {
-					if(media.getMediaId() == mediaGroupMedia.getMedia().getMediaId()){
-						mediaModel2.setCheckStatus(true);
-					}
+				if(media.getMediaId() == mediaGroupMedia.getMedia().getMediaId()){
+					mediaModel2.setCheckStatus(true);
 				}
 				mediaList.add(mediaModel2);
 			}
@@ -111,7 +111,32 @@ public class MediaGroupService {
 		
 	}
 
-
+	public void getRemainingMedia(MediaUploadModel mediaUploadModel,ModelMap model ) {
+		// TODO Auto-generated method stub
+		try {
+			List<Media> mediaList1 = mediaDao.findRemainingMedia(mediaUploadModel);
+			List<MediaModel> mediaList = new ArrayList<MediaModel>();
+			//List<MediaGroupMedia> mediaGroupMedias = new ArrayList<MediaGroupMedia>();
+			//List<MediaGroupMedia> mediaGroupMedias = mediaGroupMediaDao.findByProperty("mediaGroup", mediaGroupId);
+			//BeanUtils.copyProperties(mediaList, mediaList1);
+			for (Media media : mediaList1) {
+				//Media media = mediaGroupMedia.getMedia();
+				MediaModel mediaModel2 = new MediaModel();
+				mediaModel2.setDescription(media.getDescription());
+				mediaModel2.setMediaId(media.getMediaId());
+				mediaModel2.setMediaName(media.getMediaName());
+				mediaModel2.setMediaTitle(media.getMediaTitle());
+				mediaModel2.setMediaCycle(media.getMediaCycle());
+				mediaModel2.setMgid(mediaUploadModel.getMgid());
+				mediaList.add(mediaModel2);
+			}
+			model.addAttribute("remMediaList", mediaList);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	public void mapMedia(MediaModel mediaModel)throws Exception {
 		// TODO Auto-generated method stub
 		try {
@@ -149,6 +174,40 @@ public class MediaGroupService {
 					mediaGroupMediaDao.delete(mediaGroupMedia);
 				}
 			}
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+	public void addMedia(MediaModel mediaModel)throws Exception {
+		// TODO Auto-generated method stub
+		try {
+			Integer mediaGroupId = mediaModel.getMgid();
+			String[] string = mediaModel.getSelectedMedia();
+			//List<Integer> selectedMediaIds = new ArrayList<Integer>();
+			List<MediaGroupMedia> mediaGroupMedias = mediaGroupMediaDao.findMappedMedia(mediaGroupId);
+			int i=0;
+			for (String string2 : string) {
+			//	List<MediaGroupMedia> mediaGroupMediaList = mediaGroupMediaDao.findMappedMedia(Integer.parseInt(string2), mediaGroupId);
+				MediaGroupMedia mediaGroupMedia = new MediaGroupMedia();
+				mediaGroupMedia.setMedia(mediaDao.findById(Integer.parseInt(string2)));
+				mediaGroupMedia.setMediaGroup(mediaGroupDao.findById(mediaGroupId));
+				mediaGroupMedia.setMediaOrder(i);
+				mediaGroupMediaDao.save(mediaGroupMedia);
+				i++;
+			}
+			/*for (MediaGroupMedia mediaGroupMedia : mediaGroupMedias) {
+				boolean b = false;
+				for (String str : string) {
+					if(mediaGroupMedia.getMedia().getMediaId() == Integer.parseInt(str))
+						b = true;
+				}
+				if(!b){
+					mediaGroupMediaDao.delete(mediaGroupMedia);
+				}
+			}*/
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

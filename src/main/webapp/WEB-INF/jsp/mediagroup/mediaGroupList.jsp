@@ -1,6 +1,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
+ 
 
 
 <fieldset>
@@ -21,7 +21,7 @@
 				<td><c:out value="${mediaGrp.mediaGroupTitle}" /></td>
 				<td><c:out value="${mediaGrp.mediaGroupPreviewId}" /></td>
 				<td><c:out value="${mediaGrp.mediaGroupDescription}" /></td>
-				<td><a href="mapMedia?mgid=${mediaGrp.mediaGroupId}">mapMedia</a></td>
+				<td><a href="showSearchMap?mgid=${mediaGrp.mediaGroupId}">mapMedia</a></td>
 			</tr>
 		</c:forEach>
 	</table>

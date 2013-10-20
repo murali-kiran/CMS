@@ -14,6 +14,13 @@ public class MediaUploadModel {
 	private String mediaStartTime;
 	private String mediaEndTime;
 	private Integer mediaId;
+	private Integer mgid;
+	public Integer getMgid() {
+		return mgid;
+	}
+	public void setMgid(Integer mgid) {
+		this.mgid = mgid;
+	}
 	private List<MediaContentModel> mediaContentModelList;
 	
 	public Integer getMediaTypeId() {
