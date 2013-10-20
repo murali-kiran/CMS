@@ -3,6 +3,7 @@ package com.sumadga.mediagroup;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,6 +30,22 @@ public class MediaGroupController {
 		
 		logger.info("log4j");
 	}*/
+	
+	@RequestMapping(value="/",method = RequestMethod.GET)
+	public String welcomePage(Model model){
+		return "forward:/login";
+	}
+	
+	@RequestMapping(value="/login",method = RequestMethod.GET)
+	public String login(Model model){
+		return "login";
+	}
+	
+	@RequestMapping(value="/loginfailed", method = RequestMethod.GET)
+	public String loginerror(ModelMap model) {
+		model.addAttribute("error", "true");
+		return "login";
+	}
 	
 	@RequestMapping("/addGroup")
 	public String createGroup(ModelMap model){
@@ -75,24 +92,75 @@ public class MediaGroupController {
 		
 	}
 	
-	@RequestMapping(value = "/mapMedia",  method=RequestMethod.GET)
+	@RequestMapping(value = "/showSearchMap",  method=RequestMethod.GET)
 	//@ResponseBody
 	public String getFiles(@RequestParam("mgid") Integer mediaGroupId,ModelMap model){
-		
 		mediaGroupService.getMedia(model, mediaGroupId);
+		model.addAttribute("mgid", mediaGroupId);
+		return "selectMedia";
+	}
+	@RequestMapping(value = "/showMappedGroup",  method=RequestMethod.GET)
+	//@ResponseBody
+	public String getGroups(@RequestParam("mgid") Integer mediaGroupId,ModelMap model){
+		mediaGroupService.getGroups(model, mediaGroupId);
+		model.addAttribute("mgid", mediaGroupId);
+		return "selectMediaGroup";
+	}
+	@RequestMapping(value = "/showGroupSearch",  method=RequestMethod.GET)
+	//@ResponseBody
+	public String showGroupSearch(@RequestParam("mgid") Integer mediaGroupId,ModelMap model){
+		//mediaGroupService.getGroups(model, mediaGroupId);
+		//model.addAttribute("mgid", mediaGroupId);
+		MediaGroupModel mediaGroupModel = new MediaGroupModel();
+		model.addAttribute("searchMediaGroup", mediaGroupModel);
+		model.addAttribute("mgid", mediaGroupId);
+		return "showGroupSearch";
+	}
+	@RequestMapping(value="/showRemMedia",  method=RequestMethod.POST)
+	public String searchMedia(@ModelAttribute("searchMedia") MediaUploadModel mediaUploadModel,
+			BindingResult result, SessionStatus status,ModelMap model){
+		mediaGroupService.getMedia(model, mediaUploadModel.getMgid());
+		mediaGroupService.getRemainingMedia(mediaUploadModel, model);
 		
 		return "selectMedia";//MediaContentModelList;
 		
 	}
-	
-	@RequestMapping(value="/saveMappedMedia",  method=RequestMethod.POST)
-	public String saveMappedMedia(@ModelAttribute("mediaList") MediaModel mediaModel,
+	@RequestMapping(value="/showRemMediaGroup",  method=RequestMethod.POST)
+	public String searchRemMediaGroup(@ModelAttribute("searchMediaGroup") MediaGroupModel mediaGroupModel,
+			BindingResult result, SessionStatus status,ModelMap model){
+		mediaGroupService.getGroups(model, mediaGroupModel.getParentmgId());
+		mediaGroupService.getRemainingMediaGroup(mediaGroupModel, model);
+		
+		return "selectMediaGroup";//MediaContentModelList;
+		
+	}
+	@RequestMapping(value="/remAddOrderMedia",  method=RequestMethod.POST)
+	public String remAddOrderMedia(@ModelAttribute("mediaList") MediaModel mediaModel,
 			BindingResult result, SessionStatus status,ModelMap model){
 		String message = null;
 			//System.out.println("mm"+mediaModel.getSelectedMedia().length);
 		if(mediaModel != null && mediaModel.getSelectedMedia() != null && mediaModel.getSelectedMedia().length > 0){
 		try {
 			mediaGroupService.mapMedia(mediaModel);
+			message = "mapping success";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			message = "mapping failed";
+		}
+		}
+		mediaGroupService.getMedia(model, mediaModel.getMgid());
+		model.addAttribute("mgid", mediaModel.getMgid());
+		return "selectMedia";
+	}
+	@RequestMapping(value="/saveMappedMedia",  method=RequestMethod.POST)
+	public String saveMappedMedia(@ModelAttribute("remMediaList") MediaModel mediaModel,
+			BindingResult result, SessionStatus status,ModelMap model){
+		String message = null;
+			//System.out.println("mm"+mediaModel.getSelectedMedia().length);
+		if(mediaModel != null && mediaModel.getSelectedMedia() != null && mediaModel.getSelectedMedia().length > 0){
+		try {
+			mediaGroupService.addMedia(mediaModel);
 			message = "mapping success";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

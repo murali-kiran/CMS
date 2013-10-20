@@ -162,4 +162,30 @@ public class MediaDao  {
 		
 		return query.getResultList();
 	}
+
+	public List<Media> findRemainingMedia(MediaUploadModel mediaUploadModel) {
+		// TODO Auto-generated method stub
+		StringBuffer queryString = new StringBuffer("select model from Media model where 1=1 ");
+		if(mediaUploadModel != null){
+			if(mediaUploadModel.getLanguageId() != null && mediaUploadModel.getLanguageId() != -1)
+				queryString.append(" and model.language="+mediaUploadModel.getLanguageId());
+			if(mediaUploadModel.getDescription() != null && !mediaUploadModel.getDescription().equals(""))
+				queryString.append(" and model.description like '%"+mediaUploadModel.getDescription()+"%'");
+			if(mediaUploadModel.getMediaCycleId() != null && mediaUploadModel.getMediaCycleId() != -1)
+				queryString.append(" and model.mediaCycle="+mediaUploadModel.getMediaCycleId());
+			if(mediaUploadModel.getMediaName() != null && !mediaUploadModel.getMediaName().equals(""));
+				queryString.append(" and model.mediaName like '%"+mediaUploadModel.getMediaName()+"%'");
+			if(mediaUploadModel.getMediaTitle() != null && !mediaUploadModel.getMediaTitle().equals(""))
+				queryString.append(" and model.mediaTitle like '%"+mediaUploadModel.getMediaTitle()+"%'");
+			if(mediaUploadModel.getMediaTypeId() != null && mediaUploadModel.getMediaTypeId() != -1)
+				queryString.append(" and model.mediaType="+mediaUploadModel.getMediaTypeId());
+		}
+		queryString.append("and model.mediaId not in (select mgm.media.mediaId from MediaGroupMedia mgm where mgm.mediaGroup.mediaGroupId="+mediaUploadModel.getMgid()+")");
+		
+		Query query = entityManager
+				.createQuery(queryString.toString(), Media.class);
+		
+		List<Media> media = query.getResultList();
+		return media;
+	}
 }

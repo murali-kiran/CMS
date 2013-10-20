@@ -5,6 +5,7 @@
 <html>
 <head>
 
+  
 <meta http-equiv="Cache-Control" content="no-cache"/>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <STYLE>
@@ -86,7 +87,29 @@ body, input{
 	})
 	
 </script>
+<script type="text/javascript">
+//<![CDATA[ 
+$(window).load(function(){
+var fixHelperModified = function(e, tr) {
+    var $originals = tr.children();
+    var $helper = tr.clone();
+    $helper.children().each(function(index) {
+        $(this).width($originals.eq(index).width())
+    });
+    return $helper;
+},
+    updateIndex = function(e, ui) {
+        $('td.index', ui.item.parent()).each(function (i) {
+            $(this).html(i + 1);
+        });
+    };
 
+$("#sort tbody").sortable({
+    helper: fixHelperModified,
+    stop: updateIndex
+}).disableSelection();
+});//]]>  
+</script>
 </head>
 <body style="border-collapse: collapse;">
 <%-- <table style="width: 100%;">

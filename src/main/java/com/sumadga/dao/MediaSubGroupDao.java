@@ -15,19 +15,22 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sumadga.dto.Media;
+import com.sumadga.dto.MediaGroup;
 import com.sumadga.dto.MediaGroupMedia;
+import com.sumadga.dto.MediaSubGroup;
+import com.sumadga.mediagroup.MediaGroupModel;
 
 @Repository
-public class MediaGroupMediaDao  {
+public class MediaSubGroupDao  {
 
-	private static final Logger logger = Logger.getLogger(MediaGroupMediaDao.class);
+	private static final Logger logger = Logger.getLogger(MediaSubGroupDao.class);
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataAccessException.class)
-	public void save(MediaGroupMedia entity) {
-		logger.info("saving MediaGroupMedia instance");
+	public void save(MediaSubGroup entity) {
+		logger.info("saving MediaSubGroup instance");
 		try {
 			entity.setCreatedTime(new Date());
 			entity.setModifiedTime(new Timestamp(new Date().getTime()));
@@ -40,11 +43,11 @@ public class MediaGroupMediaDao  {
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataAccessException.class)
-	public void delete(MediaGroupMedia entity) {
-		logger.info("deleting MediaGroupMedia instance");
+	public void delete(MediaSubGroup entity) {
+		logger.info("deleting MediaSubGroup instance");
 		try {
-			entity = entityManager.getReference(MediaGroupMedia.class,
-					entity.getMediaGroupMediaId());
+			entity = entityManager.getReference(MediaSubGroup.class,
+					entity.getSubGroupId());
 			entityManager.remove(entity);
 			logger.info("delete successful");
 		} catch (RuntimeException re) {
@@ -52,7 +55,7 @@ public class MediaGroupMediaDao  {
 			throw re;
 		}
 	}
-	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataAccessException.class)
+	/*@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataAccessException.class)
 	public List<MediaGroupMedia> findMappedMedia(Integer mediaId, Integer mediaGroupId) {
 		logger.info("find MediaGroupMedia instance");
 		List<MediaGroupMedia> mediagm = null;
@@ -86,14 +89,14 @@ public class MediaGroupMediaDao  {
 			throw re;
 		}
 		return mediagm;
-	}
+	}*/
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataAccessException.class)
-	public MediaGroupMedia update(MediaGroupMedia entity) {
-		logger.info("updating MediaGroupMedia instance");
+	public MediaSubGroup update(MediaSubGroup entity) {
+		logger.info("updating MediaSubGroup instance");
 		try {
 			entity.setModifiedTime(new Timestamp(new Date().getTime()));
-			MediaGroupMedia result = entityManager.merge(entity);
+			MediaSubGroup result = entityManager.merge(entity);
 			logger.info("update successful");
 			return result;
 		} catch (RuntimeException re) {
@@ -102,10 +105,10 @@ public class MediaGroupMediaDao  {
 		}
 	}
 
-	public MediaGroupMedia findById(Integer id) {
-		logger.info("finding MediaGroupMedia instance with id: " + id);
+	public MediaSubGroup findById(Integer id) {
+		logger.info("finding MediaSubGroup instance with id: " + id);
 		try {
-			MediaGroupMedia instance = entityManager.find(MediaGroupMedia.class, id);
+			MediaSubGroup instance = entityManager.find(MediaSubGroup.class, id);
 			return instance;
 		} catch (RuntimeException re) {
 			logger.error("find failed", re);
@@ -114,49 +117,18 @@ public class MediaGroupMediaDao  {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<MediaGroupMedia> findByProperty(String propertyName,
+	public List<MediaSubGroup> findByProperty(String propertyName,
 			final Object value, final int... rowStartIdxAndCount) {
-		logger.info("finding MediaGroupMedia instance with property: " + propertyName
+		logger.info("finding MediaSubGroup instance with property: " + propertyName
 				+ ", value: " + value);
 		try {
-			String queryString = "select model from MediaGroupMedia model where model."
+			String queryString = "select model from MediaSubGroup model where model."
 					+ propertyName + "= " + value;
 			if(value.getClass().getName().equals("java.lang.String"))
-				queryString = "select model from MediaGroupMedia model where model."
+				queryString = "select model from MediaSubGroup model where model."
 						+ propertyName + "= '" + value+"'";
 			Query query = entityManager
-					.createQuery(queryString, MediaGroupMedia.class);
-			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
-				int rowStartIdx = Math.max(0, rowStartIdxAndCount[0]);
-				if (rowStartIdx > 0) {
-					query.setFirstResult(rowStartIdx);
-				}
-
-				if (rowStartIdxAndCount.length > 1) {
-					int rowCount = Math.max(0, rowStartIdxAndCount[1]);
-					if (rowCount > 0) {
-						query.setMaxResults(rowCount);
-					}
-				}
-			}
-			return query.getResultList();
-		} catch (RuntimeException re) {
-			logger.error("find by property name failed", re);
-			throw re;
-		}
-	}
-	@SuppressWarnings("unchecked")
-	public List<MediaGroupMedia> findMediaByOrder(String propertyName,
-			final Object value, final int... rowStartIdxAndCount) {
-		logger.info("finding MediaGroupMedia instance with property: " + propertyName
-				+ ", value: " + value);
-		try {
-			
-			
-			String queryString = "select model from MediaGroupMedia model where model."
-					+ propertyName + "= " + value+" order by model.mediaOrder";
-			Query query = entityManager
-					.createQuery(queryString, MediaGroupMedia.class);
+					.createQuery(queryString, MediaSubGroup.class);
 			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
 				int rowStartIdx = Math.max(0, rowStartIdxAndCount[0]);
 				if (rowStartIdx > 0) {
@@ -178,12 +150,12 @@ public class MediaGroupMediaDao  {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<MediaGroupMedia> findAll(final int... rowStartIdxAndCount) {
-		logger.info("finding all MediaGroupMedia instances");
+	public List<MediaSubGroup> findAll(final int... rowStartIdxAndCount) {
+		logger.info("finding all MediaSubGroup instances");
 		try {
-			final String queryString = "select model from MediaGroupMedia model";
+			final String queryString = "select model from MediaSubGroup model";
 			Query query = entityManager
-					.createQuery(queryString, MediaGroupMedia.class);
+					.createQuery(queryString, MediaSubGroup.class);
 			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
 				int rowStartIdx = Math.max(0, rowStartIdxAndCount[0]);
 				if (rowStartIdx > 0) {
@@ -202,5 +174,38 @@ public class MediaGroupMediaDao  {
 			logger.error("find all failed", re);
 			throw re;
 		}
+	}
+
+	public List<MediaSubGroup> findMediaGroupByOrder(Integer mediaGroupId) {
+		// TODO Auto-generated method stub
+		try {
+			String queryString = "select model from MediaSubGroup model where model.parentMediaGroup.mediaGroupId="
+					 + mediaGroupId+" order by model.groupOrder";
+			Query query = entityManager
+					.createQuery(queryString, MediaSubGroup.class);
+			return query.getResultList();
+		} catch (RuntimeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	public List<MediaGroup> findRemainingMediaGroup(MediaGroupModel mediaGroupModel) {
+		// TODO Auto-generated method stub
+		try {
+			String queryString = "select model from MediaGroup model where 1=1 "
+					 +" and model.mediaGroupId not in(select msb.childMediaGroup.mediaGroupId from MediaSubGroup msb"
+					 +" where msb.parentMediaGroup.mediaGroupId="
+					 + mediaGroupModel.getParentmgId()+")";
+			Query query = entityManager
+					.createQuery(queryString, MediaGroup.class);
+			return query.getResultList();
+		} catch (RuntimeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+		//return null;
 	}
 }
