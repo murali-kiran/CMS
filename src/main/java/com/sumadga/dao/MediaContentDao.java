@@ -131,4 +131,37 @@ public class MediaContentDao {
 			throw re;
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MediaContent> findByMediaIdAndMediaSpecId(Integer mediaId,Integer mediaSpecId,
+			final int... rowStartIdxAndCount) {
+		logger.info("finding MediaContent instance with mediaId and mediaSpecId values " + mediaId
+				+ ", " + mediaSpecId);
+		try {
+			 String queryString = "select model from MediaContent model where model.media = " 
+					 + mediaId + " and model.mediaSpecification ="+mediaSpecId;
+			
+			Query query = entityManager
+					.createQuery(queryString, MediaContent.class);
+			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
+				int rowStartIdx = Math.max(0, rowStartIdxAndCount[0]);
+				if (rowStartIdx > 0) {
+					query.setFirstResult(rowStartIdx);
+				}
+
+				if (rowStartIdxAndCount.length > 1) {
+					int rowCount = Math.max(0, rowStartIdxAndCount[1]);
+					if (rowCount > 0) {
+						query.setMaxResults(rowCount);
+					}
+				}
+			}
+			return query.getResultList();
+		} catch (RuntimeException re) {
+			logger.error("find by property name failed", re);
+			throw re;
+		}
+	}
+
+
 }

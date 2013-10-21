@@ -66,7 +66,6 @@ body, input{
 <link rel="stylesheet" type="text/css"
 	href="<%=request.getContextPath()%>/resources/themes/demo.css">
 	
-	<%-- <script type="text/javascript" src="<%=request.getContextPath()%>/resources/script/climb3.js"></script> --%>
 	<script type="text/javascript" src="<%=request.getContextPath()%>/resources/script/jquery-1.10.2.js"></script> 
      <script src="<%=request.getContextPath()%>/resources/script/jquery-ui.js"></script>
      

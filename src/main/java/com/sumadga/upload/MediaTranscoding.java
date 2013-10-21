@@ -20,6 +20,44 @@ Logger logger = Logger.getLogger(MediaTranscoding.class);
 	@Autowired
 	ApplicationProperties applicationProperties;
 	
+	public Boolean transCoding(String[] cmdArray) throws Exception{
+		Boolean result=true;
+		logger.info("Starting   "); 
+		String command="";
+		for (String s : cmdArray) 
+			command = command + s + " ";
+		
+		logger.info("Command "+command);
+		
+		
+		Process process = null;
+		
+		try {
+			process = Runtime.getRuntime().exec(cmdArray);
+		} catch(IOException e) {
+			result = false;
+			throw new IOException();
+		}
+		
+		try {
+			process.waitFor();
+			logger.info("Done. ");
+			
+			if (process.exitValue() != 0)
+			{
+				result = false;
+				logger.error(" Transcoding failed, exit code is "+process.exitValue());
+				throw new Exception();
+			}
+		} catch (InterruptedException e) {
+			result = false;
+			logger.error(" Transcoding failed due to interrupted ");
+			throw new InterruptedException();		
+			}
+		
+		return result;
+	}
+	
 	public Boolean videoTransCoding(String sourceVideo,  
 			String destinationVideo, String size ,Integer bitrate,String mimeType) throws Exception{
 		
@@ -40,7 +78,7 @@ Logger logger = Logger.getLogger(MediaTranscoding.class);
 			mimeType 
 		};
 				
-		logger.info("Lanching  "); 
+		logger.info("Starting   "); 
 		String command="";
 		for (String s : cmdArray) 
 			command = command + s + " ";
