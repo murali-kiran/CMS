@@ -50,6 +50,16 @@ public class MediaUploadController {
 		
 	}
 	
+	@RequestMapping("/showMediaContent")
+	public String showMediaFile(@RequestParam("mediaId") Integer mediaId,ModelMap model){
+		
+		logger.info("show Media Content ");
+		
+		mediaUploadService.showMediaContent( model,mediaId);
+		
+		return "mediaContent";
+		
+	}
 		
 	@RequestMapping(value = "/getFiles",  method=RequestMethod.GET)
 	//@ResponseBody
@@ -88,7 +98,8 @@ public class MediaUploadController {
 				message=e.getMessage();
 				logger.error("Exception while saving uploaded files", e);
 			}
-			return "uploadFile";
+			
+			return showSearch(model);
 		}
 		
 	}

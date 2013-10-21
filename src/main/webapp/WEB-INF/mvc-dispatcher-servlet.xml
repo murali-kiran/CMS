@@ -38,9 +38,9 @@
 
 <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/cms?autoReconnect=true" />
+		<property name="url" value="jdbc:mysql://localhost:3306/CMS?autoReconnect=true" />
 		<property name="username" value="root" />
-		<property name="password" value="mysql" />
+		<property name="password" value="root" />
 		<property name="minIdle" value="1" />
 		<property name="maxActive" value="5" />
 		<property name="validationQuery" value="select 1" />
@@ -50,7 +50,7 @@
 	<bean id="jpaVendorAdapter"
 		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 		<property name="database" value="MYSQL" />
-		<property name="showSql" value="false" />
+		<property name="showSql" value="true" />
 		<property name="generateDdl" value="false" />
 		<property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect" />
 	</bean>
@@ -96,17 +96,6 @@
 	
 	<bean id="webexpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler" /> 
 	
-	
-	<!-- <bean id="applicationProperties" class="com.ayansys.climb.model.ApplicationProperties" >
-		            
-          <property name="thumbnailBaseDir" value="/home/ayansys123/Desktop/climb-content/thumbnails/" />
-          <property name="thumbnailDirPrefix" value="/CLIMB/images/thumbnails/" />
-          <property name="contentBaseDir" value="/home/ayansys123/Desktop/climb-content/content/" />
-          <property name="contentDirPrefix" value="/CLIMB/images/thumbnails/content/"/>
-          <property name="climbRootPrefix" value="/CLIMB2/" />
-          <property name="maxSubdirs" value="10000" />
-	   
-	</bean> -->
 	
 	<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
 	   <property name="definitions">

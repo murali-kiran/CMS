@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.apache.tomcat.util.http.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
@@ -87,7 +86,18 @@ public class MediaUploadService {
 		model.addAttribute("uploadFile", mediaUploadModel);
 		
 	}
+
+	public void showMediaContent(ModelMap model,Integer mediaId){
+
+		
+		logger.info("show media content service");
+		
+		List<MediaContent> mediaContentList = mediaContentDao.findByProperty("media", mediaId);
+		model.addAttribute("mediaContentList",mediaContentList);
+		model.addAttribute("relativePath",applicationProperties.getMediaAbsolutePath());
+        
 	
+	}
 public void edit(ModelMap model,Integer mediaId){
 		
 		logger.info("upload service");
@@ -242,7 +252,7 @@ public void saveUpload(MediaUploadModel mediaUploadModel) throws Exception{
 		
 		
 		if(offlineConversion && mediaUploadModel.getMediaId()==null)
-			media.setMediaCycle(mediaCycleDao.findById(2));
+			media.setMediaCycle(mediaCycleDao.findById(1));
 		else
 			media.setMediaCycle(mediaCycleDao.findById(mediaUploadModel.getMediaCycleId()));
 		
@@ -267,14 +277,15 @@ public void saveUpload(MediaUploadModel mediaUploadModel) throws Exception{
 		media.setMediaEndTime(toPublishDate);
 		
 		
-		media.setMediaProcessState(mediaProcessStateDao.findById(1));//not started
+		
 		if(mediaUploadModel.getMediaId() == null)
 		{
-			media.setMediaProcessState(mediaProcessStateDao.findById(2));//not started
+			media.setMediaProcessState(mediaProcessStateDao.findById(1));//not started
 		   mediaDao.save(media);
 		}
-		else
+		else{
 			 mediaDao.update(media);
+		}
 		
 	
 		  insertMediaTags(media, mediaUploadModel.getTags());
@@ -293,6 +304,8 @@ public void saveUpload(MediaUploadModel mediaUploadModel) throws Exception{
 			throw new Exception("Upload Failed");
 		}
 		}//for	
+	  
+	  transcoding(media);
 	  }// mediaContentModelList	
 	 
 	}
@@ -365,6 +378,9 @@ public void saveUpload(MediaUploadModel mediaUploadModel) throws Exception{
 		try{
 		MediaType mediaType=media.getMediaType();
 		
+		media.setMediaProcessState(mediaProcessStateDao.findById(2));//not started
+		
+		mediaDao.update(media);
 		/*List<MediaSpecification> mediaSpecificationList=new ArrayList<MediaSpecification>();*/
 		
 		
@@ -380,7 +396,7 @@ public void saveUpload(MediaUploadModel mediaUploadModel) throws Exception{
 					String command=mediaSpecification.getTranscodingCommand();
 					command=command.replaceAll("@SOURCE@", applicationProperties.getMediaCompletePath()+mediaContent.getStoragePath());
 					
-					String newFileName=mediaUtils.renameMediaContentFile(""+media.getMediaId(),
+					String newFileName=mediaUtils.renameMediaContentFile(media.getMediaId()+"."+mediaSpecification.getMimeType().getMediaExtension(),
 							mediaSpecification.getWidth(), mediaSpecification.getHeight(),
 							mediaSpecification.getBitrate(), mediaSpecification.getMediaContentPurpos().getMediaContentPurpose());
 					
@@ -397,7 +413,7 @@ public void saveUpload(MediaUploadModel mediaUploadModel) throws Exception{
 						mediaContentAuto.setMedia(media);
 						mediaContentAuto.setMediaSpecification(mediaSpecification);
 				  		
-				  		File f=new File(newFileName);
+				  		File f=new File(completePath);
 				  		mediaContentAuto.setMd5(mediaUtils.getMd5(f));
 				  		mediaContentAuto.setStoragePath(relativePath);
 				  		mediaContentDao.save(mediaContentAuto);
@@ -407,7 +423,9 @@ public void saveUpload(MediaUploadModel mediaUploadModel) throws Exception{
 				}
 			}
 			
-	
+			media.setMediaProcessState(mediaProcessStateDao.findById(3));
+			media.setMediaCycle(mediaCycleDao.findById(2));
+			mediaDao.update(media);
 		
 		}catch(Exception e){logger.error("error while conversion",e);}
 	}

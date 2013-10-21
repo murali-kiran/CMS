@@ -1,7 +1,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<script type="text/javascript" src="<%=request.getContextPath()%>/resources/script/climb3.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/resources/script/cms.js"></script>
 <script>
 
  $(document).ready(function(){

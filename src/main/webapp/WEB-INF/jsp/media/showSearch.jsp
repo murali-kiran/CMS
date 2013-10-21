@@ -1,7 +1,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<script type="text/javascript" src="<%=request.getContextPath()%>/resources/script/climb3.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/resources/script/cms.js"></script>
 <script>
 
  $(document).ready(function(){
@@ -16,8 +16,8 @@
 
 %>
 <div style="width: 100%;display: block;border: 1px solid #95B8E7;">
-<div class="panel-header panel-title">Upload</div>
-<%if(s != null && !s.equalsIgnoreCase("mapping")){ ;%>
+<div class="panel-header panel-title">Search</div>
+<%if(s == null /* && !s.equalsIgnoreCase("mapping") */){ ;%>
 <form:form method="post" id="feedbackform" name="feedbackform"  commandName="searchMedia"
                            action="${pageContext.servletContext.contextPath}/searchMedia" escape="false" enctype="multipart/form-data">
 

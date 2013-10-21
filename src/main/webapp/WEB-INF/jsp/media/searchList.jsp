@@ -33,6 +33,7 @@
 		 <td><c:out value="${media.mediaType.mediaTypeName}" /></td>
 		<td><c:out value="${media.description}" /></td>
 		<td><a href="editMedia?mediaId=<c:out value="${media.mediaId}" />">Edit </a></td>
+		<td><a href="showMediaContent?mediaId=<c:out value="${media.mediaId}" />">MediaContents </a></td>
 	</tr>
 </c:forEach>
 </table>
