@@ -126,6 +126,7 @@ public class MediaGroupService {
 				mediaGroup.setMediaGroupId(mediaSubGroup.getChildMediaGroup().getMediaGroupId());
 			//	mediaGroup.setMediaGroupPreviewId(mediaSubGroup.getChildMediaGroup().getMediaGroupPreviewId());
 			//	mediaGroup.setMediaGroupDescription(mediaSubGroup.getChildMediaGroup().getMediaGroupDescription());
+				mediaGroup.setMediaSubGroupId(mediaSubGroup.getSubGroupId());
 				mediaGroup.setCheckStatus(true);
 				mediaGroup.setParentmgId(parentMediaGroupId);
 				mediaGroupList.add(mediaGroup);
@@ -260,6 +261,65 @@ public class MediaGroupService {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+
+
+	public void addMediaGroup(MediaGroupModel mediaGroupModel) {
+		// TODO Auto-generated method stub
+		try {
+			String[] selectedGroup = mediaGroupModel.getSelectedMediaGroup();
+			MediaGroup mediaGroup1 = mediaGroupDao.findById(mediaGroupModel.getParentmgId());
+			if(mediaGroup1 != null){
+				for (String string : selectedGroup) {
+					MediaGroup mediaGroup = mediaGroupDao.findById(Integer.parseInt(string));
+					if(mediaGroup != null){
+						MediaSubGroup mediaSubGroup = new MediaSubGroup();
+						mediaSubGroup.setParentMediaGroup(mediaGroup1);
+						mediaSubGroup.setChildMediaGroup(mediaGroup);
+						mediaSubGroup.setGroupOrder(0);
+						mediaSubGroupDao.save(mediaSubGroup);
+					}
+						
+				}
+			}
+		} catch (RuntimeException e) {
+			// TODO: handle exception
+			throw e;
+		}
+	}
+	public void remAddOrderMediaGroup(MediaGroupModel mediaGroupModel) {
+		// TODO Auto-generated method stub
+		try {
+			//reused SelectedMediaGroup for media sub group id
+			List<MediaSubGroup> mediaSubGroupMedias = mediaSubGroupDao.findByProperty("parentMediaGroup", mediaGroupModel.getParentmgId());
+			String[] selectedGroup = mediaGroupModel.getSelectedMediaGroup();
+			MediaGroup mediaGroup1 = mediaGroupDao.findById(mediaGroupModel.getParentmgId());
+			if(mediaGroup1 != null){
+				int i=1;
+				for (String string : selectedGroup) {
+					MediaSubGroup mediaSubGroup = mediaSubGroupDao.findById(Integer.parseInt(string));
+					if(mediaSubGroup != null){
+						mediaSubGroup.setGroupOrder(i);
+						mediaSubGroupDao.save(mediaSubGroup);
+					}
+					i++;
+				}
+			}
+			
+			for (MediaSubGroup mediaSubGroupMedia : mediaSubGroupMedias) {
+				boolean b = false;
+				for (String str : selectedGroup) {
+					if(mediaSubGroupMedia.getSubGroupId() == Integer.parseInt(str))
+						b = true;
+				}
+				if(!b){
+					mediaSubGroupDao.delete(mediaSubGroupMedia);
+				}
+			}
+		} catch (RuntimeException e) {
+			// TODO: handle exception
+			throw e;
 		}
 	}
 }
