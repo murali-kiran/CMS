@@ -33,8 +33,8 @@
 		<td><c:out value="${mediaGroup.description}" /></td> --%>
 		<td>
 		<c:choose>
-		  <c:when test="${mediaGroup.checkStatus}"><input type="checkbox" name="selectedMediaGroup" value="${mediaGroup.mediaGroupId}" checked="${mediaGroup.checkStatus}"/></c:when>
-		  <c:otherwise><input type="checkbox" name="selectedMedia" value="${mediaGroup.mediaGroupId}"/></c:otherwise>
+		  <c:when test="${mediaGroup.checkStatus}"><input type="checkbox" name="selectedMediaGroup" value="${mediaGroup.mediaSubGroupId}" checked="${mediaGroup.checkStatus}"/></c:when>
+		  <c:otherwise><input type="checkbox" name="selectedMediaGroup" value="${mediaGroup.mediaSubGroupId}"/></c:otherwise>
 		</c:choose>
 		<input type="hidden" name="parentmgid" value="${mediaGroup.parentmgId}"/>
 		</td>
@@ -81,7 +81,7 @@
 		<td>
 		<c:choose>
 		  <c:when test="${mediaGroup.checkStatus}"><input type="checkbox" name="selectedMediaGroup" value="${mediaGroup.mediaGroupId}" checked="${mediaGroup.checkStatus}"/></c:when>
-		  <c:otherwise><input type="checkbox" name="selectedMedia" value="${mediaGroup.mediaGroupId}"/></c:otherwise>
+		  <c:otherwise><input type="checkbox" name="selectedMediaGroup" value="${mediaGroup.mediaGroupId}"/></c:otherwise>
 		</c:choose>
 		<input type="hidden" name="parentmgid" value="${mediaGroup.parentmgId}"/>
 		</td>

@@ -171,6 +171,46 @@ public class MediaGroupController {
 		mediaGroupService.listGroup(model);
 		return "mediaGroupList";
 	}
+	
+	
+	@RequestMapping(value="/remAddOrderMediaGroup",  method=RequestMethod.POST)
+	public String remAddOrderMediaGroup(@ModelAttribute("mediaGroupList") MediaGroupModel mediaGroupModel,
+			BindingResult result, SessionStatus status,ModelMap model){
+		String message = null;
+			//System.out.println("mm"+mediaModel.getSelectedMedia().length);
+		if(mediaGroupModel != null && mediaGroupModel.getSelectedMediaGroup() != null && mediaGroupModel.getSelectedMediaGroup().length > 0){
+		try {
+			mediaGroupService.remAddOrderMediaGroup(mediaGroupModel);
+			message = "mapping success";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			message = "mapping failed";
+		}
+		}
+		//mediaGroupService.getMedia(model, mediaGroupModel.getMgid());
+		//model.addAttribute("mgid", mediaModel.getMgid());
+		mediaGroupService.listGroup(model);
+		return "mediaGroupList";
+	}
+	@RequestMapping(value="/saveMappedMediaGroup",  method=RequestMethod.POST)
+	public String saveMappedMediaGroup(@ModelAttribute("remMediaList") MediaGroupModel mediaGroupModel,
+			BindingResult result, SessionStatus status,ModelMap model){
+		String message = null;
+			//System.out.println("mm"+mediaModel.getSelectedMedia().length);
+		if(mediaGroupModel != null && mediaGroupModel.getSelectedMediaGroup() != null && mediaGroupModel.getSelectedMediaGroup().length > 0){
+		try {
+			mediaGroupService.addMediaGroup(mediaGroupModel);
+			message = "mapping success";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			message = "mapping failed";
+		}
+		}
+		mediaGroupService.listGroup(model);
+		return "mediaGroupList";
+	}
 	@RequestMapping("/welcome")
 	public String welcome(ModelMap model){
 		
