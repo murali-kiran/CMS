@@ -190,8 +190,10 @@ public class MediaGroupController {
 		}
 		//mediaGroupService.getMedia(model, mediaGroupModel.getMgid());
 		//model.addAttribute("mgid", mediaModel.getMgid());
-		mediaGroupService.listGroup(model);
-		return "mediaGroupList";
+		//mediaGroupService.listGroup(model);
+		mediaGroupService.getGroups(model, mediaGroupModel.getParentmgId());
+		model.addAttribute("mgid", mediaGroupModel.getParentmgId());
+		return "selectMediaGroup";
 	}
 	@RequestMapping(value="/saveMappedMediaGroup",  method=RequestMethod.POST)
 	public String saveMappedMediaGroup(@ModelAttribute("remMediaList") MediaGroupModel mediaGroupModel,

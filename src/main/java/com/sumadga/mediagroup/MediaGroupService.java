@@ -255,6 +255,7 @@ public class MediaGroupService {
 				mediaGroupModel2.setMediaGroupId(mediaGroup.getMediaGroupId());
 				mediaGroupModel2.setMediaGroupName(mediaGroup.getMediaGroupName());
 				mediaGroupModel2.setMediaGroupTitle(mediaGroup.getMediaGroupTitle());
+				mediaGroupModel2.setParentmgId(mediaGroupModel.getParentmgId());
 				mediaGroupList.add(mediaGroupModel2);
 			}
 			model.addAttribute("remMediaGroupList", mediaGroupList);
@@ -301,7 +302,7 @@ public class MediaGroupService {
 					MediaSubGroup mediaSubGroup = mediaSubGroupDao.findById(Integer.parseInt(string));
 					if(mediaSubGroup != null){
 						mediaSubGroup.setGroupOrder(i);
-						mediaSubGroupDao.save(mediaSubGroup);
+						mediaSubGroupDao.update(mediaSubGroup);
 					}
 					i++;
 				}

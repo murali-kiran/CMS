@@ -4,11 +4,11 @@
 
 <c:choose>
     <c:when test="${empty mediaGroupList}">
-    	No media found. Please search and add media
+    	No Sub Groups found. Please search and add sub groups
     </c:when>
     <c:otherwise> 
 <form:form method="post" id="feedbackform" name="feedbackform"  commandName="mediaGroupList"
-                           action="${pageContext.servletContext.contextPath}/remAddOrderMedia" >
+                           action="${pageContext.servletContext.contextPath}/remAddOrderMediaGroup" >
 <table border="1" id="sort" class="grid">
 <thead>
 <tr>
@@ -36,7 +36,7 @@
 		  <c:when test="${mediaGroup.checkStatus}"><input type="checkbox" name="selectedMediaGroup" value="${mediaGroup.mediaSubGroupId}" checked="${mediaGroup.checkStatus}"/></c:when>
 		  <c:otherwise><input type="checkbox" name="selectedMediaGroup" value="${mediaGroup.mediaSubGroupId}"/></c:otherwise>
 		</c:choose>
-		<input type="hidden" name="parentmgid" value="${mediaGroup.parentmgId}"/>
+		<input type="hidden" name="parentmgId" value="${mediaGroup.parentmgId}"/>
 		</td>
 		
 	</tr>
@@ -83,7 +83,7 @@
 		  <c:when test="${mediaGroup.checkStatus}"><input type="checkbox" name="selectedMediaGroup" value="${mediaGroup.mediaGroupId}" checked="${mediaGroup.checkStatus}"/></c:when>
 		  <c:otherwise><input type="checkbox" name="selectedMediaGroup" value="${mediaGroup.mediaGroupId}"/></c:otherwise>
 		</c:choose>
-		<input type="hidden" name="parentmgid" value="${mediaGroup.parentmgId}"/>
+		<input type="hidden" name="parentmgId" value="${mediaGroup.parentmgId}"/>
 		</td>
 		
 	</tr>
