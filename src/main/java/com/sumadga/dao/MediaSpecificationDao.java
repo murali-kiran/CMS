@@ -138,7 +138,7 @@ public class MediaSpecificationDao {
 		logger.info("finding MediaSpecification instance with mediaTypeId and : isSource values"+mediaTypeId +", "+isSource);
 		try {
 			 String queryString = "select model from MediaSpecification model where " +
-			 		"model.mimeType= " + mediaTypeId + " and model.isSource="+isSource;
+			 		"model.mediaType= " + mediaTypeId + " and model.isSource="+isSource;
 			
 			Query query = entityManager
 					.createQuery(queryString, MediaSpecification.class);
@@ -168,7 +168,7 @@ public class MediaSpecificationDao {
 		logger.info("finding MediaSpecification instance with mediaTypeId , isSource  and parentSpecificationId values"+mediaTypeId +", "+isSource +", "+parentSpecificationId);
 		try {
 			 String queryString = "select model from MediaSpecification model where " +
-			 		"model.mimeType= " + mediaTypeId + " and model.isSource="+isSource + 
+			 		"model.mediaType= " + mediaTypeId + " and model.isSource="+isSource + 
 			 		" and model.parentSpecificationId = "+parentSpecificationId;
 			
 			Query query = entityManager

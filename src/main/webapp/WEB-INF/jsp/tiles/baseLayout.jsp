@@ -53,7 +53,7 @@ body, input{
 
 </STYLE>
 <title><tiles:insertAttribute name="title" ignore="true" /></title>
-<link rel="stylesheet" href="<%=request.getContextPath()%>/resources/css/climb3.css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/resources/css/cms.css">
 	<link rel="stylesheet" href="<%=request.getContextPath()%>/resources/css/jquery-ui.css" />
 	
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/css/easyui.css">
@@ -70,7 +70,7 @@ body, input{
      <script src="<%=request.getContextPath()%>/resources/script/jquery-ui.js"></script>
      
      <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/css/formwizard.css" />
-	<script type='text/javascript' src='http://code.jquery.com/jquery-1.4.4.min.js'></script>
+	<script type='text/javascript' src='<%=request.getContextPath()%>/resources/script/jquery-1.4.4.min.js'></script>
 	<script src="<%=request.getContextPath()%>/resources/script/formwizard.js" type="text/javascript"></script>
 	
 	<script src="<%=request.getContextPath()%>/resources/script/formwizard.js" type="text/javascript"></script>
