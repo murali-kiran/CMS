@@ -26,7 +26,7 @@
 		<td><c:out value="${mediaContent.mediaSpecification.width}" /></td>
 		<td><c:out value="${mediaContent.mediaSpecification.height}" /></td>
 		 <td><c:out value="${mediaContent.mediaSpecification.bitrate}" /></td> 
-		 <td><a href="<c:out value="${relativePath}" /><c:out value="${mediaContent.storagePath}" />">download</a></td>
+		 <td><a href="<%=request.getContextPath()%><c:out value="${relativePath}" /><c:out value="${mediaContent.storagePath}" />">download</a></td>
 	</tr>
 </c:forEach>
 </table>

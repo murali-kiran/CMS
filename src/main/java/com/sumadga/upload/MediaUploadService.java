@@ -396,6 +396,12 @@ public void saveUpload(MediaUploadModel mediaUploadModel) throws Exception{
 					String command=mediaSpecification.getTranscodingCommand();
 					command=command.replaceAll("@SOURCE@", applicationProperties.getMediaCompletePath()+mediaContent.getStoragePath());
 					
+					File f=new File(applicationProperties.getMediaCompletePath()+mediaContent.getStoragePath());
+					
+					if(f.exists())
+						logger.info("Source file exist ");
+					else
+						logger.info("Source file not exist ");
 					String newFileName=mediaUtils.renameMediaContentFile(media.getMediaId()+"."+mediaSpecification.getMimeType().getMediaExtension(),
 							mediaSpecification.getWidth(), mediaSpecification.getHeight(),
 							mediaSpecification.getBitrate(), mediaSpecification.getMediaContentPurpos().getMediaContentPurpose());
@@ -413,7 +419,7 @@ public void saveUpload(MediaUploadModel mediaUploadModel) throws Exception{
 						mediaContentAuto.setMedia(media);
 						mediaContentAuto.setMediaSpecification(mediaSpecification);
 				  		
-				  		File f=new File(completePath);
+				  		/*File */f=new File(completePath);
 				  		mediaContentAuto.setMd5(mediaUtils.getMd5(f));
 				  		mediaContentAuto.setStoragePath(relativePath);
 				  		mediaContentDao.save(mediaContentAuto);

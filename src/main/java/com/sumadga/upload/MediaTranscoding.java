@@ -2,9 +2,11 @@ package com.sumadga.upload;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,33 @@ Logger logger = Logger.getLogger(MediaTranscoding.class);
 			throw new IOException();
 		}
 		
+		if(logger.isDebugEnabled()){
+			BufferedReader outReader = null;
+			BufferedReader errReader = null;
+			try{
+				outReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+				errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+				
+				String outLine = null;
+				String errLine = null;
+				
+				while ((outLine = outReader.readLine()) != null | (errLine = errReader.readLine()) != null) {
+					if (outLine != null)
+						logger.debug("Command : out: " + outLine);
+
+					if (errLine != null)
+						logger.debug("Command : err: " + errLine);
+				}
+			}catch (Exception e) {
+				logger.warn("Exception ignored : "+e.getMessage());
+			}finally{
+				try{
+				if(outReader!=null)
+					outReader.close();
+				if(errReader!=null){errReader.close();}
+				}catch(Exception e){}
+			}
+			}
 		try {
 			process.waitFor();
 			logger.info("Done. ");
