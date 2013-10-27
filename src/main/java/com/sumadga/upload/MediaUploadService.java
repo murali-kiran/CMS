@@ -452,6 +452,11 @@ public void saveUpload(MediaUploadModel mediaUploadModel) throws Exception{
 	public void searchMedia(ModelMap model,MediaUploadModel mediaUploadModel) {
 		List<Media> mediaModels = mediaDao.search(mediaUploadModel);
 		model.addAttribute("mediaList",mediaModels);
+		
+		model.addAttribute("mediaTypeList",mediaUtils.getMediaTypeList());
+		model.addAttribute("mediaCycleList",mediaUtils.getMediaCycleList());
+		//model.addAttribute("languageList",mediaUtils.getLanguageList());
+		model.addAttribute("searchMedia", mediaUploadModel);
 	}
 	
 }

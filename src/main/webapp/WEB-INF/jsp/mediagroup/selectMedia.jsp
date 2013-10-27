@@ -1,7 +1,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-
+<c:out value="${message}"></c:out>
 <c:choose>
     <c:when test="${empty mediaList}">
     	No media found. Please search and add media

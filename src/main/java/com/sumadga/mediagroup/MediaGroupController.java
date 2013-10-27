@@ -72,14 +72,19 @@ public class MediaGroupController {
 					mediaGroupService.saveGroup(mediaGroupModel);
 				
 				status.setComplete();
-				message = "upload success";
+				message = "Media Group created successfully";
 				mediaGroupService.createGroup(model);
 				mediaGroupService.listGroup(model);
+				model.addAttribute("message",message);
 				return "mediaGroupList";
 				}catch (Exception e) {
 					message=e.getMessage();
 					logger.error("Exception while saving uploaded files", e);
+					message = "Media Group creation falied due to "+e.getMessage();
+					model.addAttribute("message",message);
 				}
+				message = "Media Group creation falied due to internal error";
+				model.addAttribute("message",message);
 				return "addGroup";
 			}
 	}
@@ -142,15 +147,16 @@ public class MediaGroupController {
 		if(mediaModel != null && mediaModel.getSelectedMedia() != null && mediaModel.getSelectedMedia().length > 0){
 		try {
 			mediaGroupService.mapMedia(mediaModel);
-			message = "mapping success";
+			message = "Media order/removel success";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			message = "mapping failed";
+			message = "Media order/removel failed";
 		}
 		}
 		mediaGroupService.getMedia(model, mediaModel.getMgid());
 		model.addAttribute("mgid", mediaModel.getMgid());
+		model.addAttribute("message",message);
 		return "selectMedia";
 	}
 	@RequestMapping(value="/saveMappedMedia",  method=RequestMethod.POST)
@@ -161,7 +167,7 @@ public class MediaGroupController {
 		if(mediaModel != null && mediaModel.getSelectedMedia() != null && mediaModel.getSelectedMedia().length > 0){
 		try {
 			mediaGroupService.addMedia(mediaModel);
-			message = "mapping success";
+			message = "Media mapped successfully";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -169,6 +175,7 @@ public class MediaGroupController {
 		}
 		}
 		mediaGroupService.listGroup(model);
+		model.addAttribute("message",message);
 		return "mediaGroupList";
 	}
 	
@@ -181,11 +188,11 @@ public class MediaGroupController {
 		if(mediaGroupModel != null && mediaGroupModel.getSelectedMediaGroup() != null && mediaGroupModel.getSelectedMediaGroup().length > 0){
 		try {
 			mediaGroupService.remAddOrderMediaGroup(mediaGroupModel);
-			message = "mapping success";
+			message = "Media Group order/removal success";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			message = "mapping failed";
+			message = "Media Group order/removal failed";
 		}
 		}
 		//mediaGroupService.getMedia(model, mediaGroupModel.getMgid());
@@ -193,6 +200,7 @@ public class MediaGroupController {
 		//mediaGroupService.listGroup(model);
 		mediaGroupService.getGroups(model, mediaGroupModel.getParentmgId());
 		model.addAttribute("mgid", mediaGroupModel.getParentmgId());
+		model.addAttribute("message",message);
 		return "selectMediaGroup";
 	}
 	@RequestMapping(value="/saveMappedMediaGroup",  method=RequestMethod.POST)
@@ -203,14 +211,15 @@ public class MediaGroupController {
 		if(mediaGroupModel != null && mediaGroupModel.getSelectedMediaGroup() != null && mediaGroupModel.getSelectedMediaGroup().length > 0){
 		try {
 			mediaGroupService.addMediaGroup(mediaGroupModel);
-			message = "mapping success";
+			message = "Media Group mapping success";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			message = "mapping failed";
+			message = "Media group mapping failed";
 		}
 		}
 		mediaGroupService.listGroup(model);
+		model.addAttribute("message",message);
 		return "mediaGroupList";
 	}
 	@RequestMapping("/welcome")
