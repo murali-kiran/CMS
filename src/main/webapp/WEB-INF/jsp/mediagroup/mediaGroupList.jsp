@@ -53,8 +53,6 @@ jQuery("#list").jqGrid({
 
 });
 
- 
-
 </script>
 
 <fieldset>

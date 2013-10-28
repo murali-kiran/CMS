@@ -98,7 +98,8 @@ public class MediaUploadController {
 				message=e.getMessage();
 				logger.error("Exception while saving uploaded files", e);
 			}
-			
+			//mediaUploadService.searchMedia(model,null);
+			model.addAttribute("message",message);
 			return showSearch(model);
 		}
 		
@@ -108,7 +109,7 @@ public class MediaUploadController {
 	public String showSearch(ModelMap model){
 		
 		logger.info("upload");
-		
+		mediaUploadService.searchMedia(model,null);
 		mediaUploadService.search(model);
 		
 		return "showSearch";
@@ -120,10 +121,12 @@ public class MediaUploadController {
 	
         String message = null;		
 		logger.info("uploadfile "+mediaUploadModel.toString()+""+mediaUploadModel.getMediaId());
+		
+		//mediaUploadService.search(model);
 		mediaUploadService.searchMedia(model,mediaUploadModel);
 		
-		
-		return "searchList";
+		return "showSearch";
+		//return "searchList";
 	}
 }
 

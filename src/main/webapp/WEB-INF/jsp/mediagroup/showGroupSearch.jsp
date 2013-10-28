@@ -11,6 +11,7 @@
 }); 
 
 </script>
+<c:out value="${message}"></c:out>
 <div>
 <form:form method="post" id="feedbackform" name="feedbackform"  commandName="searchMediaGroup"
                            action="${pageContext.servletContext.contextPath}/showRemMediaGroup" escape="false" enctype="multipart/form-data">
