@@ -156,10 +156,10 @@ public class MediaDao  {
 			if(mediaUploadModel.getMediaTypeId() != null && mediaUploadModel.getMediaTypeId() != -1)
 				queryString.append(" and model.mediaType="+mediaUploadModel.getMediaTypeId());
 		}
-		
+		queryString.append(" order by model.createdTime,model.modifiedTime");
 		Query query = entityManager
 				.createQuery(queryString.toString(), Media.class);
-		
+		query.setMaxResults(20);
 		return query.getResultList();
 	}
 
