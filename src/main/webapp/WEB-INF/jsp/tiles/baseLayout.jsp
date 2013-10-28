@@ -59,14 +59,13 @@ body, input{
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/css/easyui.css">
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/css/icon.css">
 	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/css/demo.css">
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/themes/demo.css">
+	<link href="${pageContext.servletContext.contextPath}/resources/script/jqgrid/gridJS/ui.jqgrid.css" rel="stylesheet" type="text/css" />
+	<link href="${pageContext.servletContext.contextPath}/resources/script/jqgrid/gridJS/jquery-ui-1.10.1.custom.css" rel="stylesheet" type="text/css"  />
 	
+	 
 	
-
-
-<link rel="stylesheet" type="text/css"
-	href="<%=request.getContextPath()%>/resources/themes/demo.css">
-	
-	<script type="text/javascript" src="<%=request.getContextPath()%>/resources/script/jquery-1.10.2.js"></script> 
+	 <script type="text/javascript" src="<%=request.getContextPath()%>/resources/script/jquery-1.10.2.js"></script> 
      <script src="<%=request.getContextPath()%>/resources/script/jquery-ui.js"></script>
      
      <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/resources/css/formwizard.css" />
@@ -74,6 +73,7 @@ body, input{
 	<script src="<%=request.getContextPath()%>/resources/script/formwizard.js" type="text/javascript"></script>
 	
 	<script src="<%=request.getContextPath()%>/resources/script/formwizard.js" type="text/javascript"></script>
+		
     <script type="text/javascript">
   /* $(function() {
     $( ".datepicker" ).datepicker();
