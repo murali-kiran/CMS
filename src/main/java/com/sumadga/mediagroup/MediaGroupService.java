@@ -1,28 +1,25 @@
 package com.sumadga.mediagroup;
 
-import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 
-import com.sumadga.dao.MediaContentDao;
 import com.sumadga.dao.MediaDao;
 import com.sumadga.dao.MediaGroupDao;
 import com.sumadga.dao.MediaGroupMediaDao;
-import com.sumadga.dao.MediaSpecificationDao;
 import com.sumadga.dao.MediaSubGroupDao;
 import com.sumadga.dto.Media;
 import com.sumadga.dto.MediaGroup;
 import com.sumadga.dto.MediaGroupMedia;
-import com.sumadga.dto.MediaSpecification;
 import com.sumadga.dto.MediaSubGroup;
+import com.sumadga.model.JqGridInfo;
+import com.sumadga.model.MediaGroupBean;
 import com.sumadga.upload.MediaUploadModel;
 import com.sumadga.utils.MediaUtils;
 
@@ -78,6 +75,7 @@ public class MediaGroupService {
 			throw e;
 		}
 	}
+	
 	public void listGroup(ModelMap model) {
 		// TODO Auto-generated method stub
 		//List<MediaGroupModel> mediaGroups = new ArrayList<MediaGroupModel>();
@@ -85,6 +83,35 @@ public class MediaGroupService {
 		System.out.println("size:"+mediaGroupList.size());
 		model.addAttribute("groupList",mediaGroupList);
 	}
+	
+	public JqGridInfo<MediaGroupBean> listAjaxGroup() {
+		List<MediaGroup> mediaGroupList = mediaGroupDao.findAll();
+		int totalNumberOfPages = 1;
+	    int currentPageNumber = 1;
+	    int totalNumberOfRecords = mediaGroupList.size();
+		
+		List<MediaGroupBean> rows = new ArrayList<MediaGroupBean>();
+		for(MediaGroup mediaGroup : mediaGroupList){
+			MediaGroupBean groupBean = new MediaGroupBean();
+			groupBean.setMediaGroupName(mediaGroup.getMediaGroupName());
+			groupBean.setMediaGroupId(mediaGroup.getMediaGroupId());
+			groupBean.setMediaGroupTitle(mediaGroup.getMediaGroupTitle());
+			groupBean.setMediaGroupPreviewId(mediaGroup.getMediaGroupPreviewId());
+			groupBean.setMediaGroupDescription(mediaGroup.getMediaGroupDescription());
+			groupBean.setMapGroup(mediaGroup.getMediaGroupId());
+			groupBean.setMapMedia(mediaGroup.getMediaGroupId());
+			
+			rows.add(groupBean);
+		}
+		
+        JqGridInfo<MediaGroupBean> jqGridInfo = new JqGridInfo<MediaGroupBean>(totalNumberOfPages, currentPageNumber, totalNumberOfRecords, rows);
+		
+		System.out.println(jqGridInfo.getJsonString());
+		
+		return jqGridInfo;
+		
+	}
+	
 	public void getMedia(ModelMap model, Integer mediaGroupId) {
 		// TODO Auto-generated method stub
 		try {

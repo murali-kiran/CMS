@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 
+import com.sumadga.model.JqGridInfo;
+import com.sumadga.model.MediaGroupBean;
 import com.sumadga.upload.MediaUploadModel;
 
 
@@ -85,11 +88,15 @@ public class MediaGroupController {
 	}
 	@RequestMapping("/listMediaGroup")
 	public String listGroup(ModelMap model){
-		
 		logger.info("upload");
-		mediaGroupService.listGroup(model);
 		return "mediaGroupList";
-		
+	}
+
+	
+	@RequestMapping("/listMediaGroupAjaxCopy")
+	public @ResponseBody JqGridInfo<MediaGroupBean> listGroupAjaxCopy(ModelMap model){
+		logger.info("upload");
+		return mediaGroupService.listAjaxGroup();
 	}
 	
 	@RequestMapping(value = "/showSearchMap",  method=RequestMethod.GET)
