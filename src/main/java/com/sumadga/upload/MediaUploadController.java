@@ -91,7 +91,7 @@ public class MediaUploadController {
 				mediaUploadService.saveUpload(mediaUploadModel);
 			
 			status.setComplete();
-			message = "upload success";
+			message = "Media uploaded successfully";
 			mediaUploadService.upload(model);
 			
 			}catch (Exception e) {
@@ -100,7 +100,11 @@ public class MediaUploadController {
 			}
 			//mediaUploadService.searchMedia(model,null);
 			model.addAttribute("message",message);
-			return showSearch(model);
+			mediaUploadService.searchMedia(model,null);
+			mediaUploadService.search(model);
+			
+			return "showSearch";
+			//return showSearch(model);
 		}
 		
 	}

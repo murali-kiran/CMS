@@ -156,7 +156,7 @@ public class MediaDao  {
 			if(mediaUploadModel.getMediaTypeId() != null && mediaUploadModel.getMediaTypeId() != -1)
 				queryString.append(" and model.mediaType="+mediaUploadModel.getMediaTypeId());
 		}
-		queryString.append(" order by model.createdTime,model.modifiedTime");
+		queryString.append(" order by model.createdTime desc, model.modifiedTime desc");
 		Query query = entityManager
 				.createQuery(queryString.toString(), Media.class);
 		query.setMaxResults(20);

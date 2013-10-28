@@ -85,15 +85,15 @@ public class MediaType implements Serializable {
 		this.modifiedTime = modifiedTime;
 	}
 
-	public List<Media> getMedias() {
+	/*public List<Media> getMedias() {
 		return this.medias;
 	}
 
 	public void setMedias(List<Media> medias) {
 		this.medias = medias;
-	}
+	}*/
 
-	public Media addMedia(Media media) {
+	/*public Media addMedia(Media media) {
 		getMedias().add(media);
 		media.setMediaType(this);
 
@@ -105,9 +105,9 @@ public class MediaType implements Serializable {
 		media.setMediaType(null);
 
 		return media;
-	}
+	}*/
 
-	public List<MediaSpecification> getMediaSpecifications() {
+	/*public List<MediaSpecification> getMediaSpecifications() {
 		return this.mediaSpecifications;
 	}
 
@@ -127,15 +127,15 @@ public class MediaType implements Serializable {
 		mediaSpecification.setMediaType(null);
 
 		return mediaSpecification;
-	}
+	}*/
 
 	@Override
 	public String toString() {
 		return "MediaType [mediaTypeId=" + mediaTypeId + ", createdTime="
 				+ createdTime + ", mediaTypeName=" + mediaTypeName
 				+ ", mediaTypeTitle=" + mediaTypeTitle + ", modifiedTime="
-				+ modifiedTime + ", medias=" + medias
-				+ ", mediaSpecifications=" + mediaSpecifications + "]";
+				+ modifiedTime 
+				 + "]";
 	}
 
 }

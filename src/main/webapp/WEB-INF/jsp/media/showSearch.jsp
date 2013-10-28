@@ -15,6 +15,7 @@
 //String action = "/searchMedia";
 
 %>
+<c:out value="${message}"></c:out>
 <div style="width: 100%;display: block;border: 1px solid #95B8E7;">
 <div class="panel-header panel-title">Search</div>
 <%if(s == null /* && !s.equalsIgnoreCase("mapping") */){ ;%>
