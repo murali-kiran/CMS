@@ -28,12 +28,41 @@ public class MediaAppContent implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="media_id", nullable=false)
 	private Media media;
-
+	@ManyToOne
+	@JoinColumn(name="os_id", nullable=false)
+	private Os os;
+	@ManyToOne
+	@JoinColumn(name="mime_type_id", nullable=false)
+	private MimeType mimeType;
 	public MediaAppContent() {
 	}
 
 
 
+	public Integer getMediaAppContentId() {
+		return mediaAppContentId;
+	}
+	public void setMediaAppContentId(Integer mediaAppContentId) {
+		this.mediaAppContentId = mediaAppContentId;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public Os getOs() {
+		return os;
+	}
+	public void setOs(Os os) {
+		this.os = os;
+	}
+	public MimeType getMimeType() {
+		return mimeType;
+	}
+	public void setMimeType(MimeType mimeType) {
+		this.mimeType = mimeType;
+	}
 	public String getStoragePath() {
 		return this.storagePath;
 	}

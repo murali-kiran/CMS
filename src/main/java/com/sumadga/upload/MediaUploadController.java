@@ -39,6 +39,16 @@ public class MediaUploadController {
 		return "uploadFile";
 		
 	}
+	@RequestMapping("/appUpload")
+	public String appUpload(ModelMap model){
+		
+		logger.info("upload");
+		
+		mediaUploadService.upload(model);
+		
+		return "uploadApp";
+		
+	}
 	@RequestMapping("/editMedia")
 	public String upload(@RequestParam("mediaId") Integer mediaId,ModelMap model){
 		
