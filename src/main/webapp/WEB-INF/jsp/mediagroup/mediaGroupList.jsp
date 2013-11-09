@@ -30,14 +30,14 @@ jQuery("#list").jqGrid({
 					    return "<a href=\"showMappedGroup?mgid=" + rowObject.mediaGroupId + "\" style=\"color: #0000FF\" > map group </a>";
 					}} ],
 		paging: true,
-	    rowNum:10,
+	    rowNum:2,
 		rowList:[10,20,30],
 	    pager: "#page",
         caption: "Media Group List", 
 	    sortable: true,
         viewrecords: true,
         jsonReader : { 
-        root: "rows", 
+        rows: "rows", 
         page: "page", 
         total: "total", 
         repeatitems: false,
