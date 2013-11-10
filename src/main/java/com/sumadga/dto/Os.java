@@ -12,7 +12,7 @@ import java.util.List;
  * 
  */
 @Entity
-@Table(name="media")
+@Table(name="os")
 public class Os implements Serializable {
 	private static final long serialVersionUID = 1L;
 
