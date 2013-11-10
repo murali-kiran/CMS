@@ -55,6 +55,10 @@ public class Media implements Serializable {
 	@JoinColumn(name="media_cycle_id", nullable=false)
 	private MediaCycle mediaCycle;
 
+	@ManyToOne
+	@JoinColumn(name="media_provider_id", nullable=false)
+	private MediaProvider mediaProvider;
+	
 	//bi-directional many-to-one association to MediaProcessState
 	@ManyToOne
 	@JoinColumn(name="media_process_state_id", nullable=false)
@@ -190,6 +194,16 @@ public class Media implements Serializable {
 
 	public void setMediaGroupMedias(List<MediaGroupMedia> mediaGroupMedias) {
 		this.mediaGroupMedias = mediaGroupMedias;
+	}
+
+	
+	
+	public MediaProvider getMediaProvider() {
+		return mediaProvider;
+	}
+
+	public void setMediaProvider(MediaProvider mediaProvider) {
+		this.mediaProvider = mediaProvider;
 	}
 
 	public MediaGroupMedia addMediaGroupMedia(MediaGroupMedia mediaGroupMedia) {
