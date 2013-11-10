@@ -17,6 +17,7 @@ import com.sumadga.dao.MediaContentDao;
 import com.sumadga.dao.MediaCycleDao;
 import com.sumadga.dao.MediaDao;
 import com.sumadga.dao.MediaProcessStateDao;
+import com.sumadga.dao.MediaProviderDao;
 import com.sumadga.dao.MediaSpecificationDao;
 import com.sumadga.dao.MediaTagDao;
 import com.sumadga.dao.MediaTypeDao;
@@ -58,6 +59,9 @@ public class MediaUploadService {
 	LanguageDao languageDao;
 	
 	@Autowired
+	MediaProviderDao mediaProviderDao;
+	
+	@Autowired
 	MediaProcessStateDao mediaProcessStateDao;
 	
 	@Autowired
@@ -79,6 +83,7 @@ public class MediaUploadService {
 		model.addAttribute("mediaTypeList",mediaUtils.getMediaTypeList());
 		model.addAttribute("mediaCycleList",mediaUtils.getMediaCycleList());
 		model.addAttribute("languageList",mediaUtils.getLanguageList());
+		model.addAttribute("mediaProviderList",mediaUtils.getMediaProviderList());
 		
 		
         MediaUploadModel mediaUploadModel = new MediaUploadModel();
@@ -105,7 +110,7 @@ public void edit(ModelMap model,Integer mediaId){
 		model.addAttribute("mediaTypeList",mediaUtils.getMediaTypeList());
 		model.addAttribute("mediaCycleList",mediaUtils.getMediaCycleList());
 		model.addAttribute("languageList",mediaUtils.getLanguageList());
-		
+		model.addAttribute("mediaProviderList",mediaUtils.getMediaProviderList());
 		
         MediaUploadModel mediaUploadModel = new MediaUploadModel();
         
@@ -235,6 +240,7 @@ public void edit(ModelMap model,Integer mediaId){
 public void saveUpload(MediaUploadModel mediaUploadModel) throws Exception{
 		
 		boolean offlineConversion = true;
+		logger.info(" MediaProviderId "+mediaUploadModel.getMediaProviderId());
 		logger.info(" MediaTypeId "+mediaUploadModel.getMediaTypeId());
 		logger.info(" MediaCycleId "+mediaUploadModel.getMediaCycleId());
 		logger.info(" LanguageId "+mediaUploadModel.getLanguageId());
@@ -259,6 +265,7 @@ public void saveUpload(MediaUploadModel mediaUploadModel) throws Exception{
 		media.setMediaType(mediaTypeDao.findById(mediaUploadModel.getMediaTypeId()));
 		media.setDescription(mediaUploadModel.getDescription());
 		media.setLanguage(languageDao.findById(mediaUploadModel.getLanguageId()));
+		media.setMediaProvider(mediaProviderDao.findById(mediaUploadModel.getMediaProviderId()));
 		media.setMediaTitle(mediaUploadModel.getMediaTitle());
 		media.setMediaName(mediaUploadModel.getMediaName());
 		
