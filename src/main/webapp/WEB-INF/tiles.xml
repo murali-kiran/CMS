@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+<tiles-definitions>
+
+	<definition name="base.definition" template="/WEB-INF/jsp/tiles/sampleLayout.jsp">
+		<put-attribute name="title" value="" />
+		<put-attribute name="header"
+			value="/WEB-INF/jsp/tiles/sampleHeader.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer"
+			value="/WEB-INF/jsp/tiles/sampleFooter.jsp" />
+	</definition>
+
+	<definition name="sampleLandingPage" extends="base.definition">
+		<put-attribute name="title" value="Sample Service" />
+		<put-attribute name="body"
+			value="/WEB-INF/jsp/views/sampleService/landingPage.jsp" />
+	</definition>
+
+	<definition name="landingPage2" extends="base.definition">
+		<put-attribute name="title" value="Sample Service" />
+		<put-attribute name="body"  value="/WEB-INF/jsp/views/sampleService/landingPage2.jsp" />
+	</definition>
+	
+	<definition name="service2CategoryPage" extends="base.definition">
+		<put-attribute name="title" value="Sample Service" />
+		<put-attribute name="body"  value="/WEB-INF/jsp/views/sampleService/service2CategoryPage.jsp" />
+	</definition>
+	
+
+</tiles-definitions>

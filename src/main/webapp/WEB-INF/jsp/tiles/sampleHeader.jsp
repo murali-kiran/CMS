@@ -1,0 +1,2 @@
+<div style="background-image: url('${pageContext.servletContext.contextPath}/images/logos/idea-bg-header.png');background-repeat: repeat-x;background-color: #ff0000;margin-bottom: 1px;text-align: left;padding-top:8px;padding-bottom:8px;">
+</div>
