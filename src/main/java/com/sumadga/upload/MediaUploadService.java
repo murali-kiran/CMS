@@ -202,14 +202,16 @@ public void edit(ModelMap model,Integer mediaId){
 				mediaContentModel.setHeight(mediaSpecification.getHeight());
 				mediaContentModel.setMimeType(mediaSpecification.getMimeType().getMimeType());
 				mediaContentModel.setPurpose(mediaSpecification.getMediaContentPurpos().getMediaContentPurpose());
-				if(mediaSpecification.getMimeType().getMimeType().contains("image"))
+				/*if(mediaSpecification.getMimeType().getMimeType().contains("image"))
 				mediaContentModel.setLabel(mediaContentModel.getWidth()+
 						"x"+mediaContentModel.getHeight()+" size "+
 						mediaSpecification.getMimeType().getMediaExtension()+ " image");
 				else
 					mediaContentModel.setLabel(mediaContentModel.getWidth()+
 							"x"+mediaContentModel.getHeight()+" size "+
-							mediaSpecification.getBitrate()+ " bitrate Video");
+							mediaSpecification.getBitrate()+ " bitrate Video");*/
+				mediaContentModel.setLabel(
+						mediaSpecification.getMediaSpecificationsName());
 				/*mediaContentModel.setIsLocal(mediaSpecification.get);*/
 				mediaContentModel.setMediaSpecificationId(mediaSpecification.getMediaSpecificationId());
 				mediaContentModel.setId(i);
