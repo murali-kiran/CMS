@@ -73,7 +73,8 @@ public class MediaUtils {
 	    	Authentication authentication=context.getAuthentication();
 	    	if(authentication !=null){
 	    		String userName=authentication.getName();
-	    		
+	    		logger.info("User name "+userName);
+	    		return mediaProviderDao.findByUserName(userName);
 	    	}
     	}catch(Exception e){
     		logger.error("Exception caught : ",e);

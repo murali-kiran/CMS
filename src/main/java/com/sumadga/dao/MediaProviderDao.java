@@ -136,4 +136,20 @@ public class MediaProviderDao {
 			throw re;
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MediaProvider> findByUserName(String userName) {
+		logger.info("finding all MediaProvider instances");
+		try {
+			final String queryString = "select model.* from media_providers model JOIN user_media_providers ump on " +
+					"model.media_provider_id=ump.media_provider_id where ump.user_name='"+userName+"'";
+			Query query = entityManager
+					.createNativeQuery(queryString, MediaProvider.class);
+			
+			return query.getResultList();
+		} catch (RuntimeException re) {
+			logger.error("find all failed", re);
+			throw re;
+		}
+	}
 }

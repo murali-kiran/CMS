@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="purchases")
-@NamedQuery(name="Purchas.findAll", query="SELECT p FROM Purchas p")
+//@NamedQuery(name="Purchas.findAll", query="SELECT p FROM Purchas p")
 public class Purchases implements Serializable {
 	private static final long serialVersionUID = 1L;
 
