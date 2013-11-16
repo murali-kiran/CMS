@@ -14,9 +14,15 @@ public class MediaContentModel {
 	private Boolean isLocal=false;
 	private String remoteUrl;
 	private Integer id;
+	private Integer osid;
 	
 	
-	
+	public Integer getOsid() {
+		return osid;
+	}
+	public void setOsid(Integer osid) {
+		this.osid = osid;
+	}
 	public Integer getId() {
 		return id;
 	}

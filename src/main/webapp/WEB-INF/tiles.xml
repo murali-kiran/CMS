@@ -34,7 +34,7 @@
      </definition>
      <definition name="uploadApp" extends="base.definition">
         <put-attribute name="title" value="Upload" />
-        <put-attribute name="body" value="/WEB-INF/jsp/media/uploadApp.jsp" />
+        <put-attribute name="body" value="/WEB-INF/jsp/media/uploadApp1.jsp" />
      </definition>
       <definition name="display" extends="base.definition">
         <put-attribute name="title" value="search" />

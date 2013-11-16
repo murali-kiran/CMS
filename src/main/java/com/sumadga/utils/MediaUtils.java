@@ -18,10 +18,13 @@ import com.sumadga.dao.MediaCycleDao;
 import com.sumadga.dao.MediaDao;
 import com.sumadga.dao.MediaSpecificationDao;
 import com.sumadga.dao.MediaTypeDao;
+import com.sumadga.dao.MimeTypeDao;
 import com.sumadga.dto.Language;
 import com.sumadga.dto.Media;
 import com.sumadga.dto.MediaCycle;
 import com.sumadga.dto.MediaType;
+import com.sumadga.dto.MimeType;
+import com.sumadga.dto.Os;
 
 @Component
 public class MediaUtils {
@@ -43,6 +46,9 @@ public class MediaUtils {
     MediaSpecificationDao mediaSpecificationDao;
     
     @Autowired
+    MimeTypeDao mimeTypeDao;
+    
+    @Autowired
     ApplicationProperties applicationProperties;
     
     public List<Language> getLanguageList(){
@@ -55,6 +61,13 @@ public class MediaUtils {
     
     public List<MediaType> getMediaTypeList(){
     	return mediaTypeDao.findAll();
+    }
+    
+    public List<MimeType> getMimeTypeList(){
+    	return mimeTypeDao.findAll();
+    }
+    public List<Os> getOsList(){
+    	return mimeTypeDao.findAllOs();
     }
     public java.util.Date parseDate(String dateString){ 
 		SimpleDateFormat dateFormat=new SimpleDateFormat("dd-MM-yyyy");

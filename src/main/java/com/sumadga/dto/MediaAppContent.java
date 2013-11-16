@@ -1,6 +1,9 @@
 package com.sumadga.dto;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Date;
+
 import javax.persistence.*;
 
 
@@ -36,9 +39,48 @@ public class MediaAppContent implements Serializable {
 	private MimeType mimeType;
 	public MediaAppContent() {
 	}
+	@Column(name="purpose", nullable=false, length=20)
+	private String purpose;
+	@Column(name="height", nullable=false)
+	private Integer height;
+	@Column(name="width", nullable=false)
+	private Integer width;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="created_time", nullable=false)
+	private Date createdTime;
+	@Column(name="modified_time", nullable=false)
+	private Timestamp modifiedTime;
 
-
-
+	public Date getCreatedTime() {
+		return createdTime;
+	}
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
+	}
+	public Timestamp getModifiedTime() {
+		return modifiedTime;
+	}
+	public void setModifiedTime(Timestamp modifiedTime) {
+		this.modifiedTime = modifiedTime;
+	}
+	public String getPurpose() {
+		return purpose;
+	}
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
+	}
+	public Integer getHeight() {
+		return height;
+	}
+	public void setHeight(Integer height) {
+		this.height = height;
+	}
+	public Integer getWidth() {
+		return width;
+	}
+	public void setWidth(Integer width) {
+		this.width = width;
+	}
 	public Integer getMediaAppContentId() {
 		return mediaAppContentId;
 	}
