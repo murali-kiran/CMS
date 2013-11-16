@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.Errors;
 
 import com.sumadga.dao.LanguageDao;
+import com.sumadga.dao.MediaAppContentDao;
 import com.sumadga.dao.MediaContentDao;
 import com.sumadga.dao.MediaCycleDao;
 import com.sumadga.dao.MediaDao;
@@ -23,10 +25,13 @@ import com.sumadga.dao.MediaTagDao;
 import com.sumadga.dao.MediaTypeDao;
 import com.sumadga.dao.TagDao;
 import com.sumadga.dto.Media;
+import com.sumadga.dto.MediaAppContent;
 import com.sumadga.dto.MediaContent;
 import com.sumadga.dto.MediaSpecification;
 import com.sumadga.dto.MediaTag;
 import com.sumadga.dto.MediaType;
+import com.sumadga.dto.MimeType;
+import com.sumadga.dto.Os;
 import com.sumadga.dto.Tag;
 import com.sumadga.utils.ApplicationProperties;
 import com.sumadga.utils.MediaUtils;
@@ -76,6 +81,9 @@ public class MediaUploadService {
 	@Autowired
 	MediaTranscoding mediaTranscoding;
 	
+	@Autowired
+	MediaAppContentDao mediaAppContentDao;
+	
 	public void upload(ModelMap model){
 		
 		logger.info("upload service");
@@ -89,9 +97,35 @@ public class MediaUploadService {
         MediaUploadModel mediaUploadModel = new MediaUploadModel();
         
 		model.addAttribute("uploadFile", mediaUploadModel);
+	}
+	public void uploadApp(ModelMap model){
+		
+		logger.info("upload service");
+		
+		model.addAttribute("mediaTypeList",mediaUtils.getMediaTypeList());
+		model.addAttribute("mediaCycleList",mediaUtils.getMediaCycleList());
+		model.addAttribute("languageList",mediaUtils.getLanguageList());
+		model.addAttribute("mimeTypeList",mediaUtils.getMimeTypeList());
+		model.addAttribute("osList",mediaUtils.getOsList());
+		
+        MediaUploadModel mediaUploadModel = new MediaUploadModel();
+        
+        MediaContentModel m = new MediaContentModel();
+       // m.setHeight(10);
+        List<MediaContentModel> mediaContentModelList = new ArrayList<MediaContentModel>();
+        mediaContentModelList.add(m);
+       // model.addAttribute("mlist",mediaContentModelList);
+        
+        mediaUploadModel.setMediaContentModelList(mediaContentModelList);
+       // mediaUploadModel.setDescription("DEsc");
+        model.addAttribute("uploadFile", mediaUploadModel);
+        
+		/*model.addAttribute("uploadFile", mediaUploadModel);
+		List<MediaAppContent> mediaAppContents = new ArrayList<MediaAppContent>();
+		mediaAppContents.add(new MediaAppContent());
+		model.addAttribute("appList",mediaAppContents);*/
 		
 	}
-
 	public void showMediaContent(ModelMap model,Integer mediaId){
 
 		
@@ -318,7 +352,83 @@ public void saveUpload(MediaUploadModel mediaUploadModel) throws Exception{
 	  }// mediaContentModelList	
 	 
 	}
+public void saveUploadApp(MediaUploadModel mediaUploadModel) throws Exception{
+	
+	boolean offlineConversion = true;
+	logger.info(" MediaTypeId "+mediaUploadModel.getMediaTypeId());
+	logger.info(" MediaCycleId "+mediaUploadModel.getMediaCycleId());
+	logger.info(" LanguageId "+mediaUploadModel.getLanguageId());
+	logger.info(" MediaName "+mediaUploadModel.getMediaName());
+	logger.info(" MediaTitle "+mediaUploadModel.getMediaTitle());
+	logger.info(" description "+mediaUploadModel.getDescription());
+	logger.info(" Start Time "+mediaUploadModel.getMediaStartTime());
+	logger.info(" End time "+mediaUploadModel.getMediaEndTime());
+	
+	Media media = null;
+	if(mediaUploadModel.getMediaId() == null)
+		media=new Media();
+	else
+		media=mediaDao.findById(mediaUploadModel.getMediaId());
+	
+	
+	if(offlineConversion && mediaUploadModel.getMediaId()==null)
+		media.setMediaCycle(mediaCycleDao.findById(1));
+	else
+		media.setMediaCycle(mediaCycleDao.findById(mediaUploadModel.getMediaCycleId()));
+	
+	media.setMediaType(mediaTypeDao.findById(mediaUploadModel.getMediaTypeId()));
+	media.setDescription(mediaUploadModel.getDescription());
+	media.setLanguage(languageDao.findById(mediaUploadModel.getLanguageId()));
+	media.setMediaTitle(mediaUploadModel.getMediaTitle());
+	media.setMediaName(mediaUploadModel.getMediaName());
+	
+	Date fromPublishDate=null,toPublishDate=null;
+	SimpleDateFormat sdf=new SimpleDateFormat("MM/dd/yyyy");
+	fromPublishDate = sdf.parse(mediaUploadModel.getMediaStartTime());
+	toPublishDate = sdf.parse(mediaUploadModel.getMediaEndTime());
+	
+	if(fromPublishDate == null)
+		fromPublishDate = mediaUtils.parseDate("01-01-1970");
+	
+	if(toPublishDate == null)
+		toPublishDate = mediaUtils.parseDate("31-12-9999");
+		
+	media.setMediaStartTime(fromPublishDate);
+	media.setMediaEndTime(toPublishDate);
+	
+	
+	
+	if(mediaUploadModel.getMediaId() == null)
+	{
+		media.setMediaProcessState(mediaProcessStateDao.findById(1));//not started
+	   mediaDao.save(media);
+	}
+	else{
+		 mediaDao.update(media);
+	}
+	
 
+//	  insertMediaTags(media, mediaUploadModel.getTags());
+
+	  List<MediaContentModel> mediaContentModelList = mediaUploadModel.getMediaContentModelList();
+  
+  if(mediaContentModelList!=null){
+ 
+  for (MediaContentModel mediaContentModel : mediaContentModelList) {
+	    
+	  /*getting uploaded files to save and convert*/
+	  try{
+		  saveMediaAppFiles(media, mediaContentModel);
+	  }catch (Exception e) {
+		logger.error("Exception while saving app contentItemFiles",e);  
+		throw new Exception("Upload Failed");
+	}
+	}//for	
+  
+  transcoding(media);
+  }// mediaContentModelList	
+ 
+}
 
   	public void saveMediaFiles(Media media,MediaContentModel mediaContentModel){
   		MediaContent mediaContent=new MediaContent();
@@ -356,7 +466,50 @@ public void saveUpload(MediaUploadModel mediaUploadModel) throws Exception{
   			logger.error("Exception catch while saving media content", e);
   		}
   	}
-	
+  	public void saveMediaAppFiles(Media media,MediaContentModel mediaContentModel){
+  		MediaAppContent mediaAppContent=new MediaAppContent();
+  		
+  		try{
+  		
+  			
+  		//mediaContent.setMediaSpecification(mediaSpecificationDao.findById(mediaContentModel.getMediaSpecificationId()));
+  		
+  		//mediaContent.setMd5(mediaUtils.getMd5(mediaContentModel.getFile()));
+  		
+  		
+  		String fileName=mediaUtils.renameMediaContentFile(mediaContentModel.getFile().getOriginalFilename(),
+  				mediaContentModel.getWidth(), mediaContentModel.getHeight(), mediaContentModel.getBitRate(),
+  				mediaContentModel.getPurpose());
+  		String relativePath=mediaUtils.getRelativePath(media.getMediaId(), fileName);
+  		String completePath=mediaUtils.getCompleteFilePath(media.getMediaId(), fileName);
+  		File fileToCreate = new File(completePath);
+		File fileToCreateDir=new File(fileToCreate.getParent());
+		if(!fileToCreateDir.exists())
+			fileToCreateDir.mkdirs();
+		
+		//FileUtils.copyFile((File)contentFileBean.getFile(), fileToCreate);
+		mediaContentModel.getFile().transferTo(fileToCreate);
+		MimeType mimeType = new MimeType();
+		mimeType.setMimeTypeId(Integer.parseInt(mediaContentModel.getMimeType()));
+		
+		Os os = new Os();
+		os.setOsId(mediaContentModel.getOsid());
+		
+		mediaAppContent.setMimeType(mimeType);
+		mediaAppContent.setOs(os);
+		mediaAppContent.setMedia(media);
+  		mediaAppContent.setStoragePath(relativePath);
+  		mediaAppContent.setHeight(mediaContentModel.getHeight());
+  		mediaAppContent.setWidth(mediaContentModel.getWidth());
+  		mediaAppContent.setPurpose(mediaContentModel.getPurpose());
+  		mediaAppContent.setDescription(mediaContentModel.getDuration());
+  		
+  		mediaAppContentDao.save(mediaAppContent);
+  		}catch(Throwable e)
+  		{
+  			logger.error("Exception catch while saving media content", e);
+  		}
+  	}
 	public void insertMediaTags(Media media,String tags){
 		List<Tag> tagList=new ArrayList<Tag>();
 		String[] tagArray=tags.split(",");

@@ -1,4 +1,4 @@
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%--<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <script type="text/javascript" src="<%=request.getContextPath()%>/resources/script/cms.js"></script>
@@ -96,13 +96,26 @@
 </tr>
 </table>
 
-
+ <table>
+	<c:forEach items="${appList}" var="fileContent" varStatus="fileStatus">
+		 <tr>
+			<td>file :</td>
+			<td>
+			<form:input type="file" path="fileContent[${fileContent.id}].file" /></td>
+			<td><form:errors path="mediaContentModelList[${fileContent.id}].file" cssClass="error" /></td>
+			
+			<form:hidden path="fileContent[fileStatus].description"  />
+			
+		</tr>
+	</c:forEach>
+</table> 
 
 <div><input type="submit"/></div>
 
-<!-- <div><input type="submit" onclick="return sub('feedbackform')"/></div> -->
 
 
 </form:form>
 
-</div>
+</div>--%>
+
+hi

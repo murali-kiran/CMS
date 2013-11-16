@@ -22,11 +22,14 @@ import com.sumadga.dao.MediaDao;
 import com.sumadga.dao.MediaProviderDao;
 import com.sumadga.dao.MediaSpecificationDao;
 import com.sumadga.dao.MediaTypeDao;
+import com.sumadga.dao.MimeTypeDao;
 import com.sumadga.dto.Language;
 import com.sumadga.dto.Media;
 import com.sumadga.dto.MediaCycle;
 import com.sumadga.dto.MediaProvider;
 import com.sumadga.dto.MediaType;
+import com.sumadga.dto.MimeType;
+import com.sumadga.dto.Os;
 
 @Component
 public class MediaUtils {
@@ -48,6 +51,8 @@ public class MediaUtils {
     MediaSpecificationDao mediaSpecificationDao;
     
     @Autowired
+    MimeTypeDao mimeTypeDao;
+    @Autowired
     MediaProviderDao mediaProviderDao;
     
     
@@ -66,6 +71,12 @@ public class MediaUtils {
     	return mediaTypeDao.findAll();
     }
     
+    public List<MimeType> getMimeTypeList(){
+    	return mimeTypeDao.findAll();
+    }
+    public List<Os> getOsList(){
+    	return mimeTypeDao.findAllOs();
+    }
     public List<MediaProvider> getMediaProviderList(){
     	
     	try{

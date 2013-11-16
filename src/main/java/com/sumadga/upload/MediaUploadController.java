@@ -44,9 +44,46 @@ public class MediaUploadController {
 		
 		logger.info("upload");
 		
-		mediaUploadService.upload(model);
+		mediaUploadService.uploadApp(model);
 		
 		return "uploadApp";
+		
+	}
+	@RequestMapping(value="/saveapp",  method=RequestMethod.POST)
+	public String saveapp(@ModelAttribute("uploadFile") MediaUploadModel mediaUploadModel,
+			BindingResult result, SessionStatus status,ModelMap model){
+		
+		String message = null;		
+		logger.info("uploadfile "+mediaUploadModel.toString()+""+mediaUploadModel.getMediaId());
+		
+		
+		mediaUploadService.validate(mediaUploadModel, result);
+		
+		if (result.hasErrors()) {
+			//if validator failed
+			message="";
+			mediaUploadService.uploadApp(model);
+			return "uploadFile";
+		} else {
+			try{
+				mediaUploadService.saveUploadApp(mediaUploadModel);
+			
+			status.setComplete();
+			message = "Media uploaded successfully";
+			mediaUploadService.upload(model);
+			
+			}catch (Exception e) {
+				message=e.getMessage();
+				logger.error("Exception while saving uploaded files", e);
+			}
+			//mediaUploadService.searchMedia(model,null);
+			model.addAttribute("message",message);
+			mediaUploadService.searchMedia(model,null);
+			mediaUploadService.search(model);
+			
+			return "showSearch";
+			//return showSearch(model);
+		}
 		
 	}
 	@RequestMapping("/editMedia")
