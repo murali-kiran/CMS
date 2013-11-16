@@ -10,18 +10,23 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sumadga.dao.LanguageDao;
 import com.sumadga.dao.MediaCycleDao;
 import com.sumadga.dao.MediaDao;
+import com.sumadga.dao.MediaProviderDao;
 import com.sumadga.dao.MediaSpecificationDao;
 import com.sumadga.dao.MediaTypeDao;
 import com.sumadga.dao.MimeTypeDao;
 import com.sumadga.dto.Language;
 import com.sumadga.dto.Media;
 import com.sumadga.dto.MediaCycle;
+import com.sumadga.dto.MediaProvider;
 import com.sumadga.dto.MediaType;
 import com.sumadga.dto.MimeType;
 import com.sumadga.dto.Os;
@@ -47,6 +52,9 @@ public class MediaUtils {
     
     @Autowired
     MimeTypeDao mimeTypeDao;
+    @Autowired
+    MediaProviderDao mediaProviderDao;
+    
     
     @Autowired
     ApplicationProperties applicationProperties;
@@ -69,6 +77,22 @@ public class MediaUtils {
     public List<Os> getOsList(){
     	return mimeTypeDao.findAllOs();
     }
+    public List<MediaProvider> getMediaProviderList(){
+    	
+    	try{
+	    	SecurityContext context=SecurityContextHolder.getContext();
+	    	Authentication authentication=context.getAuthentication();
+	    	if(authentication !=null){
+	    		String userName=authentication.getName();
+	    		
+	    	}
+    	}catch(Exception e){
+    		logger.error("Exception caught : ",e);
+    	}
+    	
+    	return mediaProviderDao.findAll();
+    }
+    
     public java.util.Date parseDate(String dateString){ 
 		SimpleDateFormat dateFormat=new SimpleDateFormat("dd-MM-yyyy");
 		java.util.Date date=null;

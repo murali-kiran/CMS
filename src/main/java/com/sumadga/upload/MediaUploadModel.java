@@ -6,6 +6,7 @@ import java.util.List;
 public class MediaUploadModel {
 	
 	private Integer mediaTypeId;
+	private Integer mediaProviderId;
 	private Integer mediaCycleId;
 	private Integer languageId;
 	private String mediaTitle;
@@ -89,6 +90,12 @@ public class MediaUploadModel {
 	public void setMediaContentModelList(
 			List<MediaContentModel> mediaContentModelList) {
 		this.mediaContentModelList = mediaContentModelList;
+	}
+	public Integer getMediaProviderId() {
+		return mediaProviderId;
+	}
+	public void setMediaProviderId(Integer mediaProviderId) {
+		this.mediaProviderId = mediaProviderId;
 	}	
 	
 }

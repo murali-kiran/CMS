@@ -35,13 +35,24 @@
 
 </script>
 <div style="width: 100%;display: block;border: 1px solid #95B8E7;">
-<div class="panel-header panel-title">Upload</div>
+<div class="panel-header panel-title">Upload Media</div>
 <form:form method="post" id="feedbackform" name="feedbackform"  commandName="uploadFile"
                            action="${pageContext.servletContext.contextPath}/save" enctype="multipart/form-data">
 
 <table>
 <tr><td style="width: 50%;vertical-align: top;">
 <table>
+
+<tr>
+<td>MediaProvider</td>
+<td><div class="styled-select">
+<form:select path="mediaProviderId" id="mediaProviderId" class="validate">
+<form:option value="-1" label="--- Select ---"/>
+<form:options items="${mediaProviderList}" itemValue="mediaProviderId" itemLabel="mediaProviderName"/>
+</form:select></div>
+</td>
+<td><form:errors path="mediaTypeId" cssClass="error" /></td>
+</tr>
 
 
 <tr>
