@@ -2,6 +2,7 @@ package com.sumadga.dao;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -15,6 +16,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sumadga.dto.Media;
+import com.sumadga.dto.MediaProvider;
+import com.sumadga.mis.MisModel;
 import com.sumadga.upload.MediaUploadModel;
 
 @Repository
@@ -188,4 +191,28 @@ public class MediaDao  {
 		List<Media> media = query.getResultList();
 		return media;
 	}
+	
+	public List<MisModel> getMisModel(List<MediaProvider> mediaProviderList) {
+
+		StringBuffer queryString = new StringBuffer("select model.* from RevenueView model where 1=1 ");
+			
+		if(mediaProviderList!=null)
+		{
+			String str="";
+			Iterator<MediaProvider> itr=mediaProviderList.iterator();
+			while(itr.hasNext())
+			{
+				str=str+itr.next().getMediaProviderId();
+				if(itr.hasNext())
+					str=str+",";
+			}
+			if(!str.trim().equals(""))
+				queryString.append(" and mediaProviderId in ("+str+")");
+		}
+		Query query = entityManager
+				.createNativeQuery(queryString.toString(), MisModel.class);
+		
+		return query.getResultList();
+	}
 }
+

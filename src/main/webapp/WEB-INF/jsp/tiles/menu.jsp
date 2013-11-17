@@ -4,6 +4,7 @@
 	<li>Upload</li>
 	<ul>
 		<li><a href="upload">Upload</a></li>
+		<li><a href="appUpload">Game Upload</a></li>
 		<li><a href="showSearch">List</a></li>
 	</ul>
 	<li>Media Group</li>
@@ -11,7 +12,10 @@
 		<li><a href="addGroup">Create Group</a></li>
 		<li><a href="listMediaGroup">Group List</a></li>
 	</ul>
-	
+	<li>Mis</li>
+	<ul>
+		<li><a href="mis/show">Mis</a></li>
+	</ul>
 </ul>
 
 
