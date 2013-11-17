@@ -127,4 +127,6 @@
 		
 	</bean>
 	
+	<bean id="mimeType" class="javax.activation.MimetypesFileTypeMap"></bean>
+	
 </beans>

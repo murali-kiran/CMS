@@ -231,15 +231,57 @@ public class MediaGroupMediaDao  {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<MediaBean> getMediaInfoOfMediaGroup(int mediaGroupId,final int... rowStartIdxAndCount) {
+	public MediaBean getMediaInfoOfMedia(int mediaId,int mediaContentPurposeId,int width,int height) {
 		logger.info("Finding media info of mediaGroup");
 		try {
-			final String queryString = "SELECT m.media_type_id , m.media_id , m.media_title , mc.storage_path "
-					+"FROM  media_group_media cat JOIN  media m JOIN  media_contents mc ON  media_group_id =? "
-					+"AND cat.media_id = m.media_id AND mc.media_id = cat.media_id group by m.media_id , m.media_title , mc.storage_path ";
+			
+			final String queryString = "SELECT m.media_type_id as mediaTypeId, m.media_id  as mediaId, m.media_title  as mediaName, mc.storage_path as storagePath ,mc.media_content_id FROM   media m JOIN  media_contents mc JOIN media_specifications ms ON   m.media_id = ?  AND m.media_id = mc.media_id  AND mc.media_specification_id = ms.media_specification_id  AND ms.width <= ?  AND ms.height <= ?  AND  ms.media_content_purpose_id = ? order by ms.width , ms.height desc limit 1";
+			
+			Query query = entityManager.createNativeQuery(queryString);
+			query.setParameter(1, mediaId);
+			query.setParameter(2, width);
+			query.setParameter(3, height);
+			query.setParameter(4, mediaContentPurposeId);
+			
+			Object [] obj = (Object [])query.getSingleResult();
+			MediaBean mediaBean = new MediaBean();
+			mediaBean.setMediaTypeId((Integer)obj[0]);
+			mediaBean.setMediaId((Integer)obj[1]);
+			mediaBean.setMediaName((String)obj[2]);
+			mediaBean.setStoragePath((String)obj[3]);
+			mediaBean.setMediaContentId((Integer)obj[4]);
+			
+			return mediaBean;
+		} catch (RuntimeException re) {
+			logger.error("Failed to retrive record ", re);
+			throw re;
+		}
+	}	
+	
+	@SuppressWarnings("unchecked")
+	public List<MediaBean> getMediaInfoOfMediaGroup(int mediaGroupId,int mediaContentPurposeId,int serviceKeyId,int width,int height,final int... rowStartIdxAndCount) {
+		logger.info("Finding media info of mediaGroup");
+		try {
+			
+/*			final String queryString = "SELECT m.media_type_id , m.media_id , m.media_title , mc.storage_path FROM  "
+					+ "media_group_media cat JOIN  media m JOIN  media_contents mc JOIN media_specifications ms "
+					+ "ON  media_group_id = ? AND cat.media_id = m.media_id  AND mc.media_id = cat.media_id AND "
+					+ "mc.media_specification_id = ms.media_specification_id  AND ms.width = ?  AND ms.height = ?  AND  ms.media_content_purpose_id = ?";
+*/			
+			final String queryString = "SELECT m.media_type_id , m.media_id , m.media_title , mc.storage_path , skp.service_key_id , skp.service_key_price_id , skp.price FROM  "
+					+ "media_group_media cat JOIN  media m JOIN  media_contents mc JOIN media_specifications ms JOIN service_key_prices skp ON  "
+					+ "media_group_id = ? AND skp.service_key_id = ?  AND cat.media_id = m.media_id  AND "
+					+ "mc.media_id = cat.media_id AND mc.media_specification_id = ms.media_specification_id  AND ms.width = ?  AND ms.height = ?  AND  ms.media_content_purpose_id = ?";
 			
 			Query query = entityManager.createNativeQuery(queryString);
 			query.setParameter(1, mediaGroupId);
+			query.setParameter(2, serviceKeyId);
+			query.setParameter(3, width);
+			query.setParameter(4, height);
+			
+		
+			
+			query.setParameter(5, mediaContentPurposeId);
 			
 			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
 				int rowStartIdx = Math.max(0, rowStartIdxAndCount[0]);
@@ -264,6 +306,11 @@ public class MediaGroupMediaDao  {
 				bean.setMediaId((Integer)obj[1]);
 				bean.setMediaName((String)obj[2]);
 				bean.setStoragePath((String)obj[3]);
+				bean.setServiceKeyId((Integer)obj[4]);
+				bean.setServiceKeypriceId((Integer)obj[5]);
+				bean.setPrice((Double)obj[6]);
+				// 	cat.service_key_id , skp.service_key_price_id , skp.price
+				
 				bean.setIsSubMediaGroup(false);
 				mediaBeans.add(bean);
 			}
@@ -278,13 +325,15 @@ public class MediaGroupMediaDao  {
 	
 	
 			@SuppressWarnings("unchecked")
-			public MediaBean getMediaInfoOfMediaSubGroup(int mediaGroupId,final int... rowStartIdxAndCount) {
+			public MediaBean getMediaInfoOfMediaSubGroup(int mediaGroupId,int serviceKeyId,int contentpurpose,final int... rowStartIdxAndCount) {
 				logger.info("Finding media info of mediaGroup");
 				try {
-					final String queryString = "SELECT m.media_type_id , m.media_id , m.media_title , mc.storage_path FROM  media_groups cat JOIN  media m JOIN  media_contents mc ON  media_group_id = ? AND cat.media_group_preview_id = m.media_id AND mc.media_id = cat.media_group_preview_id group by m.media_id , m.media_title , mc.storage_path";
-					
+				//	final String queryString = "SELECT m.media_type_id , m.media_id , m.media_title , mc.storage_path FROM  media_groups cat JOIN  media m JOIN  media_contents mc ON  media_group_id = ? AND cat.media_group_preview_id = m.media_id AND mc.media_id = cat.media_group_preview_id group by m.media_id , m.media_title , mc.storage_path";
+					final String queryString = "SELECT m.media_type_id , m.media_id , m.media_title , mc.storage_path , skp.service_key_id , skp.service_key_price_id , skp.price  FROM  media_groups cat JOIN  media m JOIN  media_contents mc JOIN service_key_prices skp   JOIN media_specifications ms ON  media_group_id = ? AND skp.service_key_id = ? AND cat.media_group_preview_id = m.media_id AND mc.media_id = cat.media_group_preview_id AND mc.media_specification_id = ms.media_specification_id  AND  ms.media_content_purpose_id = ? group by m.media_id , m.media_title , mc.storage_path, skp.service_key_id ,skp.service_key_price_id , skp.price";
 					Query query = entityManager.createNativeQuery(queryString);
 					query.setParameter(1, mediaGroupId);
+					query.setParameter(2, serviceKeyId);
+					query.setParameter(3, contentpurpose);
 					
 					if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
 						int rowStartIdx = Math.max(0, rowStartIdxAndCount[0]);
@@ -309,6 +358,9 @@ public class MediaGroupMediaDao  {
 						bean.setMediaId((Integer)obj[1]);
 						bean.setMediaName((String)obj[2]);
 						bean.setStoragePath((String)obj[3]);
+						bean.setServiceKeyId((Integer)obj[4]);
+						bean.setServiceKeypriceId((Integer)obj[5]);
+						bean.setPrice((Double)obj[6]);
 						bean.setIsSubMediaGroup(true);
 						bean.setMediagroupId(mediaGroupId);
 						mediaBeans.add(bean);

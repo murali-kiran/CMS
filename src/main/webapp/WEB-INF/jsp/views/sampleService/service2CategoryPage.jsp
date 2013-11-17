@@ -3,22 +3,33 @@
 
 	<c:set var="category" scope="session" value="${categoryMap.key}" />
 	<div style="width: 100%; background-color: #00FF00">${category.name}</div>
-	
+
 	<c:set var="media" scope="request" value="${categoryMap.value}" />
-	
+
 	<c:forEach var="mediaInfo" items="${media.name}">
-  		<div style="width: 50%;float: left;text-align: center;">${mediaInfo.mediaName} </div>
+		<div style="width: 33%; float: left; text-align: center;margin: 2px 0px 2px;">
+			<div>@ ${mediaInfo.price}</div>
+			<div>
+			<a href="${pageContext.servletContext.contextPath}/service2/dwl/${serviceId}/${mediaInfo.mediaId}?channel=${channel}">		<img alt="noImage"
+					src="${pageContext.servletContext.contextPath}/${mediaInfo.storagePath}"
+					width="52px" height="52px">
+			</a>
+			</div>
+			<div>${mediaInfo.mediaName}</div>
+		</div>
 	</c:forEach>
-	
-	<br/>
-	
-	<div style="width: 100%;text-align: right;">
-	
-	
-	<c:forEach var="i" begin="1" end="${media.id}">
-	&nbsp;<a href="<c:url value="/service2/cat/pageId/pageCount/${serviceId}/${category.id}/${i}/${PaginationCount}"/>">${i}</a>&nbsp;
+
+	<br />
+
+	<div style="width: 100%; text-align: right;">
+
+
+		<c:forEach var="i" begin="1" end="${media.id}">
+	&nbsp;<a
+				href="<c:url value="/service2/cat/pageId/pageCount/${serviceId}/${category.id}/${i}/${PaginationCount}?channel=${channel}"/>">${i}</a>&nbsp;
 	</c:forEach>
 	</div>
-	
-	
+
+
+
 </c:forEach>

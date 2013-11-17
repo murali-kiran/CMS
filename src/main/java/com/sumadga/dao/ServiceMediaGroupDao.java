@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sumadga.dto.ServiceMediaGroup;
+import com.sumadga.wap.model.MediaBean;
 
 @Repository
 public class ServiceMediaGroupDao {
@@ -109,6 +110,27 @@ public class ServiceMediaGroupDao {
 			throw re;
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public ServiceMediaGroup findByServiceIdAndMediagroupId(int serviceId,int mediaGroupId) {
+		
+		try {
+		final String queryString = "SELECT * FROM  service_media_groups  WHERE service_id = ? and media_group_id = ?";
+			
+			Query query = entityManager.createNativeQuery(queryString,ServiceMediaGroup.class);
+			query.setParameter(1, serviceId);
+			query.setParameter(2, mediaGroupId);
+			
+			
+			ServiceMediaGroup serviceMediaGroup  = (ServiceMediaGroup)query.getSingleResult();
+			
+			return serviceMediaGroup;
+		} catch (RuntimeException re) {
+			logger.error("find by property name failed", re);
+			throw re;
+		}
+	}
+
 
 	@SuppressWarnings("unchecked")
 	public List<ServiceMediaGroup> findAll(final int... rowStartIdxAndCount) {

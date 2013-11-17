@@ -7,13 +7,30 @@
 	<c:set var="media" scope="request" value="${categoryMap.value}" />
 	
 	<c:forEach var="mediaInfo" items="${media.name}">
-		<div style="width: 50%;float: left;text-align: center;">
+		<div style="width: 33%;float: left;text-align: center;margin: 2px 0px 2px;">
+		<div>@ ${mediaInfo.price}</div>
 	   <c:choose>
 	    <c:when test="${mediaInfo.isSubMediaGroup eq true}">
-  		<a href="${pageContext.servletContext.contextPath}/service2/cat/${serviceId}/${mediaInfo.mediagroupId}">${mediaInfo.mediaName}</a> 
+  		<a href="${pageContext.servletContext.contextPath}/service2/cat/${serviceId}/${mediaInfo.mediagroupId}?channel=${channel}">
+  		
+  		<div>
+				<img alt="noImage" src="${pageContext.servletContext.contextPath}/${mediaInfo.storagePath}"
+					width="52px" height="52px">
+			</div>
+			<div>${mediaInfo.mediaName}</div>
+  		
+  		</a> 
   		</c:when>
   		<c:otherwise>
-  		${mediaInfo.mediaName}
+  		
+  		<div>
+  		<a href="${pageContext.servletContext.contextPath}/service2/dwl/${serviceId}/${mediaInfo.mediaId}?channel=${channel}">
+		<img alt="noImage" src="${pageContext.servletContext.contextPath}/${mediaInfo.storagePath}"
+					width="52px" height="52px">
+		</a>			
+		</div>
+		<div>${mediaInfo.mediaName}</div>
+  		
   		</c:otherwise>
   		</c:choose>
   		</div>
@@ -22,7 +39,7 @@
 	<br/>
 	<div style="width: 100%;text-align: right;">
 	<c:if test="${media.id eq true}">
-	&nbsp;<a href="${pageContext.servletContext.contextPath}/service2/cat/${serviceId}/${category.id}">more</a>&nbsp;
+	&nbsp;<a href="${pageContext.servletContext.contextPath}/service2/cat/${serviceId}/${category.id}?channel=${channel}">more</a>&nbsp;
 	</c:if>
 	</div>
 	
