@@ -33,22 +33,20 @@ public class CaptureRequestInterceptor extends HandlerInterceptorAdapter{
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler) throws Exception {
 		
-//		WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(context);
         WURFLEngine holder = (WURFLEngine)wac.getBean(WURFLEngine.class.getName());
 		
 		Device device = holder.getDeviceForRequest(request);
+		logger.info("I am in interceptor ");
 				
-		logger.info("Device: " + device.getId());
+	/*	
 		String deviceCapabilities = device.getCapability("preferred_markup");
 		Map<String, String> deviceCapabilitiesMap = device.getCapabilities();
-		
-		System.out.println("width : "+device.getCapability("resolution_width"));
-		System.out.println("height : "+device.getCapability("resolution_height"));
+	*/	
 		
 		request.setAttribute("resolution_width", device.getCapability("resolution_width"));
 		request.setAttribute("resolution_height", device.getCapability("resolution_height"));
 		 
-		StringBuilder captureRequestStr = new StringBuilder();
+		/*StringBuilder captureRequestStr = new StringBuilder();
 		captureRequestStr.append(device.getId());
 		captureRequestStr.append("##");// resolution_height resolution_width
 		captureRequestStr.append(deviceCapabilitiesMap.get("resolution_height"));
@@ -68,7 +66,7 @@ public class CaptureRequestInterceptor extends HandlerInterceptorAdapter{
 		captureRequestStr.append(request.getRequestURL()).toString();
 		captureRequestStr.append("\n");
 		
-		CommonUtils.AppendInfoToCsv("/home/sravan/Desktop/capture.csv",captureRequestStr.toString());
+		CommonUtils.AppendInfoToCsv("/home/sravan/Desktop/capture.csv",captureRequestStr.toString());*/
 		
 		return true;
 	}

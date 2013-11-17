@@ -177,6 +177,7 @@ public class ServiceLayer {
 
 	public Map<Bean<Integer,String>,Bean<Integer,List<MediaBean>>> getMediaInfoOfCategory(int serviceId,int catId,int mediaContentPurposeId,int width,int height,int ...pageIdxPageCount){
 
+		//Map<Bean<mediaGroupId,mediaGroupTitle>,Bean<no. of pages count,List<MediaBean>>>
 		Map<Bean<Integer,String>,Bean<Integer,List<MediaBean>>> mediaInfoMap = new LinkedHashMap<Bean<Integer,String>,Bean<Integer,List<MediaBean>>>();
 
 		MediaGroup mediaGroup = mediaGroupDao.findById(catId);
@@ -188,21 +189,32 @@ public class ServiceLayer {
 		List<MediaBean> mediaBeans = mediaGroupMediaDao.getMediaInfoOfMediaGroup(category.getId(),mediaContentPurposeId,serviceMediaGroup.getServiceKeyId(),width,height);
 		List<MediaSubGroup>  mediaSubGroups = mediaSubGroupDao.findByProperty("parentMediaGroup",category.getId());
 
+		List<MediaBean> mediaList = new LinkedList<MediaBean>();
+		
 		if(!mediaSubGroups.isEmpty() || !mediaBeans.isEmpty()){
+			
+			for(MediaSubGroup mediaSubGroup : mediaSubGroups){
+				MediaGroup childMediaGroup   =	mediaSubGroup.getChildMediaGroup();
+				ServiceMediaGroup serviceMediaGroupOfchildMediaGroup = serviceMediaGroupDao.findByServiceIdAndMediagroupId(serviceId, childMediaGroup.getMediaGroupId());
+				MediaBean mediaBean = mediaGroupMediaDao.getMediaInfoOfMediaSubGroup(childMediaGroup.getMediaGroupId(),serviceMediaGroupOfchildMediaGroup.getServiceKeyId(),CommonUtils.MEDIA_CONTENT_PRIVIEW);
+				mediaList.add(mediaBean);
+			}
+			
+			mediaList.addAll(mediaBeans);
 
 			Bean<Integer,List<MediaBean>> bean = new Bean<Integer,List<MediaBean>>();
-			if(mediaBeans.size() > pageIdxPageCount[1]){
+			if(mediaList.size() > pageIdxPageCount[1]){
 
-				if((pageIdxPageCount[0]+pageIdxPageCount[1]) > mediaBeans.size())	
-					bean.setName(mediaBeans.subList(pageIdxPageCount[0],mediaBeans.size()));
+				if((pageIdxPageCount[0]+pageIdxPageCount[1]) > mediaList.size())	
+					bean.setName(mediaList.subList(pageIdxPageCount[0],mediaList.size()));
 				else
-					bean.setName(mediaBeans.subList(pageIdxPageCount[0],pageIdxPageCount[1]+pageIdxPageCount[0]));
+					bean.setName(mediaList.subList(pageIdxPageCount[0],pageIdxPageCount[1]+pageIdxPageCount[0]));
 
 			}else{
-				bean.setName(mediaBeans);
+				bean.setName(mediaList);
 			}
 
-			bean.setId((int)Math.ceil((mediaBeans.size()+mediaSubGroups.size())/(float)pageIdxPageCount[1]));
+			bean.setId((int)Math.ceil((mediaList.size())/(float)pageIdxPageCount[1]));
 
 			mediaInfoMap.put(category, bean);
 

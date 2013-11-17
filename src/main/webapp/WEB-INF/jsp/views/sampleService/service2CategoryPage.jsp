@@ -8,14 +8,17 @@
 
 	<c:forEach var="mediaInfo" items="${media.name}">
 		<div style="width: 33%; float: left; text-align: center;margin: 2px 0px 2px;">
-			<div>@ ${mediaInfo.price}</div>
+			<div>${mediaInfo.mediaName}</div>
 			<div>
 			<a href="${pageContext.servletContext.contextPath}/service2/dwl/${serviceId}/${mediaInfo.mediaId}?channel=${channel}">		<img alt="noImage"
 					src="${pageContext.servletContext.contextPath}/${mediaInfo.storagePath}"
 					width="52px" height="52px">
 			</a>
 			</div>
-			<div>${mediaInfo.mediaName}</div>
+			<div>@ ${mediaInfo.price}</div>
+			<div><img alt="noImage"
+					src="${pageContext.servletContext.contextPath}/resources/images/buy.png"
+					width="40px" height="15px"></div>
 		</div>
 	</c:forEach>
 

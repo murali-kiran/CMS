@@ -68,6 +68,7 @@ public class HomeController extends BaseController{
 		model.addAttribute("serviceId",serviceId);
 		model.addAttribute("mediaInfoMap", mediaInfoMap);
 		model.addAttribute("channel",channel);
+		model.addAttribute("title", "Home");
 		
 		return "landingPage2";
 		
@@ -117,6 +118,8 @@ public class HomeController extends BaseController{
 	public String getSecondServiceByCategory(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer catId){
 
 		    int pageCount = 9;
+		    
+		    //
 			Map<Bean<Integer,String>,Bean<Integer,List<MediaBean>>> mediaInfoMap =	serviceLayer.getMediaInfoOfCategory(serviceId,catId,CommonUtils.MEDIA_CONTENT_PRIVIEW,100,100,0,pageCount);
 			String channel = request.getParameter("channel");
 			
