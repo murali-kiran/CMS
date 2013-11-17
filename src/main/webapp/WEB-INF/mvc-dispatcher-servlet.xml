@@ -129,4 +129,15 @@
 	
 	<bean id="mimeType" class="javax.activation.MimetypesFileTypeMap"></bean>
 	
+	<bean id="applicationProperties" class="com.sumadga.utils.ApplicationProperties">
+	<!-- 	<property name="mediaCompletePath" value="/home/kumar/mms/"/>
+		<property name="mediaAbsolutePath" value="/resources/mms/"/> -->
+		<property name="qubeCellURL" value="http://IP:PORT/APP/Detect.php"/>
+		<property name="username" value="/resources/mms/"/>
+		<property name="password" value="/resources/mms/"/>
+		<property name="msisdnReturnURL" value="/resources/mms/"/>
+		<property name="eventChargeReturnURL" value="/resources/mms/"/>
+		<property name="secretKey" value="/resources/mms/"/>
+	</bean>
+	
 </beans>
