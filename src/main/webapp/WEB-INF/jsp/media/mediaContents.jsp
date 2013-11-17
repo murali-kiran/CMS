@@ -15,6 +15,8 @@
 <table border="1">
 <tr>
 	<th>Media Id</th>
+	<th>Media Content</th>
+	<th>MimeType</th>
 	<th>Width</th>
 	<th>Height</th>
 	<th>Bitrate</th>
@@ -23,6 +25,8 @@
 <c:forEach items="${mediaContentList}" var="mediaContent">
 	<tr>
 		<td><c:out value="${mediaContent.media.mediaId}" /></td>
+		<td><c:out value="${mediaContent.mediaSpecification.mediaSpecificationsName}" /></td>
+		<td><c:out value="${mediaContent.mediaSpecification.mimeType.mimeType}" /></td>
 		<td><c:out value="${mediaContent.mediaSpecification.width}" /></td>
 		<td><c:out value="${mediaContent.mediaSpecification.height}" /></td>
 		 <td><c:out value="${mediaContent.mediaSpecification.bitrate}" /></td> 
