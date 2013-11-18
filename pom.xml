@@ -8,7 +8,7 @@
 
 	<properties>
 
-	<org.slf4j-version>1.5.10</org.slf4j-version>
+		<org.slf4j-version>1.5.10</org.slf4j-version>
 		<!-- Generic properties -->
 		<java.version>1.6</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -117,6 +117,12 @@
 			<artifactId>commons-collections</artifactId>
 			<version>3.2.1</version>
 		</dependency>
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
