@@ -31,7 +31,7 @@ public class HomeController extends BaseController{
 	@Autowired
 	private DownloadFile downloadFile;
 
-	@RequestMapping(value="/service/{serviceId}",method=RequestMethod.GET)
+/*	@RequestMapping(value="/service/{serviceId}",method=RequestMethod.GET)
 	public String getFirstService(Model model,@PathVariable Integer serviceId){
 
 		List<Bean<Integer,Bean<String,ServiceMediaGroup>>> categories =	serviceLayer.getCategoryByServiceId(serviceId);
@@ -50,13 +50,15 @@ public class HomeController extends BaseController{
 		}
 	
 		return "sampleLandingPage";
-	}
+	}*/
 	
-	@RequestMapping(value="/service2/{serviceId}",method=RequestMethod.GET)
+	@RequestMapping(value="/service/{serviceId}",method=RequestMethod.GET)
 	public String getSecondService(Model model,@PathVariable Integer serviceId,HttpServletRequest request){
 		String channel = request.getParameter("channel");
 		if(channel==null)
-			return "redirect:/service2/"+serviceId+"?channel=smd";
+			return "redirect:/service/"+serviceId+"?channel=smd";
+		
+		Map<String,String> deviceMap =	getDeviceCapbilities(request);
 		
 		int previewCount = 3;
 		//List<Bean<categoryId,Bean<categoryName,ServiceMediaGroup>>>	
@@ -79,19 +81,96 @@ public class HomeController extends BaseController{
 	@RequestMapping(value="/service2/dwl/{serviceId}/{mediaId}",method=RequestMethod.GET)
 	public void downloadMedia(HttpServletRequest request,HttpServletResponse response,Model model,@PathVariable Integer serviceId,@PathVariable Integer mediaId){
 	String channel = request.getParameter("channel");
-	Map<String, String> deviceCapility = getDeviceCapbilities(request);
-	MediaBean mediaBean = serviceLayer.getMediaInfoOfMedia(mediaId,CommonUtils.MEDIA_CONTENT_NON_PRIVIEW, 100, 100);
+	Map<String, String> deviceMap = getDeviceCapbilities(request);
+	MediaBean mediaBean = serviceLayer.getMediaInfoOfMedia(mediaId,CommonUtils.MEDIA_CONTENT_NON_PRIVIEW, 100,100);
 	mediaBean.setServiceId(serviceId);
 	
 	PurchaseBean purchaseBean = new PurchaseBean();	
 	purchaseBean.setPurchase_id((byte)1);
-	purchaseBean.setMsisdn("9030575622");
+	purchaseBean.setMsisdn("9030335622");
 	purchaseBean.setChannel(channel);
-	downloadFile.downLoadMedia(request, response,mediaBean,purchaseBean,deviceCapility);
+	downloadFile.downLoadMedia(request, response,mediaBean,purchaseBean,deviceMap);
 		
 //		getMediaInfoOfMedia.
 //		return "landingPage2";
 		
+	}
+	
+	
+	
+	@RequestMapping(value="/service2/cat/{serviceId}/{catId}",method=RequestMethod.GET)
+	public String getSecondServiceByCategory(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer catId){
+
+		    int pageCount = 9;
+		    Map<String,String> deviceMap =	getDeviceCapbilities(request);
+		    //
+			Map<Bean<Integer,String>,Bean<Integer,List<MediaBean>>> mediaInfoMap =	serviceLayer.getMediaInfoOfCategory(serviceId,catId,CommonUtils.MEDIA_CONTENT_PRIVIEW,100,100,0,pageCount);
+			String channel = request.getParameter("channel");
+			
+			model.addAttribute("serviceId",serviceId);
+			model.addAttribute("categoryId",catId);
+			model.addAttribute("mediaInfoMap", mediaInfoMap);
+			model.addAttribute("PaginationCount",pageCount);
+			model.addAttribute("channel",channel);
+		
+		return "service2CategoryPage";
+	}
+	
+	@RequestMapping(value="/service2/cat/{serviceId}/{parentCatId}/{catId}",method=RequestMethod.GET)
+	public String getSecondServiceBySubCategory(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer parentCatId,@PathVariable Integer catId){
+
+		    int pageCount = 9;
+		    Map<String,String> deviceMap =	getDeviceCapbilities(request);
+		    //
+			Map<Bean<Integer,String>,Bean<Integer,List<MediaBean>>> mediaInfoMap =	serviceLayer.getMediaInfoOfSubCategory(serviceId,parentCatId,catId,CommonUtils.MEDIA_CONTENT_PRIVIEW,100,100,0,pageCount);
+			String channel = request.getParameter("channel");
+			
+			model.addAttribute("serviceId",serviceId);
+			model.addAttribute("categoryId",catId);
+			model.addAttribute("mediaInfoMap", mediaInfoMap);
+			model.addAttribute("PaginationCount",pageCount);
+			model.addAttribute("channel",channel);
+		
+		return "service2CategoryPage";
+	}
+	
+	@RequestMapping(value="/service2/cat/pageId/pageCount/{serviceId}/{catId}/{pageId}/{pageCount}",method=RequestMethod.GET)
+	public String getSecondServiceByCategorybyPagination(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer catId,@PathVariable Integer pageId,@PathVariable Integer pageCount){
+		String channel = request.getParameter("channel");
+		Map<String,String> deviceMap =	getDeviceCapbilities(request);
+			Map<Bean<Integer,String>,Bean<Integer,List<MediaBean>>> mediaInfoMap =	serviceLayer.getMediaInfoOfCategory(serviceId,catId,CommonUtils.MEDIA_CONTENT_PRIVIEW,100,100,(pageId-1)*pageCount,pageCount);
+			
+			model.addAttribute("serviceId",serviceId);
+			model.addAttribute("categoryId",catId);
+			model.addAttribute("mediaInfoMap", mediaInfoMap);
+			model.addAttribute("PaginationCount",pageCount);
+			model.addAttribute("channel",channel);
+		
+		return "service2CategoryPage";
+	}
+	
+	
+	
+	/*@RequestMapping(value="/service/cat/typeId/pageId/{serviceId}/{catId}/{typeId}/{pageId}/{paginationIds}",method=RequestMethod.GET)
+	public String getFirstServiceByCategoryAndPagination(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer catId,@PathVariable Integer typeId,
+			@PathVariable Integer pageId,@PathVariable String paginationIds){
+
+		int pageCount =2;
+		List<Bean<Integer,Bean<String,ServiceMediaGroup>>> categories =	serviceLayer.getCategoryByServiceId(serviceId);
+		
+		if(!categories.isEmpty()){
+			Map<Integer,Integer> mediaTypePaginationMap = serviceLayer.makePaginationMap(model,categories.get(0).getId(),paginationIds,typeId+"",pageId+"");
+			Map<Bean<Integer,String>,Bean<Integer,List<MediaBean>>> mediaInfoMap =	serviceLayer.getMediaInfoOfCategoryOfMediaType(serviceId,catId,mediaTypePaginationMap,pageCount,CommonUtils.MEDIA_CONTENT_PRIVIEW,100,100);
+			
+			model.addAttribute("serviceId",serviceId);
+			model.addAttribute("categoryId",categories.get(0).getId(	));
+			model.addAttribute("categories", categories);
+			model.addAttribute("mediaInfoMap", mediaInfoMap);
+			model.addAttribute("PaginationCount",2);
+			
+		}
+		
+		return "sampleLandingPage";
 	}
 	
 	@RequestMapping(value="/service/cat/{serviceId}/{catId}",method=RequestMethod.GET)
@@ -113,62 +192,10 @@ public class HomeController extends BaseController{
 		
 		return "sampleLandingPage";
 	}
-	
-	@RequestMapping(value="/service2/cat/{serviceId}/{catId}",method=RequestMethod.GET)
-	public String getSecondServiceByCategory(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer catId){
-
-		    int pageCount = 9;
-		    
-		    //
-			Map<Bean<Integer,String>,Bean<Integer,List<MediaBean>>> mediaInfoMap =	serviceLayer.getMediaInfoOfCategory(serviceId,catId,CommonUtils.MEDIA_CONTENT_PRIVIEW,100,100,0,pageCount);
-			String channel = request.getParameter("channel");
-			
-			model.addAttribute("serviceId",serviceId);
-			model.addAttribute("categoryId",catId);
-			model.addAttribute("mediaInfoMap", mediaInfoMap);
-			model.addAttribute("PaginationCount",pageCount);
-			model.addAttribute("channel",channel);
-		
-		return "service2CategoryPage";
-	}
-	
-	@RequestMapping(value="/service2/cat/pageId/pageCount/{serviceId}/{catId}/{pageId}/{pageCount}",method=RequestMethod.GET)
-	public String getSecondServiceByCategorybyPagination(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer catId,@PathVariable Integer pageId,@PathVariable Integer pageCount){
-		String channel = request.getParameter("channel");
-			Map<Bean<Integer,String>,Bean<Integer,List<MediaBean>>> mediaInfoMap =	serviceLayer.getMediaInfoOfCategory(serviceId,catId,CommonUtils.MEDIA_CONTENT_PRIVIEW,100,100,(pageId-1)*pageCount,pageCount);
-			
-			model.addAttribute("serviceId",serviceId);
-			model.addAttribute("categoryId",catId);
-			model.addAttribute("mediaInfoMap", mediaInfoMap);
-			model.addAttribute("PaginationCount",pageCount);
-			model.addAttribute("channel",channel);
-		
-		return "service2CategoryPage";
-	}
-	
-	
-	
-	@RequestMapping(value="/service/cat/typeId/pageId/{serviceId}/{catId}/{typeId}/{pageId}/{paginationIds}",method=RequestMethod.GET)
-	public String getFirstServiceByCategoryAndPagination(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer catId,@PathVariable Integer typeId,
-			@PathVariable Integer pageId,@PathVariable String paginationIds){
-
-		int pageCount =2;
-		List<Bean<Integer,Bean<String,ServiceMediaGroup>>> categories =	serviceLayer.getCategoryByServiceId(serviceId);
-		
-		if(!categories.isEmpty()){
-			Map<Integer,Integer> mediaTypePaginationMap = serviceLayer.makePaginationMap(model,categories.get(0).getId(),paginationIds,typeId+"",pageId+"");
-			Map<Bean<Integer,String>,Bean<Integer,List<MediaBean>>> mediaInfoMap =	serviceLayer.getMediaInfoOfCategoryOfMediaType(serviceId,catId,mediaTypePaginationMap,pageCount,CommonUtils.MEDIA_CONTENT_PRIVIEW,100,100);
-			
-			model.addAttribute("serviceId",serviceId);
-			model.addAttribute("categoryId",categories.get(0).getId(	));
-			model.addAttribute("categories", categories);
-			model.addAttribute("mediaInfoMap", mediaInfoMap);
-			model.addAttribute("PaginationCount",2);
-			
-		}
-		
-		return "sampleLandingPage";
-	}
+	*
+	*
+	*
+	*/
 	
 	
 

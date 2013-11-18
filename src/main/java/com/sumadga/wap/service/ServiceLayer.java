@@ -16,10 +16,12 @@ import org.springframework.ui.Model;
 import com.sumadga.dao.MediaGroupDao;
 import com.sumadga.dao.MediaGroupMediaDao;
 import com.sumadga.dao.MediaSubGroupDao;
+import com.sumadga.dao.ServiceKeyPriceDao;
 import com.sumadga.dao.ServiceMediaGroupDao;
 import com.sumadga.dto.MediaGroup;
 import com.sumadga.dto.MediaGroupMedia;
 import com.sumadga.dto.MediaSubGroup;
+import com.sumadga.dto.ServiceKeyPrice;
 import com.sumadga.dto.ServiceMediaGroup;
 import com.sumadga.utils.CommonUtils;
 import com.sumadga.wap.model.Bean;
@@ -39,6 +41,9 @@ public class ServiceLayer {
 
 	@Autowired
 	private MediaGroupDao mediaGroupDao;
+	
+	@Autowired
+	private ServiceKeyPriceDao serviceKeyPriceDao;
 
 	public List<Bean<Integer,Bean<String,ServiceMediaGroup>>>	getCategoryByServiceId(int serviceId){
 
@@ -143,8 +148,14 @@ public class ServiceLayer {
 				
 				for(MediaSubGroup mediaSubGroup : mediaSubGroups){
 					MediaGroup childMediaGroup   =	mediaSubGroup.getChildMediaGroup();
-					ServiceMediaGroup serviceMediaGroup = serviceMediaGroupDao.findByServiceIdAndMediagroupId(serviceId, childMediaGroup.getMediaGroupId());
-					MediaBean mediaBean = mediaGroupMediaDao.getMediaInfoOfMediaSubGroup(childMediaGroup.getMediaGroupId(),serviceMediaGroup.getServiceKeyId(),CommonUtils.MEDIA_CONTENT_PRIVIEW);
+					MediaGroup parentMediaGroup   =	mediaSubGroup.getParentMediaGroup();
+					ServiceMediaGroup serviceMediaGroup = serviceMediaGroupDao.findByServiceIdAndMediagroupId(serviceId, parentMediaGroup.getMediaGroupId());
+					ServiceKeyPrice serviceKeyPrice = serviceKeyPriceDao.findByProperty("serviceKey", serviceMediaGroup.getServiceKeyId()).get(0);
+					MediaBean mediaBean = mediaGroupMediaDao.getMediaInfoOfMediaSubGroup(childMediaGroup.getMediaGroupId(),serviceMediaGroup.getServiceKeyId(),CommonUtils.MEDIA_CONTENT_PRIVIEW,width,height);
+					mediaBean.setServiceKeyId((Integer)serviceMediaGroup.getServiceKeyId());
+					mediaBean.setServiceKeypriceId((Integer)serviceKeyPrice.getServiceKeyPriceId());
+					mediaBean.setPrice((Double)serviceKeyPrice.getPrice());
+					mediaBean.setMediagroupParentId(category.getId());
 					mediaList.add(mediaBean);
 				}
 				
@@ -195,10 +206,71 @@ public class ServiceLayer {
 			
 			for(MediaSubGroup mediaSubGroup : mediaSubGroups){
 				MediaGroup childMediaGroup   =	mediaSubGroup.getChildMediaGroup();
-				ServiceMediaGroup serviceMediaGroupOfchildMediaGroup = serviceMediaGroupDao.findByServiceIdAndMediagroupId(serviceId, childMediaGroup.getMediaGroupId());
-				MediaBean mediaBean = mediaGroupMediaDao.getMediaInfoOfMediaSubGroup(childMediaGroup.getMediaGroupId(),serviceMediaGroupOfchildMediaGroup.getServiceKeyId(),CommonUtils.MEDIA_CONTENT_PRIVIEW);
+				MediaGroup parentMediaGroup   =	mediaSubGroup.getParentMediaGroup();
+				ServiceMediaGroup serviceMediaGroupOfchildMediaGroup = serviceMediaGroupDao.findByServiceIdAndMediagroupId(serviceId, parentMediaGroup.getMediaGroupId());
+				ServiceKeyPrice serviceKeyPrice = serviceKeyPriceDao.findByProperty("serviceKey", serviceMediaGroup.getServiceKeyId()).get(0);
+				MediaBean mediaBean = mediaGroupMediaDao.getMediaInfoOfMediaSubGroup(childMediaGroup.getMediaGroupId(),serviceMediaGroupOfchildMediaGroup.getServiceKeyId(),CommonUtils.MEDIA_CONTENT_PRIVIEW,width,height);
+				mediaBean.setServiceKeyId((Integer)serviceMediaGroup.getServiceKeyId());
+				mediaBean.setServiceKeypriceId((Integer)serviceKeyPrice.getServiceKeyPriceId());
+				mediaBean.setPrice((Double)serviceKeyPrice.getPrice());
 				mediaList.add(mediaBean);
 			}
+			
+			mediaList.addAll(mediaBeans);
+
+			Bean<Integer,List<MediaBean>> bean = new Bean<Integer,List<MediaBean>>();
+			if(mediaList.size() > pageIdxPageCount[1]){
+
+				if((pageIdxPageCount[0]+pageIdxPageCount[1]) > mediaList.size())	
+					bean.setName(mediaList.subList(pageIdxPageCount[0],mediaList.size()));
+				else
+					bean.setName(mediaList.subList(pageIdxPageCount[0],pageIdxPageCount[1]+pageIdxPageCount[0]));
+
+			}else{
+				bean.setName(mediaList);
+			}
+
+			bean.setId((int)Math.ceil((mediaList.size())/(float)pageIdxPageCount[1]));
+
+			mediaInfoMap.put(category, bean);
+
+		}
+
+		return mediaInfoMap;
+
+	}
+	
+	public Map<Bean<Integer,String>,Bean<Integer,List<MediaBean>>> getMediaInfoOfSubCategory(int serviceId,int parentCatId,int catId,int mediaContentPurposeId,int width,int height,int ...pageIdxPageCount){
+
+		//Map<Bean<mediaGroupId,mediaGroupTitle>,Bean<no. of pages count,List<MediaBean>>>
+		Map<Bean<Integer,String>,Bean<Integer,List<MediaBean>>> mediaInfoMap = new LinkedHashMap<Bean<Integer,String>,Bean<Integer,List<MediaBean>>>();
+
+		MediaGroup mediaGroup = mediaGroupDao.findById(catId);
+		ServiceMediaGroup serviceMediaGroup =  serviceMediaGroupDao.findByServiceIdAndMediagroupId(serviceId,parentCatId);
+		Bean<Integer,String> category = new Bean<Integer,String>();
+		category.setId(mediaGroup.getMediaGroupId());
+		category.setName(mediaGroup.getMediaGroupTitle());
+
+		List<MediaBean> mediaBeans = mediaGroupMediaDao.getMediaInfoOfMediaGroup(category.getId(),mediaContentPurposeId,serviceMediaGroup.getServiceKeyId(),width,height);
+	//	List<MediaSubGroup>  mediaSubGroups = mediaSubGroupDao.findByProperty("parentMediaGroup",category.getId());
+
+		List<MediaBean> mediaList = new LinkedList<MediaBean>();
+		
+		if( !mediaBeans.isEmpty()){
+			
+		/*	
+		 * !mediaSubGroups.isEmpty() ||
+		 * for(MediaSubGroup mediaSubGroup : mediaSubGroups){
+				MediaGroup childMediaGroup   =	mediaSubGroup.getChildMediaGroup();
+				MediaGroup parentMediaGroup   =	mediaSubGroup.getParentMediaGroup();
+				ServiceMediaGroup serviceMediaGroupOfchildMediaGroup = serviceMediaGroupDao.findByServiceIdAndMediagroupId(serviceId, parentMediaGroup.getMediaGroupId());
+				ServiceKeyPrice serviceKeyPrice = serviceKeyPriceDao.findByProperty("serviceKey", serviceMediaGroup.getServiceKeyId()).get(0);
+				MediaBean mediaBean = mediaGroupMediaDao.getMediaInfoOfMediaSubGroup(childMediaGroup.getMediaGroupId(),serviceMediaGroupOfchildMediaGroup.getServiceKeyId(),CommonUtils.MEDIA_CONTENT_PRIVIEW,width,height);
+				mediaBean.setServiceKeyId((Integer)serviceMediaGroup.getServiceKeyId());
+				mediaBean.setServiceKeypriceId((Integer)serviceKeyPrice.getServiceKeyPriceId());
+				mediaBean.setPrice((Double)serviceKeyPrice.getPrice());
+				mediaList.add(mediaBean);
+			}*/
 			
 			mediaList.addAll(mediaBeans);
 
