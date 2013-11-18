@@ -82,7 +82,7 @@ public class HomeController extends BaseController{
 	public void downloadMedia(HttpServletRequest request,HttpServletResponse response,Model model,@PathVariable Integer serviceId,@PathVariable Integer mediaId){
 	String channel = request.getParameter("channel");
 	Map<String, String> deviceMap = getDeviceCapbilities(request);
-	MediaBean mediaBean = serviceLayer.getMediaInfoOfMedia(mediaId,CommonUtils.MEDIA_CONTENT_NON_PRIVIEW, 100,100);
+	MediaBean mediaBean = serviceLayer.getMediaInfoOfMedia(mediaId,CommonUtils.MEDIA_CONTENT_NON_PRIVIEW,Integer.parseInt(deviceMap.get("width")),Integer.parseInt(deviceMap.get("height")));
 	mediaBean.setServiceId(serviceId);
 	
 	PurchaseBean purchaseBean = new PurchaseBean();	
