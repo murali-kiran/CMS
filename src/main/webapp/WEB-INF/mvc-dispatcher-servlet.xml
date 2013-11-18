@@ -130,22 +130,17 @@
 	<bean id="mimeType" class="javax.activation.MimetypesFileTypeMap"></bean>
 	
 	<bean id="applicationProperties" class="com.sumadga.utils.ApplicationProperties">
-<<<<<<< HEAD
 		<property name="maxSubFolders" value="20000"/>
 		<property name="mediaCompletePath" value="/home/sravan/cms"/>
 		<property name="mediaAbsolutePath" value="/home/sravan/cms"/>
 		<property name="isVideoTranscodingEnabled" value="true" />
 		<property name="videoTranscodingScriptPath" value="/home/kumar/Documents/kiran_personal/CMS/src/main/resource" />
-=======
-	<!-- 	<property name="mediaCompletePath" value="/home/kumar/mms/"/>
-		<property name="mediaAbsolutePath" value="/resources/mms/"/> -->
 		<property name="qubeCellURL" value="http://IP:PORT/APP/Detect.php"/>
 		<property name="username" value="/resources/mms/"/>
 		<property name="password" value="/resources/mms/"/>
 		<property name="msisdnReturnURL" value="/resources/mms/"/>
 		<property name="eventChargeReturnURL" value="/resources/mms/"/>
 		<property name="secretKey" value="/resources/mms/"/>
->>>>>>> f11a06b0db4e5b6477bf58b3dd6665567227cb0a
 	</bean>
 	
 </beans>
