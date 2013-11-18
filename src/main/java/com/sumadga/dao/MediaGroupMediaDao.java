@@ -11,12 +11,15 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sumadga.dto.MediaGroupMedia;
+import com.sumadga.utils.ApplicationProperties;
+import com.sumadga.utils.CommonUtils;
 import com.sumadga.wap.model.Bean;
 import com.sumadga.wap.model.MediaBean;
 
@@ -27,6 +30,9 @@ public class MediaGroupMediaDao  {
 
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	@Autowired
+	ApplicationProperties applicationProperties;
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataAccessException.class)
 	public void save(MediaGroupMedia entity) {
@@ -248,7 +254,12 @@ public class MediaGroupMediaDao  {
 			mediaBean.setMediaTypeId((Integer)obj[0]);
 			mediaBean.setMediaId((Integer)obj[1]);
 			mediaBean.setMediaName((String)obj[2]);
+			
+			if(mediaContentPurposeId==CommonUtils.MEDIA_CONTENT_NON_PRIVIEW)
+			mediaBean.setStoragePath(applicationProperties.getMediaCompletePath()+(String)obj[3]);
+			else
 			mediaBean.setStoragePath((String)obj[3]);
+			
 			mediaBean.setMediaContentId((Integer)obj[4]);
 			
 			return mediaBean;
@@ -305,7 +316,10 @@ public class MediaGroupMediaDao  {
 				bean.setMediaTypeId((Integer)obj[0]);
 				bean.setMediaId((Integer)obj[1]);
 				bean.setMediaName((String)obj[2]);
-				bean.setStoragePath((String)obj[3]);
+				if(mediaContentPurposeId == CommonUtils.MEDIA_CONTENT_PRIVIEW)
+				bean.setStoragePath(applicationProperties.getMediaAbsolutePath()+(String)obj[3]);
+				else
+				bean.setStoragePath((String)obj[3]);	
 				bean.setServiceKeyId((Integer)obj[4]);
 				bean.setServiceKeypriceId((Integer)obj[5]);
 				bean.setPrice((Double)obj[6]);
@@ -357,7 +371,12 @@ public class MediaGroupMediaDao  {
 						bean.setMediaTypeId((Integer)obj[0]);
 						bean.setMediaId((Integer)obj[1]);
 						bean.setMediaName((String)obj[2]);
+						
+						if(contentpurpose == CommonUtils.MEDIA_CONTENT_PRIVIEW)
+						bean.setStoragePath(applicationProperties.getMediaAbsolutePath()+(String)obj[3]);
+						else
 						bean.setStoragePath((String)obj[3]);
+						
 						bean.setServiceKeyId((Integer)obj[4]);
 						bean.setServiceKeypriceId((Integer)obj[5]);
 						bean.setPrice((Double)obj[6]);
