@@ -38,6 +38,7 @@
 	
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<!-- <property name="url" value="jdbc:mysql://localhost:3306/cms?autoReconnect=true" /> -->
 		<property name="url" value="jdbc:mysql://49.50.68.139:3306/cms?autoReconnect=true" />
 		<property name="username" value="sumadga" />
 		<property name="password" value="sumadga" />
@@ -130,8 +131,11 @@
 	<bean id="mimeType" class="javax.activation.MimetypesFileTypeMap"></bean>
 	
 	<bean id="applicationProperties" class="com.sumadga.utils.ApplicationProperties">
-	<!-- 	<property name="mediaCompletePath" value="/home/kumar/mms/"/>
-		<property name="mediaAbsolutePath" value="/resources/mms/"/> -->
+		<property name="maxSubFolders" value="20000"/>
+		<property name="mediaCompletePath" value="/opt/cms_media/"/>
+		<property name="mediaAbsolutePath" value="http://49.50.68.139:8080/MMS/resources/mms/"/>
+		<property name="isVideoTranscodingEnabled" value="true" />
+		<property name="videoTranscodingScriptPath" value="/home/kumar/Documents/kiran_personal/CMS/src/main/resource" />
 		<property name="qubeCellURL" value="http://IP:PORT/APP/Detect.php"/>
 		<property name="username" value="/resources/mms/"/>
 		<property name="password" value="/resources/mms/"/>
