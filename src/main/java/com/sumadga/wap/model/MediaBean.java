@@ -5,6 +5,7 @@ public class MediaBean {
 	
 	private int mediaId;
 	private int mediaTypeId;
+	private int mediagroupParentId;
 	private int mediagroupId;
 	private int mediaContentId;
 	private String storagePath;
@@ -16,10 +17,12 @@ public class MediaBean {
 	private Double price;
 	
 	
-	
-	
-	
-	
+	public int getMediagroupParentId() {
+		return mediagroupParentId;
+	}
+	public void setMediagroupParentId(int mediagroupParentId) {
+		this.mediagroupParentId = mediagroupParentId;
+	}
 	public int getServiceKeyId() {
 		return serviceKeyId;
 	}

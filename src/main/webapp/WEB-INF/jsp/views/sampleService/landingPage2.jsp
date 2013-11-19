@@ -11,10 +11,10 @@
 		
 	   <c:choose>
 	    <c:when test="${mediaInfo.isSubMediaGroup eq true}">
-  		<a href="${pageContext.servletContext.contextPath}/service2/cat/${serviceId}/${mediaInfo.mediagroupId}?channel=${channel}">
+  		<a href="${pageContext.servletContext.contextPath}/service2/cat/${serviceId}/${mediaInfo.mediagroupParentId}/${mediaInfo.mediagroupId}?channel=${channel}">
   		<div>${mediaInfo.mediaName}</div>
   		<div>
-				<img alt="noImage" src="${pageContext.servletContext.contextPath}/${mediaInfo.storagePath}"
+				<img alt="noImage" src="${mediaInfo.storagePath}"
 					width="52px" height="52px">
 			</div>
 			

@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -15,20 +14,19 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sumadga.dto.ServiceMediaGroup;
-import com.sumadga.wap.model.MediaBean;
+import com.sumadga.dto.ServiceKey;
 
 @Repository
-public class ServiceMediaGroupDao {
+public class ServiceKeyDao {
 
-	private static final Logger logger = Logger.getLogger(ServiceMediaGroupDao.class);
-	
+	private static final Logger logger = Logger.getLogger(ServiceKeyDao.class);
+
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataAccessException.class)
-	public void save(ServiceMediaGroup entity) {
-		logger.info("saving ServiceMediaGroup instance");
+	public void save(ServiceKey entity) {
+		logger.info("saving ServiceKey instance");
 		try {
 			entity.setCreatedTime(new Date());
 			entity.setModifiedTime(new Timestamp(new Date().getTime()));
@@ -41,11 +39,11 @@ public class ServiceMediaGroupDao {
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataAccessException.class)
-	public void delete(ServiceMediaGroup entity) {
-		logger.info("deleting ServiceMediaGroup instance");
+	public void delete(ServiceKey entity) {
+		logger.info("deleting ServiceKey instance");
 		try {
-			entity = entityManager.getReference(ServiceMediaGroup.class,
-					entity.getServiceMediaGroupId());
+			entity = entityManager.getReference(ServiceKey.class,
+					entity.getServiceKeyId());
 			entityManager.remove(entity);
 			logger.info("delete successful");
 		} catch (RuntimeException re) {
@@ -55,11 +53,11 @@ public class ServiceMediaGroupDao {
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataAccessException.class)
-	public ServiceMediaGroup update(ServiceMediaGroup entity) {
-		logger.info("updating ServiceMediaGroup instance");
+	public ServiceKey update(ServiceKey entity) {
+		logger.info("updating ServiceKey instance");
 		try {
 			entity.setModifiedTime(new Timestamp(new Date().getTime()));
-			ServiceMediaGroup result = entityManager.merge(entity);
+			ServiceKey result = entityManager.merge(entity);
 			logger.info("update successful");
 			return result;
 		} catch (RuntimeException re) {
@@ -68,10 +66,10 @@ public class ServiceMediaGroupDao {
 		}
 	}
 
-	public ServiceMediaGroup findById(Integer id) {
-		logger.info("finding ServiceMediaGroup instance with id: " + id);
+	public ServiceKey findById(Integer id) {
+		logger.info("finding ServiceKey instance with id: " + id);
 		try {
-			ServiceMediaGroup instance = entityManager.find(ServiceMediaGroup.class, id);
+			ServiceKey instance = entityManager.find(ServiceKey.class, id);
 			return instance;
 		} catch (RuntimeException re) {
 			logger.error("find failed", re);
@@ -80,18 +78,19 @@ public class ServiceMediaGroupDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ServiceMediaGroup> findByProperty(String propertyName,
+	public List<ServiceKey> findByProperty(String propertyName,
 			final Object value, final int... rowStartIdxAndCount) {
-		logger.info("finding ServiceMediaGroup instance with property: " + propertyName
+		logger.info("finding ServiceKey instance with property: " + propertyName
 				+ ", value: " + value);
 		try {
-			 String queryString = "select model from ServiceMediaGroup model where model."
+						
+			String queryString = "select model from ServiceKey model where model."
 					+ propertyName + "= " + value;
 			if(value.getClass().getName().equals("java.lang.String"))
-				queryString = "select model from ServiceMediaGroup model where model."
+				queryString = "select model from ServiceKey model where model."
 						+ propertyName + "= '" + value+"'";
 			Query query = entityManager
-					.createQuery(queryString, ServiceMediaGroup.class);
+					.createQuery(queryString, ServiceKey.class);
 			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
 				int rowStartIdx = Math.max(0, rowStartIdxAndCount[0]);
 				if (rowStartIdx > 0) {
@@ -111,37 +110,14 @@ public class ServiceMediaGroupDao {
 			throw re;
 		}
 	}
-	
-	@SuppressWarnings("unchecked")
-	public ServiceMediaGroup findByServiceIdAndMediagroupId(int serviceId,int mediaGroupId) {
-		
-		try {
-		final String queryString = "SELECT * FROM  service_media_groups  WHERE service_id = ? and media_group_id = ?";
-			
-			Query query = entityManager.createNativeQuery(queryString,ServiceMediaGroup.class);
-			query.setParameter(1, serviceId);
-			query.setParameter(2, mediaGroupId);
-			
-			
-			ServiceMediaGroup serviceMediaGroup  = (ServiceMediaGroup)query.getSingleResult();
-			
-			return serviceMediaGroup;
-		}catch(NoResultException re){
-		    return null;
-		}catch (RuntimeException re) {
-			logger.error("find by property name failed", re);
-			throw re;
-		}
-	}
-
 
 	@SuppressWarnings("unchecked")
-	public List<ServiceMediaGroup> findAll(final int... rowStartIdxAndCount) {
-		logger.info("finding all ServiceMediaGroup instances");
+	public List<ServiceKey> findAll(final int... rowStartIdxAndCount) {
+		logger.info("finding all ServiceKey instances");
 		try {
-			final String queryString = "select model from ServiceMediaGroup model";
+			final String queryString = "select model from ServiceKey model";
 			Query query = entityManager
-					.createQuery(queryString, ServiceMediaGroup.class);
+					.createQuery(queryString, ServiceKey.class);
 			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
 				int rowStartIdx = Math.max(0, rowStartIdxAndCount[0]);
 				if (rowStartIdx > 0) {
@@ -161,6 +137,4 @@ public class ServiceMediaGroupDao {
 			throw re;
 		}
 	}
-	
-	
 }

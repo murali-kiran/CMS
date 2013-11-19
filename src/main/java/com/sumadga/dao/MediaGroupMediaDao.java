@@ -11,12 +11,15 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sumadga.dto.MediaGroupMedia;
+import com.sumadga.utils.ApplicationProperties;
+import com.sumadga.utils.CommonUtils;
 import com.sumadga.wap.model.Bean;
 import com.sumadga.wap.model.MediaBean;
 
@@ -27,6 +30,9 @@ public class MediaGroupMediaDao  {
 
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	@Autowired
+	ApplicationProperties applicationProperties;
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataAccessException.class)
 	public void save(MediaGroupMedia entity) {
@@ -248,7 +254,12 @@ public class MediaGroupMediaDao  {
 			mediaBean.setMediaTypeId((Integer)obj[0]);
 			mediaBean.setMediaId((Integer)obj[1]);
 			mediaBean.setMediaName((String)obj[2]);
+			
+			if(mediaContentPurposeId==CommonUtils.MEDIA_CONTENT_NON_PRIVIEW)
+			mediaBean.setStoragePath(applicationProperties.getMediaCompletePath()+(String)obj[3]);
+			else
 			mediaBean.setStoragePath((String)obj[3]);
+			
 			mediaBean.setMediaContentId((Integer)obj[4]);
 			
 			return mediaBean;
@@ -305,7 +316,10 @@ public class MediaGroupMediaDao  {
 				bean.setMediaTypeId((Integer)obj[0]);
 				bean.setMediaId((Integer)obj[1]);
 				bean.setMediaName((String)obj[2]);
-				bean.setStoragePath((String)obj[3]);
+				if(mediaContentPurposeId == CommonUtils.MEDIA_CONTENT_PRIVIEW)
+				bean.setStoragePath(applicationProperties.getMediaAbsolutePath()+(String)obj[3]);
+				else
+				bean.setStoragePath((String)obj[3]);	
 				bean.setServiceKeyId((Integer)obj[4]);
 				bean.setServiceKeypriceId((Integer)obj[5]);
 				bean.setPrice((Double)obj[6]);
@@ -325,15 +339,18 @@ public class MediaGroupMediaDao  {
 	
 	
 			@SuppressWarnings("unchecked")
-			public MediaBean getMediaInfoOfMediaSubGroup(int mediaGroupId,int serviceKeyId,int contentpurpose,final int... rowStartIdxAndCount) {
+			public MediaBean getMediaInfoOfMediaSubGroup(int mediaGroupId,int serviceKeyId,int contentpurpose,int width,int height,final int... rowStartIdxAndCount) {
 				logger.info("Finding media info of mediaGroup");
 				try {
 				//	final String queryString = "SELECT m.media_type_id , m.media_id , m.media_title , mc.storage_path FROM  media_groups cat JOIN  media m JOIN  media_contents mc ON  media_group_id = ? AND cat.media_group_preview_id = m.media_id AND mc.media_id = cat.media_group_preview_id group by m.media_id , m.media_title , mc.storage_path";
-					final String queryString = "SELECT m.media_type_id , m.media_id , m.media_title , mc.storage_path , skp.service_key_id , skp.service_key_price_id , skp.price  FROM  media_groups cat JOIN  media m JOIN  media_contents mc JOIN service_key_prices skp   JOIN media_specifications ms ON  media_group_id = ? AND skp.service_key_id = ? AND cat.media_group_preview_id = m.media_id AND mc.media_id = cat.media_group_preview_id AND mc.media_specification_id = ms.media_specification_id  AND  ms.media_content_purpose_id = ? group by m.media_id , m.media_title , mc.storage_path, skp.service_key_id ,skp.service_key_price_id , skp.price";
+			//		final String queryString = "SELECT m.media_type_id , m.media_id , m.media_title , mc.storage_path , skp.service_key_id , skp.service_key_price_id , skp.price  FROM  media_groups cat JOIN  media m JOIN  media_contents mc JOIN service_key_prices skp   JOIN media_specifications ms ON  media_group_id = ? AND skp.service_key_id = ? AND cat.media_group_preview_id = m.media_id AND mc.media_id = cat.media_group_preview_id AND mc.media_specification_id = ms.media_specification_id  AND  ms.media_content_purpose_id = ? group by m.media_id , m.media_title , mc.storage_path, skp.service_key_id ,skp.service_key_price_id , skp.price";
+					final String queryString =	"SELECT m.media_type_id, m.media_id, m.media_title, mc.storage_path, ms.height, ms.width FROM media_groups cat JOIN media m JOIN media_contents mc JOIN media_specifications ms ON media_group_id = ? AND cat.media_group_preview_id = m.media_id AND mc.media_id = cat.media_group_preview_id AND mc.media_specification_id = ms.media_specification_id AND ms.width <= ? AND ms.height <= ? AND ms.media_content_purpose_id = ? GROUP BY m.media_id, m.media_title, mc.storage_path ORDER BY ms.height DESC  limit 1";
 					Query query = entityManager.createNativeQuery(queryString);
 					query.setParameter(1, mediaGroupId);
-					query.setParameter(2, serviceKeyId);
-					query.setParameter(3, contentpurpose);
+				//	query.setParameter(2, serviceKeyId);
+					query.setParameter(2, width);
+					query.setParameter(3, height);
+					query.setParameter(4, contentpurpose);
 					
 					if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
 						int rowStartIdx = Math.max(0, rowStartIdxAndCount[0]);
@@ -357,10 +374,15 @@ public class MediaGroupMediaDao  {
 						bean.setMediaTypeId((Integer)obj[0]);
 						bean.setMediaId((Integer)obj[1]);
 						bean.setMediaName((String)obj[2]);
+						
+						if(contentpurpose == CommonUtils.MEDIA_CONTENT_PRIVIEW)
+						bean.setStoragePath(applicationProperties.getMediaAbsolutePath()+(String)obj[3]);
+						else
 						bean.setStoragePath((String)obj[3]);
-						bean.setServiceKeyId((Integer)obj[4]);
+						
+					/*	bean.setServiceKeyId((Integer)obj[4]);
 						bean.setServiceKeypriceId((Integer)obj[5]);
-						bean.setPrice((Double)obj[6]);
+						bean.setPrice((Double)obj[6]);*/
 						bean.setIsSubMediaGroup(true);
 						bean.setMediagroupId(mediaGroupId);
 						mediaBeans.add(bean);
