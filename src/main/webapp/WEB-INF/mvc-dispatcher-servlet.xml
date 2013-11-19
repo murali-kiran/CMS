@@ -132,8 +132,8 @@
 	
 	<bean id="applicationProperties" class="com.sumadga.utils.ApplicationProperties">
 		<property name="maxSubFolders" value="20000"/>
-		<property name="mediaCompletePath" value="/home/sravan/cms/"/>
-		<property name="mediaAbsolutePath" value="/home/sravan/cms/"/>
+		<property name="mediaCompletePath" value="/opt/cms_media/"/>
+		<property name="mediaAbsolutePath" value="http://49.50.68.139:8080/MMS/resources/mms/"/>
 		<property name="isVideoTranscodingEnabled" value="true" />
 		<property name="videoTranscodingScriptPath" value="/home/kumar/Documents/kiran_personal/CMS/src/main/resource" />
 		<property name="qubeCellURL" value="http://IP:PORT/APP/Detect.php"/>
