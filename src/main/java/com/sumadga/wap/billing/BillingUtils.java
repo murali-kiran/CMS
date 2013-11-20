@@ -60,7 +60,7 @@ public class BillingUtils {
 		return url.toString();
 	}
 	
-public BillingModel getEventBillingURL(HttpServletRequest httpServletRequest,Long msisdn,String operator,String productid){
+public BillingModel getEventBilling(HttpServletRequest httpServletRequest,Long msisdn,String operator,String productid){
 		
 		Request request=new Request();
 		

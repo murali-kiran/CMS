@@ -99,9 +99,9 @@ public class BillingController {
 		
 		String redirectUrl=req.getRedirectURL();
 		if(redirectUrl.contains("?"))
-			redirectUrl=redirectUrl+"&responsecode="+mdn;
+			redirectUrl=redirectUrl+"&responsecode="+responsecode;
 		else
-			redirectUrl=redirectUrl+"?responsecode="+mdn;
+			redirectUrl=redirectUrl+"?responsecode="+responsecode;
 		return redirectUrl;
 	}
 	
