@@ -155,11 +155,26 @@ public class BaseController {
 		String width = device.getCapability("resolution_width");
 		String height = device.getCapability("resolution_height");
 		String userAgent = request.getHeader("User-Agent");
+		String device_os = device.getCapability("device_os");
+		
+		if(device_os.contains("Android")||device_os.contains("iPhone")){
+			if(height.equals("264")){
+				width = "320";height = "240";
+			}
+		}else{
+			if(height.equals("264")){
+				width = "320";height = "240";
+			}
+		}
 		
 		Map<String, String> mobileCapbilityMap = new HashMap<String, String>();
+		
+		// Android
 		mobileCapbilityMap.put("width", width);
 		mobileCapbilityMap.put("height", height);
 		mobileCapbilityMap.put("userAgent", userAgent);
+		mobileCapbilityMap.put("device_os", device_os);
+		
 		
 		return mobileCapbilityMap;
 	}
