@@ -11,7 +11,10 @@ public class ApplicationProperties {
 	private String msisdnReturnURL;
 	private String eventChargeReturnURL;
 	private String secretKey;
-	
+	private String usernameOtherAPI;
+	private String passwordOtherAPI;
+	private String urlOtherAPI;
+	private String secretKeyOtherAPI;
 	
 	public String getQubeCellURL() {
 		return qubeCellURL;
@@ -79,6 +82,30 @@ public class ApplicationProperties {
 	}
 	public void setVideoTranscodingScriptPath(String videoTranscodingScriptPath) {
 		this.videoTranscodingScriptPath = videoTranscodingScriptPath;
+	}
+	public String getUsernameOtherAPI() {
+		return usernameOtherAPI;
+	}
+	public void setUsernameOtherAPI(String usernameOtherAPI) {
+		this.usernameOtherAPI = usernameOtherAPI;
+	}
+	public String getPasswordOtherAPI() {
+		return passwordOtherAPI;
+	}
+	public void setPasswordOtherAPI(String passwordOtherAPI) {
+		this.passwordOtherAPI = passwordOtherAPI;
+	}
+	public String getUrlOtherAPI() {
+		return urlOtherAPI;
+	}
+	public void setUrlOtherAPI(String urlOtherAPI) {
+		this.urlOtherAPI = urlOtherAPI;
+	}
+	public String getSecretKeyOtherAPI() {
+		return secretKeyOtherAPI;
+	}
+	public void setSecretKeyOtherAPI(String secretKeyOtherAPI) {
+		this.secretKeyOtherAPI = secretKeyOtherAPI;
 	}
 
 }
