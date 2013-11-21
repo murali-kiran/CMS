@@ -5,7 +5,10 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -15,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.sumadga.dto.ServiceMediaGroup;
+import com.sumadga.utils.ApplicationProperties;
 import com.sumadga.utils.CommonUtils;
 import com.sumadga.utils.DownloadFile;
+import com.sumadga.wap.billing.BillingModel;
+import com.sumadga.wap.billing.BillingUtils;
 import com.sumadga.wap.model.Bean;
 import com.sumadga.wap.model.MediaBean;
 import com.sumadga.wap.model.PurchaseBean;
@@ -30,6 +36,12 @@ public class HomeController extends BaseController{
 	private ServiceLayer serviceLayer;
 	@Autowired
 	private DownloadFile downloadFile;
+	@Autowired
+	BillingUtils billingUtils;
+	@Autowired
+	ApplicationProperties applicationProperties;
+	@Autowired
+	HttpSession session;
 
 /*	@RequestMapping(value="/service/{serviceId}",method=RequestMethod.GET)
 	public String getFirstService(Model model,@PathVariable Integer serviceId){
@@ -54,11 +66,22 @@ public class HomeController extends BaseController{
 	
 	@RequestMapping(value="/service/{serviceId}",method=RequestMethod.GET)
 	public String getSecondService(Model model,@PathVariable Integer serviceId,HttpServletRequest request){
+		
 		String channel = request.getParameter("channel");
 		if(channel==null)
 			return "redirect:/service/"+serviceId+"?channel=smd";
 		
+		if(StringUtils.isBlank(request.getParameter("msisdn"))){
+			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
+			return "redirect:"+msisdnDetectionUrl;
+		}
+		
+		
 		Map<String,String> deviceMap =	getDeviceCapbilities(request);
+		
+		session.setAttribute("msisdn", request.getAttribute("msisdn"));
+		session.setAttribute("operator", request.getAttribute("operator"));
+		
 		
 		int previewCount = 3;
 		//List<Bean<categoryId,Bean<categoryName,ServiceMediaGroup>>>	
@@ -78,8 +101,18 @@ public class HomeController extends BaseController{
 	
 	
 	
-	@RequestMapping(value="/service2/dwl/{serviceId}/{mediaId}",method=RequestMethod.GET)
-	public void downloadMedia(HttpServletRequest request,HttpServletResponse response,Model model,@PathVariable Integer serviceId,@PathVariable Integer mediaId){
+	@RequestMapping(value="/service2/dwl/{serviceId}/{mediaId}/{serviceKeypriceKey}",method=RequestMethod.GET)
+	public void downloadMedia(HttpServletRequest request,HttpServletResponse response,Model model,@PathVariable Integer serviceId,@PathVariable Integer mediaId,@PathVariable String serviceKeypriceKey){
+		
+		
+	BillingModel billingModel =	billingUtils.getEventBilling(request,Long.parseLong((String)session.getAttribute("msisdn")), session.getAttribute("operator").toString(), serviceKeypriceKey);
+	billingModel.setServiceKeypriceKey(serviceKeypriceKey);
+	billingModel.setSecretKeyOtherAPI(applicationProperties.getSecretKeyOtherAPI());
+	
+	model.addAttribute("billingModel", billingModel);
+	//return 
+		
+		
 	String channel = request.getParameter("channel");
 	Map<String, String> deviceMap = getDeviceCapbilities(request);
 	MediaBean mediaBean = serviceLayer.getMediaInfoOfMedia(mediaId,CommonUtils.MEDIA_CONTENT_NON_PRIVIEW,Integer.parseInt(deviceMap.get("width")),Integer.parseInt(deviceMap.get("height")));
