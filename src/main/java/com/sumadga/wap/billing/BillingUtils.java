@@ -113,11 +113,11 @@ public BillingModel getEventBilling(HttpServletRequest httpServletRequest,Long m
 	}
 
 	public String getEventBillingNew(HttpServletRequest httpServletRequest,
-			long parseLong, String string, String serviceKeypriceKey) {
+			long msisdn, String operator, String serviceKeypriceKey) {
 		
 		Request request=new Request();
 		
-		request.setMsisdn(parseLong);
+		request.setMsisdn(msisdn);
 		
 		StringBuffer redirectUrl=httpServletRequest.getRequestURL();
 		redirectUrl.append("?t1=t");
@@ -140,14 +140,45 @@ public BillingModel getEventBilling(HttpServletRequest httpServletRequest,Long m
 		url.append("&password="+applicationProperties.getPassword());
 		url.append("&requestid="+request.getRequestId());
 		url.append("&key="+getMD5(applicationProperties.getSecretKey()+request.getRequestId()));
-		url.append("&msisdn=9966792234");
-		url.append("&operator=vodafone");
-		url.append("&productid=1");
+		url.append("&msisdn="+msisdn);
+		url.append("&operator="+operator);
+		url.append("&productid=1");//Product id is nothing but rupees I think but not sure 
+		//serviceKeypriceKey which you sending from controller contains integer value or not need clarification and append it.
+		//Check with Qubecell regarding productid
+		
 		url.append("&operation=EventCharge");
-		url.append("&returnurl=http://localhost:8080/Wap/service2/billingResponse");
+		url.append("&returnurl=http://49.50.68.139:8080/Wap/service2/billingResponse");
 		// http://49.50.68.139:8080/Wap
 		
 		
 		return url.toString();
+	}
+	public String getBillingErrorMessage(int errorCode){
+		String status = "";
+		if(errorCode == 101)
+			status = "success";
+		else if(errorCode == 102)
+			status = "Authentication failure";
+		else if(errorCode == 103)
+			status = "Operator not supported";
+		else if(errorCode == 104)
+			status = "Duplicate request id";
+		else if(errorCode == 105)
+			status = "Charging failed, insufficient balance";
+		else if(errorCode == 106)
+			status = "Undetermined error";
+		else if(errorCode == 107)
+			status = "Invalid key";
+		else if(errorCode == 108)
+			status = "Failure";
+		else if(errorCode == 109)
+			status = "Invalid MSISDN";
+		else if(errorCode == 110)
+			status = "Invalid product ID";
+		else if(errorCode == 111)
+			status = "Operator not supported";
+		else 
+			status = "Unknown Error While billing";
+		return status;
 	}
 }

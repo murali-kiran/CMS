@@ -102,10 +102,24 @@ public class HomeController extends BaseController{
 	@RequestMapping(value="/service2/billingResponse",method=RequestMethod.GET)
 	public String billingResponse(HttpServletRequest request){
 		
-	Map<String,String> map =	RequestUtil.INSTANCE.dumpRequestScope(request);
-	System.out.println(map);
-		
-		return "forward:/service/2";
+		Map<String,String> map =	RequestUtil.INSTANCE.dumpRequestScope(request);
+		System.out.println(map);
+		String responseCode = map.get("responsecode");
+		if(responseCode.equals("101")){
+			System.out.println("Billing Success");
+			//Add to purchase table I think Sravan already wrote it its time 3:00 AM sorry not having time to check
+			//Purchase adding logic
+			
+			//Download adding logic I think sravan wrote this
+			
+			//Flushing file download as response. //already written by sravan just he need to integrate
+			
+			
+		}else{
+			String error = billingUtils.getBillingErrorMessage(Integer.parseInt(responseCode));
+			System.out.println("Billing Failed due to :"+error);
+		}
+		return "forward:/service/2?channel=smd&msisdn=9966792234&operator=vodafone";//Please remove msisdn and operator it is for testing. Get from session
 	}
 	
 	
@@ -119,8 +133,9 @@ public class HomeController extends BaseController{
 	
 	model.addAttribute("billingModel", billingModel);
 	return "views/sampleService/billingModel";*/
-		//String url = billingUtils.getEventBillingNew(request,Long.parseLong((String)session.getAttribute("msisdn")), session.getAttribute("operator").toString(), serviceKeypriceKey);
-		String url = billingUtils.getEventBillingNew(request,9966L, "vodafone", serviceKeypriceKey);
+		//String url = billingUtils.getEventBilling(request,Long.parseLong((String)session.getAttribute("msisdn")), session.getAttribute("operator").toString(), serviceKeypriceKey);
+	//	String url = billingUtils.getEventBillingNew(request,9966L, "vodafone", serviceKeypriceKey);
+		String url = billingUtils.getEventBillingNew(request,Long.parseLong((String)session.getAttribute("msisdn")), session.getAttribute("operator").toString(), serviceKeypriceKey);
 		System.out.println("Framed url:"+url);
 		return "redirect:"+url;
 		
