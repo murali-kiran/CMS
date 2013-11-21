@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:forEach var="categoryMap" items="${mediaInfoMap}">
 
-	<c:set var="category" scope="session" value="${categoryMap.key}" />
+	<c:set var="category" scope="request" value="${categoryMap.key}" />
 	<div style="width: 100%; background-color: #00FF00">${category.name}</div>
 	
 	<c:set var="media" scope="request" value="${categoryMap.value}" />
