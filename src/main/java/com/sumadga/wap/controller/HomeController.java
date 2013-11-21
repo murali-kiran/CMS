@@ -103,13 +103,16 @@ public class HomeController extends BaseController{
 	public String downloadMedia(HttpServletRequest request,HttpServletResponse response,HttpSession session,Model model,@PathVariable Integer serviceId,@PathVariable Integer mediaId,@PathVariable String serviceKeypriceKey){
 		
 		
-	BillingModel billingModel =	billingUtils.getEventBilling(request,Long.parseLong((String)session.getAttribute("msisdn")), session.getAttribute("operator").toString(), serviceKeypriceKey);
+	/*BillingModel billingModel =	billingUtils.getEventBilling(request,Long.parseLong((String)session.getAttribute("msisdn")), session.getAttribute("operator").toString(), serviceKeypriceKey);
 	billingModel.setServiceKeypriceKey(serviceKeypriceKey);
 	billingModel.setSecretKeyOtherAPI(applicationProperties.getSecretKeyOtherAPI());
 	
 	model.addAttribute("billingModel", billingModel);
-	return "views/sampleService/billingModel";
-		
+	return "views/sampleService/billingModel";*/
+		//String url = billingUtils.getEventBillingNew(request,Long.parseLong((String)session.getAttribute("msisdn")), session.getAttribute("operator").toString(), serviceKeypriceKey);
+		String url = billingUtils.getEventBillingNew(request,9966L, "vodafone", serviceKeypriceKey);
+		System.out.println("Framed url:"+url);
+		return "redirect:"+url;
 		
 	/*String channel = request.getParameter("channel");
 	Map<String, String> deviceMap = getDeviceCapbilities(request);

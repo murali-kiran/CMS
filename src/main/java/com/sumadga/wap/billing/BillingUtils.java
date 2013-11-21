@@ -111,4 +111,43 @@ public BillingModel getEventBilling(HttpServletRequest httpServletRequest,Long m
 			return "error";
 		}
 	}
+
+	public String getEventBillingNew(HttpServletRequest httpServletRequest,
+			long parseLong, String string, String serviceKeypriceKey) {
+		
+		Request request=new Request();
+		
+		request.setMsisdn(parseLong);
+		
+		StringBuffer redirectUrl=httpServletRequest.getRequestURL();
+		redirectUrl.append("?t1=t");
+		@SuppressWarnings("unchecked")
+		Enumeration<String> enumeration= httpServletRequest.getParameterNames();
+		while(enumeration.hasMoreElements()) {
+			String param=enumeration.nextElement();
+			redirectUrl.append("&"+param +"="+httpServletRequest.getParameter(param));
+		}
+		
+		request.setRedirectURL(redirectUrl.toString());
+		request.setRequestedURL(redirectUrl.toString());
+		
+		
+		requestDao.save(request);
+
+		StringBuffer url=new StringBuffer();
+		url.append(applicationProperties.getMsisdnReturnURL());
+		url.append("?username="+applicationProperties.getUsername());
+		url.append("&password="+applicationProperties.getPassword());
+		url.append("&requestid="+request.getRequestId());
+		url.append("&key="+getMD5(applicationProperties.getSecretKey()+request.getRequestId()));
+		url.append("&msisdn=9966792234");
+		url.append("&operator=vodafone");
+		url.append("&productid=1");
+		url.append("&operation=EventCharge");
+		url.append("&returnurl=http://49.50.68.139/phpmyadmin");
+		
+		
+		
+		return url.toString();
+	}
 }
