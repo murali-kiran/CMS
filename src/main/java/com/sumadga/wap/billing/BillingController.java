@@ -66,14 +66,14 @@ public class BillingController {
 		
 		String redirectUrl=req.getRedirectURL();
 		if(redirectUrl.contains("?"))
-			redirectUrl=redirectUrl+"&msisdn="+mdn+"operator="+operator;
+			redirectUrl=redirectUrl+"&msisdn="+mdn+"&operator="+operator;
 		else
-			redirectUrl=redirectUrl+"?msisdn="+mdn+"operator="+operator;
+			redirectUrl=redirectUrl+"?msisdn="+mdn+"&operator="+operator;
 		return "redirect:"+redirectUrl;
 	}
 
 	@RequestMapping(value="/service/billing",method=RequestMethod.GET)
-	public @ResponseBody String billingURL(Model model,HttpServletRequest request){
+	public  String billingURL(Model model,HttpServletRequest request){
 		String requestid = request.getParameter("requestid");
 		String responsecode = request.getParameter("responsecode");
 		String message = request.getParameter("message");
@@ -107,7 +107,7 @@ public class BillingController {
 			redirectUrl=redirectUrl+"&responsecode="+responsecode;
 		else
 			redirectUrl=redirectUrl+"?responsecode="+responsecode;
-		return redirectUrl;
+		return "redirect:"+redirectUrl;
 	}
 	
 	
