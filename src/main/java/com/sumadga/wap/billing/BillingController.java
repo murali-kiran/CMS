@@ -53,12 +53,12 @@ public class BillingController {
 		respons.setRequestId(Long.parseLong(requestid));
 		respons.setQueryString(request.getQueryString());
 		
-		if(StringUtils.isNotBlank(mdn))
+		//if(StringUtils.isNotBlank(mdn))
 		respons.setMsisdn(Long.parseLong(mdn));
-		else{
+		/*else{
 			mdn="9999999999";
 		respons.setMsisdn(Long.parseLong("9999999999"));
-		}
+		}*/
 		
 		responsDao.save(respons);
 		
