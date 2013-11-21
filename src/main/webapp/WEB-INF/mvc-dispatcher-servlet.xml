@@ -137,11 +137,16 @@
 		<property name="isVideoTranscodingEnabled" value="true" />
 		<property name="videoTranscodingScriptPath" value="/home/kumar/Documents/kiran_personal/CMS/src/main/resource" />
 		<property name="qubeCellURL" value="http://IP:PORT/APP/Detect.php"/>
-		<property name="username" value="/resources/mms/"/>
-		<property name="password" value="/resources/mms/"/>
-		<property name="msisdnReturnURL" value="/resources/mms/"/>
+		<property name="username" value="PeppeRMint"/>
+		<property name="password" value="PeppeRMint19-11=13"/>
+		<property name="msisdnReturnURL" value="http://180.179.212.80/xena/v3/api/d2.php"/>
 		<property name="eventChargeReturnURL" value="/resources/mms/"/>
-		<property name="secretKey" value="/resources/mms/"/>
+		<property name="secretKey" value="f2543951365f4d608ec212ff9b21ad91"/>
+		<property name="usernameOtherAPI" value="U2FsdGVkX1/3KzqQANLOmzlBsO5jXlh+B7y0x0qym2o="/>
+		<property name="passwordOtherAPI" value="U2FsdGVkX1/7cIm5/fBQY9ALU6BNgh0qQSe0z81nIHW0ce9RQstSmpFy16asQqaF"/>
+		<property name="urlOtherAPI" value="ce3f102ea449465a835bb294f931f2ea"/>
+		<property name="secretKeyOtherAPI" value="http://180.179.212.80/xena/v3/api/operation.php"/>
+				
 	</bean>
 	
 </beans>

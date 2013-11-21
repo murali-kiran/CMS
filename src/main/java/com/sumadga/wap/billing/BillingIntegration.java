@@ -81,7 +81,10 @@ public class BillingIntegration {
 	}
 	return status;
 	}
-	
+	public static void main(String args[]){
+		BillingIntegration b = new BillingIntegration();
+		//b.hitBilling(operatorName, redirectURL, productId, msisdn);
+	}
 	public String hitBilling(String operatorName, String redirectURL, Integer productId,String msisdn) throws Exception{
 		HttpClient client=new HttpClient();
 		PostMethod method=new PostMethod(applicationProperties.getQubeCellURL());
