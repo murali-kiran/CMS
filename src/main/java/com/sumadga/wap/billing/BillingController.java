@@ -66,9 +66,9 @@ public class BillingController {
 		
 		String redirectUrl=req.getRedirectURL();
 		if(redirectUrl.contains("?"))
-			redirectUrl=redirectUrl+"&msisdn="+mdn+"operator="+operator;
+			redirectUrl=redirectUrl+"&msisdn="+mdn+"&operator="+operator;
 		else
-			redirectUrl=redirectUrl+"?msisdn="+mdn+"operator="+operator;
+			redirectUrl=redirectUrl+"?msisdn="+mdn+"&operator="+operator;
 		return "redirect:"+redirectUrl;
 	}
 

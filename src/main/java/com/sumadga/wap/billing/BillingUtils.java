@@ -78,6 +78,7 @@ public BillingModel getEventBilling(HttpServletRequest httpServletRequest,Long m
 		}
 		
 		request.setRedirectURL(redirectUrl.toString());
+		request.setRequestedURL(redirectUrl.toString());
 		
 		
 		requestDao.save(request);
