@@ -107,12 +107,7 @@ public class HomeController extends BaseController{
 		String responseCode = map.get("responsecode");
 		if(responseCode.equals("101")){
 			System.out.println("Billing Success");
-			//Add to purchase table I think Sravan already wrote it its time 3:00 AM sorry not having time to check
-			//Purchase adding logic
 			
-			//Download adding logic I think sravan wrote this
-			
-			//Flushing file download as response. //already written by sravan just he need to integrate
 			
 			
 		}else{
