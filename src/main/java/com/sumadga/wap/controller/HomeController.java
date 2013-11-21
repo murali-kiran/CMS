@@ -40,8 +40,6 @@ public class HomeController extends BaseController{
 	BillingUtils billingUtils;
 	@Autowired
 	ApplicationProperties applicationProperties;
-	@Autowired
-	HttpSession session;
 
 /*	@RequestMapping(value="/service/{serviceId}",method=RequestMethod.GET)
 	public String getFirstService(Model model,@PathVariable Integer serviceId){
@@ -78,9 +76,9 @@ public class HomeController extends BaseController{
 		
 		
 		Map<String,String> deviceMap =	getDeviceCapbilities(request);
-		
-		session.setAttribute("msisdn", request.getAttribute("msisdn"));
-		session.setAttribute("operator", request.getAttribute("operator"));
+		HttpSession httpSession = request.getSession();
+		httpSession.setAttribute("msisdn", request.getParameter("msisdn"));
+		httpSession.setAttribute("operator", request.getParameter("operator"));
 		
 		
 		int previewCount = 3;
@@ -102,7 +100,7 @@ public class HomeController extends BaseController{
 	
 	
 	@RequestMapping(value="/service2/dwl/{serviceId}/{mediaId}/{serviceKeypriceKey}",method=RequestMethod.GET)
-	public void downloadMedia(HttpServletRequest request,HttpServletResponse response,Model model,@PathVariable Integer serviceId,@PathVariable Integer mediaId,@PathVariable String serviceKeypriceKey){
+	public String downloadMedia(HttpServletRequest request,HttpServletResponse response,HttpSession session,Model model,@PathVariable Integer serviceId,@PathVariable Integer mediaId,@PathVariable String serviceKeypriceKey){
 		
 		
 	BillingModel billingModel =	billingUtils.getEventBilling(request,Long.parseLong((String)session.getAttribute("msisdn")), session.getAttribute("operator").toString(), serviceKeypriceKey);
@@ -110,10 +108,10 @@ public class HomeController extends BaseController{
 	billingModel.setSecretKeyOtherAPI(applicationProperties.getSecretKeyOtherAPI());
 	
 	model.addAttribute("billingModel", billingModel);
-	//return 
+	return "views/sampleService/billingModel";
 		
 		
-	String channel = request.getParameter("channel");
+	/*String channel = request.getParameter("channel");
 	Map<String, String> deviceMap = getDeviceCapbilities(request);
 	MediaBean mediaBean = serviceLayer.getMediaInfoOfMedia(mediaId,CommonUtils.MEDIA_CONTENT_NON_PRIVIEW,Integer.parseInt(deviceMap.get("width")),Integer.parseInt(deviceMap.get("height")));
 	mediaBean.setServiceId(serviceId);
@@ -122,7 +120,7 @@ public class HomeController extends BaseController{
 	purchaseBean.setPurchase_id((byte)1);
 	purchaseBean.setMsisdn("9030335622");
 	purchaseBean.setChannel(channel);
-	downloadFile.downLoadMedia(request, response,mediaBean,purchaseBean,deviceMap);
+	downloadFile.downLoadMedia(request, response,mediaBean,purchaseBean,deviceMap);*/
 		
 //		getMediaInfoOfMedia.
 //		return "landingPage2";
