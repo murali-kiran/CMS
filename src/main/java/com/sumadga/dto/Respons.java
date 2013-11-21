@@ -37,7 +37,7 @@ public class Respons implements Serializable {
 
 	private Long msisdn;
 
-	@Column(name="query_string")
+	@Column(name="queryString")
 	private String queryString;
 
 	@Column(name="request_id")

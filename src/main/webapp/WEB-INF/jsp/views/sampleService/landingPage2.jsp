@@ -24,7 +24,7 @@
   		<c:otherwise>
   		<div>${mediaInfo.mediaName}</div>
   		<div>
-  		<a href="${pageContext.servletContext.contextPath}/service2/dwl/${serviceId}/${mediaInfo.mediaId}?channel=${channel}">
+  		<a href="${pageContext.servletContext.contextPath}/service2/dwl/${serviceId}/${mediaInfo.mediaId}/${mediaInfo.serviceKeypriceKey}?channel=${channel}">
 		<img alt="noImage" src="${mediaInfo.storagePath}"
 					width="52px" height="52px">
 		</a>			

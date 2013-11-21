@@ -1,7 +1,7 @@
 package com.sumadga.wap.billing;
 
 public class BillingModel {
-	private String usename;
+	private String username;
 	private String password;
 	private String requestid;
 	private String operation;
@@ -12,11 +12,28 @@ public class BillingModel {
 	private String message;
 	private String logopath;
 	private String operator;
-	public String getUsename() {
-		return usename;
+	private String serviceKeypriceKey;
+	private String secretKeyOtherAPI;
+	
+	
+
+	public String getSecretKeyOtherAPI() {
+		return secretKeyOtherAPI;
 	}
-	public void setUsename(String usename) {
-		this.usename = usename;
+	public void setSecretKeyOtherAPI(String secretKeyOtherAPI) {
+		this.secretKeyOtherAPI = secretKeyOtherAPI;
+	}
+	public String getServiceKeypriceKey() {
+		return serviceKeypriceKey;
+	}
+	public void setServiceKeypriceKey(String serviceKeypriceKey) {
+		this.serviceKeypriceKey = serviceKeypriceKey;
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String usename) {
+		this.username = usename;
 	}
 	public String getPassword() {
 		return password;

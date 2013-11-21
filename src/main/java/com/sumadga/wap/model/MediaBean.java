@@ -15,8 +15,14 @@ public class MediaBean {
 	private int serviceKeyId;
 	private int serviceKeypriceId;
 	private Double price;
-	
-	
+	private String serviceKeypriceKey;
+
+	public String getServiceKeypriceKey() {
+		return serviceKeypriceKey;
+	}
+	public void setServiceKeypriceKey(String serviceKeypriceKey) {
+		this.serviceKeypriceKey = serviceKeypriceKey;
+	}
 	public int getMediagroupParentId() {
 		return mediagroupParentId;
 	}

@@ -45,6 +45,7 @@ public class BillingUtils {
 			redirectUrl.append("&"+param +"="+httpServletRequest.getParameter(param));
 		}
 		request.setRequestedURL(redirectUrl.toString());
+		request.setRedirectURL(redirectUrl.toString());
 		
 		requestDao.save(request);
 		
@@ -56,6 +57,7 @@ public class BillingUtils {
 		url.append("&requestid="+request.getRequestId());
 		url.append("&key="+getMD5(applicationProperties.getSecretKey()+request.getRequestId()));
 		url.append("&returnurl=http://49.50.68.139:8080/Wap/service/detectMsisdn");
+	//	url.append("&returnurl=http://localhost:8080/Wap/service/detectMsisdn");
 		
 		return url.toString();
 	}
@@ -89,7 +91,7 @@ public BillingModel getEventBilling(HttpServletRequest httpServletRequest,Long m
 		billingModel.setProductid(productid);
 		billingModel.setRedirecturl(redirectUrl.toString());
 		billingModel.setRequestid(request.getRequestId()+"");
-		billingModel.setUsename(applicationProperties.getUsernameOtherAPI());
+		billingModel.setUsername(applicationProperties.getUsernameOtherAPI());
 		
 		return billingModel;
 	}

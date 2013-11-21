@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,7 +33,7 @@ public class BillingController {
 	RequestDao requestDao;
 	
 	@RequestMapping(value="/service/detectMsisdn",method=RequestMethod.GET)
-	public @ResponseBody String detectMsisdn(Model model,HttpServletRequest request){
+	public  String detectMsisdn(Model model,HttpServletRequest request){
 		String requestid = request.getParameter("requestid");
 		String responsecode = request.getParameter("responsecode");
 		String message = request.getParameter("message");
@@ -52,8 +53,12 @@ public class BillingController {
 		respons.setRequestId(Long.parseLong(requestid));
 		respons.setQueryString(request.getQueryString());
 		
-		if(mdn!=null)
+		if(StringUtils.isNotBlank(mdn))
 		respons.setMsisdn(Long.parseLong(mdn));
+		else{
+			mdn="9999999999";
+		respons.setMsisdn(Long.parseLong("9999999999"));
+		}
 		
 		responsDao.save(respons);
 		
@@ -61,10 +66,10 @@ public class BillingController {
 		
 		String redirectUrl=req.getRedirectURL();
 		if(redirectUrl.contains("?"))
-			redirectUrl=redirectUrl+"&msisdn="+mdn;
+			redirectUrl=redirectUrl+"&msisdn="+mdn+"operator="+operator;
 		else
-			redirectUrl=redirectUrl+"?msisdn="+mdn;
-		return redirectUrl;
+			redirectUrl=redirectUrl+"?msisdn="+mdn+"operator="+operator;
+		return "redirect:"+redirectUrl;
 	}
 
 	@RequestMapping(value="/service/billing",method=RequestMethod.GET)
