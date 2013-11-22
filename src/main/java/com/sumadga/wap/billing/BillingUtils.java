@@ -111,4 +111,34 @@ public BillingModel getEventBilling(HttpServletRequest httpServletRequest,Long m
 			return "error";
 		}
 	}
+
+
+	public String getBillingErrorMessage(int errorCode){
+		String status = "";
+		if(errorCode == 101)
+			status = "success";
+		else if(errorCode == 102)
+			status = "Authentication failure";
+		else if(errorCode == 103)
+			status = "Operator not supported";
+		else if(errorCode == 104)
+			status = "Duplicate request id";
+		else if(errorCode == 105)
+			status = "Charging failed, insufficient balance";
+		else if(errorCode == 106)
+			status = "Undetermined error";
+		else if(errorCode == 107)
+			status = "Invalid key";
+		else if(errorCode == 108)
+			status = "Failure";
+		else if(errorCode == 109)
+			status = "Invalid MSISDN";
+		else if(errorCode == 110)
+			status = "Invalid product ID";
+		else if(errorCode == 111)
+			status = "Operator not supported";
+		else 
+			status = "Unknown Error While billing";
+		return status;
+	}
 }

@@ -106,11 +106,13 @@ public class HomeController extends BaseController{
 		String channel = request.getParameter("channel");
 		Map<String, String> deviceMap = getDeviceCapbilities(request);
 		
+
 		Purchas purchas = serviceLayer.getPurchas(purchaseId);
 		MediaBean mediaBean = serviceLayer.getMediaInfoOfMedia(mediaId,CommonUtils.MEDIA_CONTENT_NON_PRIVIEW,Integer.parseInt(deviceMap.get("width")),Integer.parseInt(deviceMap.get("height")));
 		mediaBean.setServiceId(serviceId);
 		
 		downloadFile.downLoadMedia(request, response,mediaBean,purchas,deviceMap);
+
 	}
 	
 	
@@ -129,9 +131,8 @@ public class HomeController extends BaseController{
 					
 					Boolean isPurchasedToDay =	purchaseAndDownloadDao.checkPurchaseRecordExistForToday(Long.parseLong((String)session.getAttribute("msisdn")));
 					
-				//	if(!isPurchasedToDay)
 					
-					if(true){
+					if(!isPurchasedToDay){
 						
 						int serviceKeyId = Integer.parseInt(request.getParameter("servicKeyId"));
 					Purchas purchas =	serviceLayer.savePurchaseAndPurchaseDetails(request,serviceKeyId);
@@ -143,39 +144,6 @@ public class HomeController extends BaseController{
 					}
 					
 				}
-		
-		
-
-		
-/*		if(request.getParameter("responsecode") == null){
-	BillingModel billingModel =	billingUtils.getEventBilling(request,Long.parseLong((String)session.getAttribute("msisdn")), session.getAttribute("operator").toString(), serviceKeypriceKey);
-	billingModel.setServiceKeypriceKey(serviceKeypriceKey);
-	billingModel.setSecretKeyOtherAPI(applicationProperties.getSecretKeyOtherAPI());
-	
-	model.addAttribute("billingModel", billingModel);
-	return "views/sampleService/billingModel";
-		}else{
-		
-		
-	String channel = request.getParameter("channel");
-	Map<String, String> deviceMap = getDeviceCapbilities(request);
-	MediaBean mediaBean = serviceLayer.getMediaInfoOfMedia(mediaId,CommonUtils.MEDIA_CONTENT_NON_PRIVIEW,Integer.parseInt(deviceMap.get("width")),Integer.parseInt(deviceMap.get("height")));
-	mediaBean.setServiceId(serviceId);
-	
-	PurchaseBean purchaseBean = new PurchaseBean();	
-	purchaseBean.setPurchase_id((byte)1);
-	purchaseBean.setMsisdn("9030335622");
-	purchaseBean.setChannel(channel);
-	downloadFile.downLoadMedia(request, response,mediaBean,purchaseBean,deviceMap);
-		
-//		getMediaInfoOfMedia.
-//		return "landingPage2";
-		
-		return "forward:/x";
-		
-		}*/
-		
-		
 		
 	}
 	
