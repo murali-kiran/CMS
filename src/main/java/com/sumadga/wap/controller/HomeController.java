@@ -11,6 +11,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import com.sumadga.dto.ServiceMediaGroup;
 import com.sumadga.utils.ApplicationProperties;
 import com.sumadga.utils.CommonUtils;
 import com.sumadga.utils.DownloadFile;
+import com.sumadga.utils.RequestUtil;
 import com.sumadga.wap.billing.BillingModel;
 import com.sumadga.wap.billing.BillingUtils;
 import com.sumadga.wap.model.Bean;
@@ -97,6 +99,14 @@ public class HomeController extends BaseController{
 		
 	}
 	
+	@RequestMapping(value="/service2/billingResponse",method=RequestMethod.GET)
+	public String billingResponse(HttpServletRequest request){
+		
+	Map<String,String> map =	RequestUtil.INSTANCE.dumpRequestScope(request);
+	System.out.println(map);
+		
+		return "forward:/service/2";
+	}
 	
 	
 	@RequestMapping(value="/service2/dwl/{serviceId}/{mediaId}/{serviceKeypriceKey}",method=RequestMethod.GET)
