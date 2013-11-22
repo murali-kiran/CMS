@@ -326,6 +326,7 @@ public class MediaGroupMediaDao  {
 				bean.setServiceKeypriceId((Integer)obj[5]);
 				bean.setPrice((Double)obj[6]);
 				bean.setServiceKeypriceKey((String)obj[7]);
+			
 				// 	cat.service_key_id , skp.service_key_price_id , skp.price
 				
 				bean.setIsSubMediaGroup(false);

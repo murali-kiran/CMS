@@ -13,6 +13,7 @@ import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,47 +41,32 @@ public class DownloadFile {
 	@Autowired
 	private MimetypesFileTypeMap mimeTypesMap;
 	
+	@Autowired
+	private HttpSession session;
+	
 
 	
 	Logger logger=Logger.getLogger(DownloadFile.class);
 	
-	public void downLoadMedia(HttpServletRequest request,HttpServletResponse response,MediaBean mediaBean,PurchaseBean purchaseBean,Map<String, String> deviceCapility) {
+	public void downLoadMedia(HttpServletRequest request,HttpServletResponse response,MediaBean mediaBean,Purchas purchas,Map<String, String> deviceCapility) {
 		
 		String downloadId = request.getParameter("downloadId");
 	    
 	    MediaDownload download = new MediaDownload();
 	    
-	    Purchas purchase = purchasesDao.findById(1);
-	    
-/*	    Purchas purchase = new Purchas();
-	    purchase.setPurchaseId(purchaseBean.getPurchase_id());
-	    purchase.setCircleId(1);
-	    purchase.setExpiryTime(new Date());
-	    purchase.setFirstPurchaseTime(new Date());
-	    purchase.setLastPurchaseTime(new Date());
-	    purchase.setMsisdn(new BigInteger(purchaseBean.getMsisdn()));
-	    purchase.setNetworkId(1);
-	    purchase.setPurchaseId(1);
-	    purchase.setPurchaseStatus((byte)0);
-	    purchase.setPurchaseType((byte)0);
-	    purchase.setStopedTime(new Date());
-	    purchase.setServiceKeyId(1);
-*/	    
-	    
-	    download.setPurchas(purchase);
-	    download.setMsisdn(new BigInteger(purchaseBean.getMsisdn()));
+	    download.setPurchas(purchas);
+	    download.setMsisdn(new BigInteger((String)session.getAttribute("msisdn")));
 	    
 	    download.setMediaId(mediaBean.getMediaId());
 	    download.setMediaContentId(mediaBean.getMediaContentId());
 	    download.setServiceId(mediaBean.getServiceId());
 	    download.setDownloadTime(CommonUtils.convertDateToTimeStamp(new Date()));
 	    download.setModifiedTime(CommonUtils.convertDateToTimeStamp(new Date()));
-	    download.setChannel(purchaseBean.getChannel());
+	    download.setChannel("smd");
 
 	    download.setUserAgent(deviceCapility.get("userAgent"));
 	    download.setSessionId(request.getSession().getId());
 	    download.setRemarks("remarks");
-	    download.setChannel(purchaseBean.getChannel());
 	   
 	    
 	    

@@ -7,27 +7,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.sumadga.dao.PurchaseAndDownloadDao;
+import com.sumadga.dto.Purchas;
 import com.sumadga.dto.ServiceMediaGroup;
 import com.sumadga.utils.ApplicationProperties;
 import com.sumadga.utils.CommonUtils;
 import com.sumadga.utils.DownloadFile;
-import com.sumadga.utils.RequestUtil;
 import com.sumadga.wap.billing.BillingModel;
 import com.sumadga.wap.billing.BillingUtils;
 import com.sumadga.wap.model.Bean;
 import com.sumadga.wap.model.MediaBean;
-import com.sumadga.wap.model.PurchaseBean;
 import com.sumadga.wap.service.ServiceLayer;
 
 @Controller
@@ -42,6 +40,9 @@ public class HomeController extends BaseController{
 	BillingUtils billingUtils;
 	@Autowired
 	ApplicationProperties applicationProperties;
+	
+	@Autowired
+	PurchaseAndDownloadDao purchaseAndDownloadDao;
 
 /*	@RequestMapping(value="/service/{serviceId}",method=RequestMethod.GET)
 	public String getFirstService(Model model,@PathVariable Integer serviceId){
@@ -99,54 +100,50 @@ public class HomeController extends BaseController{
 		
 	}
 	
-	@RequestMapping(value="/service2/billingResponse",method=RequestMethod.GET)
-	public String billingResponse(HttpServletRequest request){
+	
+	@RequestMapping(value="/service2/dwlFile/{serviceId}/{mediaId}/{purchaseId}",method=RequestMethod.GET)
+	public void downloadFile(HttpServletRequest request,HttpServletResponse response,HttpSession session,Model model,@PathVariable Integer serviceId,@PathVariable Integer mediaId,@PathVariable Integer purchaseId){
+		String channel = request.getParameter("channel");
+		Map<String, String> deviceMap = getDeviceCapbilities(request);
 		
-		Map<String,String> map =	RequestUtil.INSTANCE.dumpRequestScope(request);
-		System.out.println(map);
-		String responseCode = map.get("responsecode");
-		if(responseCode.equals("101")){
-			System.out.println("Billing Success");
-			
-			
-			
-		}else{
-			String error = billingUtils.getBillingErrorMessage(Integer.parseInt(responseCode));
-			System.out.println("Billing Failed due to :"+error);
-		}
-		return "forward:/service/2?channel=smd&msisdn=9966792234&operator=vodafone";//Please remove msisdn and operator it is for testing. Get from session
+
+		Purchas purchas = serviceLayer.getPurchas(purchaseId);
+		MediaBean mediaBean = serviceLayer.getMediaInfoOfMedia(mediaId,CommonUtils.MEDIA_CONTENT_NON_PRIVIEW,Integer.parseInt(deviceMap.get("width")),Integer.parseInt(deviceMap.get("height")));
+		mediaBean.setServiceId(serviceId);
+		
+		downloadFile.downLoadMedia(request, response,mediaBean,purchas,deviceMap);
+
 	}
 	
 	
 	@RequestMapping(value="/service2/dwl/{serviceId}/{mediaId}/{serviceKeypriceKey}",method=RequestMethod.GET)
 	public String downloadMedia(HttpServletRequest request,HttpServletResponse response,HttpSession session,Model model,@PathVariable Integer serviceId,@PathVariable Integer mediaId,@PathVariable String serviceKeypriceKey){
 		
-		
-	/*BillingModel billingModel =	billingUtils.getEventBilling(request,Long.parseLong((String)session.getAttribute("msisdn")), session.getAttribute("operator").toString(), serviceKeypriceKey);
-	billingModel.setServiceKeypriceKey(serviceKeypriceKey);
-	billingModel.setSecretKeyOtherAPI(applicationProperties.getSecretKeyOtherAPI());
-	
-	model.addAttribute("billingModel", billingModel);
-	return "views/sampleService/billingModel";*/
-		//String url = billingUtils.getEventBilling(request,Long.parseLong((String)session.getAttribute("msisdn")), session.getAttribute("operator").toString(), serviceKeypriceKey);
-	//	String url = billingUtils.getEventBillingNew(request,9966L, "vodafone", serviceKeypriceKey);
-		String url = billingUtils.getEventBillingNew(request,Long.parseLong((String)session.getAttribute("msisdn")), session.getAttribute("operator").toString(), serviceKeypriceKey);
-		System.out.println("Framed url:"+url);
-		return "redirect:"+url;
-		
-	/*String channel = request.getParameter("channel");
-	Map<String, String> deviceMap = getDeviceCapbilities(request);
-	MediaBean mediaBean = serviceLayer.getMediaInfoOfMedia(mediaId,CommonUtils.MEDIA_CONTENT_NON_PRIVIEW,Integer.parseInt(deviceMap.get("width")),Integer.parseInt(deviceMap.get("height")));
-	mediaBean.setServiceId(serviceId);
-	
-	PurchaseBean purchaseBean = new PurchaseBean();	
-	purchaseBean.setPurchase_id((byte)1);
-	purchaseBean.setMsisdn("9030335622");
-	purchaseBean.setChannel(channel);
-	downloadFile.downLoadMedia(request, response,mediaBean,purchaseBean,deviceMap);*/
-		
-//		getMediaInfoOfMedia.
-//		return "landingPage2";
+		if(request.getParameter("responsecode") == null){
+			BillingModel billingModel =	billingUtils.getEventBilling(request,Long.parseLong((String)session.getAttribute("msisdn")), session.getAttribute("operator").toString(), serviceKeypriceKey);
+			billingModel.setServiceKeypriceKey(serviceKeypriceKey);
+			billingModel.setSecretKeyOtherAPI(applicationProperties.getSecretKeyOtherAPI());
+			
+				model.addAttribute("billingModel", billingModel);
+				return "views/sampleService/billingModel";
+				
+				}else{
+					
+					Boolean isPurchasedToDay =	purchaseAndDownloadDao.checkPurchaseRecordExistForToday(Long.parseLong((String)session.getAttribute("msisdn")));
+					
+					
+					if(!isPurchasedToDay){
+						
+						int serviceKeyId = Integer.parseInt(request.getParameter("servicKeyId"));
+					Purchas purchas =	serviceLayer.savePurchaseAndPurchaseDetails(request,serviceKeyId);
+						
+						return "forward:/service2/dwlFile/"+serviceId+"/"+mediaId+"/"+purchas.getPurchaseId();
+					    
+					}else{
+						return "forward:/service2/dwlFile/"+serviceId+"/"+mediaId+"/";
+					}
+					
+				}
 		
 	}
 	
