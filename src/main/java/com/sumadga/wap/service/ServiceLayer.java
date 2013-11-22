@@ -1,13 +1,18 @@
 package com.sumadga.wap.service;
 
+import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,11 +21,15 @@ import org.springframework.ui.Model;
 import com.sumadga.dao.MediaGroupDao;
 import com.sumadga.dao.MediaGroupMediaDao;
 import com.sumadga.dao.MediaSubGroupDao;
+import com.sumadga.dao.PurchaseDetailDao;
+import com.sumadga.dao.PurchasesDao;
 import com.sumadga.dao.ServiceKeyPriceDao;
 import com.sumadga.dao.ServiceMediaGroupDao;
 import com.sumadga.dto.MediaGroup;
 import com.sumadga.dto.MediaGroupMedia;
 import com.sumadga.dto.MediaSubGroup;
+import com.sumadga.dto.Purchas;
+import com.sumadga.dto.PurchaseDetail;
 import com.sumadga.dto.ServiceKeyPrice;
 import com.sumadga.dto.ServiceMediaGroup;
 import com.sumadga.utils.CommonUtils;
@@ -44,6 +53,17 @@ public class ServiceLayer {
 	
 	@Autowired
 	private ServiceKeyPriceDao serviceKeyPriceDao;
+	
+	@Autowired
+	private HttpSession session;
+	
+	@Autowired 
+	PurchasesDao purchasesDao;
+	
+	@Autowired
+	PurchaseDetailDao purchaseDetailDao;
+	
+	 
 
 	public List<Bean<Integer,Bean<String,ServiceMediaGroup>>>	getCategoryByServiceId(int serviceId){
 
@@ -323,6 +343,45 @@ public class ServiceLayer {
 	
 	public MediaBean getMediaInfoOfMedia(int mediaId,int mediaContentPurposeId,int width,int height){
 		return mediaGroupMediaDao.getMediaInfoOfMedia(mediaId, mediaContentPurposeId, width, height);
+	}
+	
+	public Purchas savePurchaseAndPurchaseDetails(HttpServletRequest request,int servicKeyId){
+		
+		Purchas purchase = new Purchas();
+	    purchase.setCircleId(1);
+	    purchase.setExpiryTime(new Date());
+	    purchase.setFirstPurchaseTime(new Date());
+	    purchase.setLastPurchaseTime(new Date());
+	    purchase.setMsisdn(new BigInteger(session.getAttribute("msisdn").toString()));
+	    purchase.setNetworkId(1);
+//	    purchase.setPurchaseId(1);
+	    purchase.setPurchaseStatus((byte)0);
+	    purchase.setPurchaseType((byte)0);
+	    purchase.setStopedTime(new Date());
+	    purchase.setServiceKeyId(servicKeyId);
+	    purchase =  purchasesDao.save(purchase);
+	    
+	    
+	ServiceKeyPrice serviceKeyPrices = serviceKeyPriceDao.findByProperty("serviceKey", servicKeyId).get(0);
+	    
+	    PurchaseDetail purchaseDetail = new PurchaseDetail();
+	    purchaseDetail.setPurchas(purchase);
+	    purchaseDetail.setAmount(serviceKeyPrices.getPrice());
+	    purchaseDetail.setModifiedTime(CommonUtils.convertDateToTimeStamp(new Date()));
+	    purchaseDetail.setPurchaseTime(new Date());
+	    purchaseDetail.setRemarks("remark");
+	    purchaseDetail.setServiceKeyPriceId(serviceKeyPrices.getServiceKeyPriceId());
+	    purchaseDetail.setStatus((byte)1);
+	    
+	    purchaseDetailDao.save(purchaseDetail);
+	    
+	    return purchase;
+		
+	}
+	
+public	Purchas getPurchas(int purchaseId){
+	Purchas purchas =	purchasesDao.findById(purchaseId);
+	return purchas;
 	}
 
 

@@ -1,6 +1,8 @@
 package com.sumadga.dao;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +17,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sumadga.dto.Purchas;
+import com.sumadga.dto.PurchaseDetail;
+import com.sumadga.utils.CommonUtils;
+import com.sumadga.wap.model.MediaBean;
 
 @Repository
 public class PurchasesDao {
@@ -25,16 +30,21 @@ public class PurchasesDao {
 	private EntityManager entityManager;
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataAccessException.class)
-	public void save(Purchas entity) {
+	public Purchas save(Purchas entity) {
 		logger.info("saving Purchas instance");
+		Purchas purchas = null;
 		try {
 			entity.setModifiedTime(new Timestamp(new Date().getTime()));
-			entityManager.persist(entity);
+			 purchas = entityManager.merge(entity);
 			logger.info("save successful");
 		} catch (RuntimeException re) {
 			logger.error("save failed", re);
-			throw re;
+			return purchas;
 		}
+		
+		return purchas;
+		
+		
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataAccessException.class)
@@ -109,6 +119,9 @@ public class PurchasesDao {
 			throw re;
 		}
 	}
+	
+	
+	
 
 	@SuppressWarnings("unchecked")
 	public List<Purchas> findAll(final int... rowStartIdxAndCount) {
