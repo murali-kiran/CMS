@@ -19,7 +19,7 @@
 </script>
 </head>
 <body onload="sendForm();">
-	<form action="${billingModel.secretKeyOtherAPI}" method="POST" name="billingForm">
+	<form action="${billingModel.url}" method="POST" name="billingForm">
 		<input type="hidden" value="${billingModel.msisdn}" name="msisdn"> 
 		<input type="hidden" value="${billingModel.operation}" name="operation"> <input
 			type="hidden" value="${billingModel.operator}" name="operator"> <input

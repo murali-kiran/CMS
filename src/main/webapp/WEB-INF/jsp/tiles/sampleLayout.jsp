@@ -17,6 +17,7 @@ body,p,td,div,span,a {
 }
 </style>
 </head>
+<!--  <body style="background-color: #EEEEEE;">  -->
 <body style="background-color: #EEEEEE;">
 	<table
 		style="border: 0px; padding: 0px; width: 100%; border-spacing: 0px; border-collapse: collapse;">

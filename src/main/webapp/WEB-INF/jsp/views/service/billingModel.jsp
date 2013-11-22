@@ -19,7 +19,7 @@
 </script>
 </head>
 <body onload="sendForm();">
-	<form action="${billingModel.secretKeyOtherAPI}" method="POST" name="billingForm">
+	<form action="${billingModel.url}" method="POST" name="billingForm">
 		<input type="hidden" value="${billingModel.msisdn}" name="msisdn"> 
 		<input type="hidden" value="${billingModel.operation}" name="operation"> <input
 			type="hidden" value="${billingModel.operator}" name="operator"> <input
@@ -27,8 +27,7 @@
 			type="hidden" value="${billingModel.productid}" name="productid"> <input
 			type="hidden" value="${billingModel.redirecturl}" name="redirecturl"> <input
 			type="hidden" value="${billingModel.requestid}" name="requestid"> <input
-			type="hidden" value="${billingModel.username}" name="username"> <input
-			type="hidden" value="${billingModel.serviceKeypriceKey}" name="serviceKeypriceKey">
+			type="hidden" value="${billingModel.username}" name="username"> 
 			<input type="submit" value="Click to confirm"> 
 	</form>
 </body>

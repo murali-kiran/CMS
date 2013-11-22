@@ -144,8 +144,8 @@
 		<property name="secretKey" value="f2543951365f4d608ec212ff9b21ad91"/>
 		<property name="usernameOtherAPI" value="U2FsdGVkX1/3KzqQANLOmzlBsO5jXlh+B7y0x0qym2o="/>
 		<property name="passwordOtherAPI" value="U2FsdGVkX1/7cIm5/fBQY9ALU6BNgh0qQSe0z81nIHW0ce9RQstSmpFy16asQqaF"/>
-		<property name="urlOtherAPI" value="ce3f102ea449465a835bb294f931f2ea"/>
-		<property name="secretKeyOtherAPI" value="http://180.179.212.80/xena/v3/api/operation.php"/>
+		<property name="urlOtherAPI" value="http://180.179.212.80/xena/v3/api/operation.php"/>
+		<property name="secretKeyOtherAPI" value="ce3f102ea449465a835bb294f931f2ea"/>
 				
 	</bean>
 	
