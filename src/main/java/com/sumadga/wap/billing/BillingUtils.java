@@ -144,8 +144,8 @@ public BillingModel getEventBilling(HttpServletRequest httpServletRequest,Long m
 		url.append("&operator=vodafone");
 		url.append("&productid=1");
 		url.append("&operation=EventCharge");
-		url.append("&returnurl=http://49.50.68.139/phpmyadmin");
-		
+		url.append("&returnurl=http://localhost:8080/Wap/service2/billingResponse");
+		// http://49.50.68.139:8080/Wap
 		
 		
 		return url.toString();
