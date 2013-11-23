@@ -2,6 +2,7 @@ package com.sumadga.dto;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -19,6 +20,7 @@ public class FailPurchas implements Serializable {
 
 	@Id
 	@Column(name="fail_purchase_id")
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int failPurchaseId;
 
 	@Column(name="circle_id")
@@ -57,9 +59,9 @@ public class FailPurchas implements Serializable {
 	@Column(name="stoped_time")
 	private Date stopedTime;
 
-	//bi-directional many-to-one association to FailPurchaseDetail
+	/*//bi-directional many-to-one association to FailPurchaseDetail
 	@OneToMany(mappedBy="failPurchas")
-	private List<FailPurchaseDetail> failPurchaseDetails;
+	private List<FailPurchaseDetail> failPurchaseDetails;*/
 
 	public FailPurchas() {
 	}
@@ -159,15 +161,15 @@ public class FailPurchas implements Serializable {
 	public void setStopedTime(Date stopedTime) {
 		this.stopedTime = stopedTime;
 	}
-
+/*
 	public List<FailPurchaseDetail> getFailPurchaseDetails() {
 		return this.failPurchaseDetails;
 	}
 
 	public void setFailPurchaseDetails(List<FailPurchaseDetail> failPurchaseDetails) {
 		this.failPurchaseDetails = failPurchaseDetails;
-	}
-
+	}*/
+/*
 	public FailPurchaseDetail addFailPurchaseDetail(FailPurchaseDetail failPurchaseDetail) {
 		getFailPurchaseDetails().add(failPurchaseDetail);
 		failPurchaseDetail.setFailPurchas(this);
@@ -180,6 +182,6 @@ public class FailPurchas implements Serializable {
 		failPurchaseDetail.setFailPurchas(null);
 
 		return failPurchaseDetail;
-	}
+	}*/
 
 }

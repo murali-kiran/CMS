@@ -34,10 +34,10 @@
   		
   		</c:otherwise>
   		</c:choose>
-  		<div>@ ${mediaInfo.price}</div>
-  		<div><img alt="noImage"
+  		<div>Buy @ ${mediaInfo.price}</div>
+  		<%-- <div><img alt="noImage"
 					src="${pageContext.servletContext.contextPath}/resources/images/buy.png"
-					width="40px" height="15px"></div>
+					width="40px" height="15px"></div> --%>
   		</div>
 	</c:forEach>
 	

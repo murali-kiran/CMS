@@ -104,8 +104,12 @@ public class CommonUtils {
 			msisdn=null;
 		if(msisdn!=null && msisdn.trim().length()==10)
 			msisdn="91"+msisdn;
-			
-       logger.warn("Msisdn in serviceUtils GetMsisdn Method : " + msisdn);
+		
+		String operator=request.getParameter("operator");
+		if(operator!=null)
+			session.setAttribute("operator", operator);
+       
+		logger.warn("Msisdn in serviceUtils GetMsisdn Method : " + msisdn);
 		return msisdn;
 	}
 

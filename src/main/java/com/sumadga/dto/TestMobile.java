@@ -15,6 +15,7 @@ public class TestMobile implements Serializable {
 
 	@Id
 	@Column(name="testmobile_id")
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private String testmobileId;
 
 	@Column(name="mobile_number")

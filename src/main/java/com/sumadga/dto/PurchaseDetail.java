@@ -38,6 +38,8 @@ public class PurchaseDetail implements Serializable {
 	private int serviceKeyPriceId;
 
 	private byte status;
+	
+	private String channel;
 
 	//bi-directional many-to-one association to Purchas
 	@ManyToOne
@@ -79,6 +81,7 @@ public class PurchaseDetail implements Serializable {
 		this.purchaseTime = purchaseTime;
 	}
 
+	
 	public String getRemarks() {
 		return this.remarks;
 	}
@@ -109,6 +112,14 @@ public class PurchaseDetail implements Serializable {
 
 	public void setPurchas(Purchas purchas) {
 		this.purchas = purchas;
+	}
+
+	public String getChannel() {
+		return channel;
+	}
+
+	public void setChannel(String channel) {
+		this.channel = channel;
 	}
 
 }

@@ -2,6 +2,7 @@ package com.sumadga.dto;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -17,6 +18,7 @@ public class FailPurchaseDetail implements Serializable {
 
 	@Id
 	@Column(name="fail_purchase_detail_id")
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int failPurchaseDetailId;
 
 	private double amount;
@@ -34,6 +36,8 @@ public class FailPurchaseDetail implements Serializable {
 	private int serviceKeyPriceId;
 
 	private byte status;
+	
+	private String channel;
 
 	//bi-directional many-to-one association to FailPurchas
 	@ManyToOne
@@ -105,6 +109,14 @@ public class FailPurchaseDetail implements Serializable {
 
 	public void setFailPurchas(FailPurchas failPurchas) {
 		this.failPurchas = failPurchas;
+	}
+
+	public String getChannel() {
+		return channel;
+	}
+
+	public void setChannel(String channel) {
+		this.channel = channel;
 	}
 
 }

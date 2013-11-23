@@ -241,7 +241,11 @@ public class MediaGroupMediaDao  {
 		logger.info("Finding media info of mediaGroup");
 		try {
 			
-			final String queryString = "SELECT m.media_type_id as mediaTypeId, m.media_id  as mediaId, m.media_title  as mediaName, mc.storage_path as storagePath ,mc.media_content_id FROM   media m JOIN  media_contents mc JOIN media_specifications ms ON   m.media_id = ?  AND m.media_id = mc.media_id  AND mc.media_specification_id = ms.media_specification_id  AND ms.width <= ?  AND ms.height <= ?  AND  ms.media_content_purpose_id = ? order by ms.width , ms.height desc limit 1";
+			final String queryString = "SELECT m.media_type_id as mediaTypeId, m.media_id  as mediaId, m.media_title  as mediaName" +
+					", mc.storage_path as storagePath ,mc.media_content_id FROM   media m JOIN  " +
+					"media_contents mc JOIN media_specifications ms ON   m.media_id = ?  AND m.media_id = mc.media_id  " +
+					"AND mc.media_specification_id = ms.media_specification_id  AND ms.width <= ?  AND ms.height <= ? " +
+					" AND  ms.media_content_purpose_id = ? order by ms.width desc, ms.height desc limit 1";
 			
 			Query query = entityManager.createNativeQuery(queryString);
 			query.setParameter(1, mediaId);

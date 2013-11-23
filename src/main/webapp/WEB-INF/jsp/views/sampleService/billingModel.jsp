@@ -28,7 +28,7 @@
 			type="hidden" value="${billingModel.redirecturl}" name="redirecturl"> <input
 			type="hidden" value="${billingModel.requestid}" name="requestid"> <input
 			type="hidden" value="${billingModel.username}" name="username"> <input
-			type="hidden" value="${billingModel.serviceKeypriceKey}" name="serviceKeypriceKey">
+			type="hidden" value="${billingModel.key}" name="key">
 			<input type="submit" value="Click to confirm"> 
 	</form>
 </body>

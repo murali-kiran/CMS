@@ -15,13 +15,13 @@
 					width="${previewWidth}" height="${previewHeight}">
 			</a>
 			</div>
-			<div>@ ${mediaInfo.price}</div>
-			<div>
+			<div>Buy @ ${mediaInfo.price}</div>
+			<%-- <div>
 			<img alt="noImage"
 					src="${pageContext.servletContext.contextPath}/resources/images/buy.png"
 					width="40px" height="15px">
 					
-					</div>
+					</div> --%>
 		</div>
 	</c:forEach>
 </div>

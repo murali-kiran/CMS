@@ -62,7 +62,10 @@ public class DownloadFile {
 	    download.setServiceId(mediaBean.getServiceId());
 	    download.setDownloadTime(CommonUtils.convertDateToTimeStamp(new Date()));
 	    download.setModifiedTime(CommonUtils.convertDateToTimeStamp(new Date()));
-	    download.setChannel(request.getParameter("channel"));
+	    String channel=request.getParameter("channel");
+	    if(channel==null)
+	    	channel="smd";
+	    download.setChannel(channel);
 
 	    download.setUserAgent(deviceCapility.get("userAgent"));
 	    download.setSessionId(request.getSession().getId());

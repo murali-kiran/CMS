@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -31,6 +32,7 @@ import com.sumadga.wap.service.ServiceLayer;
 @Scope("request")
 public class ServiceController extends BaseController{
 
+	Logger logger=Logger.getLogger(ServiceController.class);
 	@Autowired
 	private ServiceLayer serviceLayer;
 	@Autowired
@@ -84,16 +86,16 @@ public class ServiceController extends BaseController{
 	public String billingResponse(HttpServletRequest request,HttpSession session){
 		
 		Map<String,String> map =	RequestUtil.INSTANCE.dumpRequestScope(request);
-		System.out.println(map);
+		logger.info(map);
 		String responseCode = map.get("responsecode");
 		if(responseCode.equals("101")){
-			System.out.println("Billing Success");
+			logger.info("Billing Success");
 			
 			
 			
 		}else{
 			String error = billingUtils.getBillingErrorMessage(Integer.parseInt(responseCode));
-			System.out.println("Billing Failed due to :"+error);
+			logger.info("Billing Failed due to :"+error);
 		}
 		return "forward:/service/2?channel=smd&msisdn="+session.getAttribute("msisdn").toString()+"&operator="+session.getAttribute("operator").toString();//Please remove msisdn and operator it is for testing. Get from session
 	}

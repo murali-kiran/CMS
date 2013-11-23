@@ -121,7 +121,8 @@ public class HomeController extends BaseController{
 		
 		String msisdn = commonUtils.getMsisdn(request);
 		
-
+		 if(channel==null)
+			 channel="smd";
 		if(request.getParameter("detect")==null && msisdn==null ){
 			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
 			return "redirect:"+msisdnDetectionUrl;
@@ -133,7 +134,7 @@ public class HomeController extends BaseController{
 
 		if(!isTestMobileNumber && request.getParameter("responsecode") == null ){
 
-			BillingModel billingModel =	billingUtils.getEventBilling(request,Long.parseLong((String)session.getAttribute("msisdn")), session.getAttribute("operator").toString(), serviceKeypriceKey);
+			BillingModel billingModel =	billingUtils.getEventBilling(request,Long.parseLong(msisdn), session.getAttribute("operator").toString(), serviceKeypriceKey);
 			billingModel.setServiceKeypriceKey(serviceKeypriceKey);
 			billingModel.setSecretKeyOtherAPI(applicationProperties.getSecretKeyOtherAPI());
 			
@@ -142,33 +143,37 @@ public class HomeController extends BaseController{
 			}else {
 				int serviceKeyId = Integer.parseInt(request.getParameter("servicKeyId"));
 				Map<String,String> map =	RequestUtil.INSTANCE.dumpRequestScope(request);
-				System.out.println(map);
+				logger.info(map);
 				String responseCode = map.get("responsecode");
-				if(responseCode.equals("101")){
+				if(isTestMobileNumber || responseCode.equals("101")){
 					logger.info("Billing Success");
 					
 					Purchas purchase =	purchaseAndDownloadDao.checkPurchaseRecordExistForToday(Long.parseLong((String)session.getAttribute("msisdn")),mediaId);
-					
+					String remark="";
+					if(isTestMobileNumber)
+						remark="test number";
+					else 
+						remark="101:SUCCESS";
 					// if purchase is not done for that id
-					if(purchase == null ){
-						
-						purchase =	serviceLayer.savePurchaseAndPurchaseDetails(request,serviceKeyId);
-						
-						return "forward:/service2/dwlFile/"+serviceId+"/"+mediaId+"/"+purchase.getPurchaseId();
+						if(purchase ==null)
+						purchase =	serviceLayer.savePurchaseAndPurchaseDetails(request,serviceKeyId,channel,msisdn,remark);
 					    
-					}else{
-						return "forward:/service2/dwlFile/"+serviceId+"/"+mediaId+"/"+purchase.getPurchaseId();
-					}
+				
+					//	return "forward:/service2/dwlFile/"+serviceId+"/"+mediaId+"/"+purchase.getPurchaseId();
+				
 					
-					
+					model.addAttribute("isDownloadURL", true);
+					model.addAttribute("downloadURL", request.getContextPath()+"/service2/dwlFile/"+serviceId+"/"+mediaId+"/"+purchase.getPurchaseId()+"?channel="+channel);
+					return getService(model, serviceId, request, channel);
 				}else{
 					String errorCode = billingUtils.getBillingErrorMessage(Integer.parseInt(responseCode));
+					String remark=responseCode.equals("101")+":"+errorCode;
 					
-					serviceLayer.saveFailPurchaseAndPFailPurchaseDetails(request,serviceKeyId,errorCode);
+					serviceLayer.saveFailPurchaseAndPFailPurchaseDetails(request,serviceKeyId,errorCode,channel,msisdn,remark);
 					
-					System.out.println("Billing Failed due to :"+errorCode);
+					logger.info("Billing Failed due to :"+errorCode);
 				}
-				return "forward:/service/"+serviceId+"?channel="+channel+"&msisdn="+session.getAttribute("msisdn").toString()+"&operator="+session.getAttribute("operator").toString();
+				return "forward:/service/"+serviceId+"?channel="+channel+"&msisdn="+msisdn+"&operator="+session.getAttribute("operator").toString();
 				
 			}
 

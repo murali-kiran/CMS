@@ -366,14 +366,14 @@ public class ServiceLayer {
 		return mediaGroupMediaDao.getMediaInfoOfMedia(mediaId, mediaContentPurposeId, width, height);
 	}
 	
-	public Purchas savePurchaseAndPurchaseDetails(HttpServletRequest request,int servicKeyId){
+	public Purchas savePurchaseAndPurchaseDetails(HttpServletRequest request,int servicKeyId,String channel,String msisdn,String remark){
 		
 		Purchas purchase = new Purchas();
 	    purchase.setCircleId(1);
 	    purchase.setExpiryTime(new Date());
 	    purchase.setFirstPurchaseTime(new Date());
 	    purchase.setLastPurchaseTime(new Date());
-	    purchase.setMsisdn(new BigInteger(session.getAttribute("msisdn").toString()));
+	    purchase.setMsisdn(new BigInteger(msisdn));
 	    purchase.setNetworkId(1);
 //	    purchase.setPurchaseId(1);
 	    purchase.setPurchaseStatus((byte)0);
@@ -390,9 +390,10 @@ public class ServiceLayer {
 	    purchaseDetail.setAmount(serviceKeyPrices.getPrice());
 	    purchaseDetail.setModifiedTime(CommonUtils.convertDateToTimeStamp(new Date()));
 	    purchaseDetail.setPurchaseTime(new Date());
-	    purchaseDetail.setRemarks("remark");
+	    purchaseDetail.setRemarks(remark);
 	    purchaseDetail.setServiceKeyPriceId(serviceKeyPrices.getServiceKeyPriceId());
 	    purchaseDetail.setStatus((byte)1);
+	    purchaseDetail.setChannel(channel);
 	    
 	    purchaseDetailDao.save(purchaseDetail);
 	    
@@ -406,14 +407,14 @@ public	Purchas getPurchas(int purchaseId){
 	}
 
 public FailPurchas saveFailPurchaseAndPFailPurchaseDetails(HttpServletRequest request,
-		int serviceKeyId, String errorCode) {
+		int serviceKeyId, String errorCode,String channel,String msisdn,String remark) {
 	
 	FailPurchas purchase = new FailPurchas();
     purchase.setCircleId(1);
     purchase.setExpiryTime(new Date());
     purchase.setFirstPurchaseTime(new Date());
     purchase.setLastPurchaseTime(new Date());
-    purchase.setMsisdn(new BigInteger(session.getAttribute("msisdn").toString()));
+    purchase.setMsisdn(new BigInteger(msisdn));
     purchase.setNetworkId(1);
 //    purchase.setPurchaseId(1);
     purchase.setPurchaseStatus((byte)0);
@@ -430,9 +431,11 @@ public FailPurchas saveFailPurchaseAndPFailPurchaseDetails(HttpServletRequest re
     purchaseDetail.setAmount(serviceKeyPrices.getPrice());
     purchaseDetail.setModifiedTime(CommonUtils.convertDateToTimeStamp(new Date()));
     purchaseDetail.setPurchaseTime(new Date());
-    purchaseDetail.setRemarks("remark");
+    purchaseDetail.setRemarks(remark);
     purchaseDetail.setServiceKeyPriceId(serviceKeyPrices.getServiceKeyPriceId());
     purchaseDetail.setStatus((byte)1);
+    purchaseDetail.setChannel(channel);
+    
     
     failPurchaseDetailDao.save(purchaseDetail);
     

@@ -2,6 +2,7 @@ package com.sumadga.dto;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
 import java.math.BigInteger;
 
 
@@ -16,6 +17,7 @@ public class ServiceProperty implements Serializable {
 
 	@Id
 	@Column(name="service_property_id")
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private String servicePropertyId;
 
 	private String name;
