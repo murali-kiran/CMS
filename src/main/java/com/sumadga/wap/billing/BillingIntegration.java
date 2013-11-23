@@ -140,7 +140,7 @@ public class BillingIntegration {
             is = new InputSource(new StringReader(""));
             Document doc = builder.parse(is);
             NodeList list = doc.getElementsByTagName(node);
-            System.out.println(list.item(0).getTextContent());
+            logger.debug(list.item(0).getTextContent());
         } catch (ParserConfigurationException e) {
         } catch (SAXException e) {
         } catch (IOException e) {

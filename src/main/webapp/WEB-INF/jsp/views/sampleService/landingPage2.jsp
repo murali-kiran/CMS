@@ -15,7 +15,7 @@
   		<div>${mediaInfo.mediaName}</div>
   		<div>
 				<img alt="noImage" src="${mediaInfo.storagePath}"
-					width="52px" height="52px">
+					width="${previewWidth}" height="${previewHeight}">
 			</div>
 			
   		
@@ -27,7 +27,7 @@
   		
   		<a href="<c:url value="/service2/dwl/${serviceId}/${mediaInfo.mediaId}/${mediaInfo.serviceKeypriceKey}?channel=${channel}&servicKeyId=${mediaInfo.serviceKeyId}"/>">
 		<img alt="noImage" src="${mediaInfo.storagePath}"
-					width="52px" height="52px">
+					width="${previewWidth}" height="${previewHeight}">
 		</a>			
 		</div>
 		

@@ -12,19 +12,22 @@
 			<div>
 			<a href="${pageContext.servletContext.contextPath}/service2/dwl/${serviceId}/${mediaInfo.mediaId}/${mediaInfo.serviceKeypriceKey}?channel=${channel}">		<img alt="noImage"
 					src="${mediaInfo.storagePath}"
-					width="52px" height="52px">
+					width="${previewWidth}" height="${previewHeight}">
 			</a>
 			</div>
 			<div>@ ${mediaInfo.price}</div>
-			<div><img alt="noImage"
+			<div>
+			<img alt="noImage"
 					src="${pageContext.servletContext.contextPath}/resources/images/buy.png"
-					width="40px" height="15px"></div>
+					width="40px" height="15px">
+					
+					</div>
 		</div>
 	</c:forEach>
 </div>
 	<br />
 
-	<div style="width: 100%; text-align: right;display: block;">
+	<div style="width: 100%; text-align:center;display: block;">
 
 
 		<c:forEach var="i" begin="1" end="${media.id}">
