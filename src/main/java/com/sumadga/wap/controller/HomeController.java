@@ -63,12 +63,9 @@ public class HomeController extends BaseController{
 	@RequestMapping(value="/service/{serviceId}",method=RequestMethod.GET)
 	public String getService(Model model,@PathVariable Integer serviceId,HttpServletRequest request,@RequestParam(value="channel", required = false,defaultValue="smd") String channel){
 		
-
-	
-		
-		
 		String msisdn = commonUtils.getMsisdn(request);
 		
+
 		if(request.getParameter("detect")==null && msisdn==null ){
 			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
 			return "redirect:"+msisdnDetectionUrl;
@@ -80,11 +77,9 @@ public class HomeController extends BaseController{
 		
 		
 		Map<String,String> deviceMap =	getDeviceCapbilities(request);
+
 		session.setAttribute("msisdn", msisdn);
-		//session.setAttribute("operator", request.getParameter("operator"));
-		
-		session.setAttribute("operator", "optr");
-		
+		session.setAttribute("operator", request.getParameter("operator"));
 		
 		int previewCount = Integer.parseInt(serviceLayer.getServiceProprety(serviceId, "pageCount_LP"));
 		
@@ -124,10 +119,9 @@ public class HomeController extends BaseController{
 	@RequestMapping(value="/service2/dwl/{serviceId}/{mediaId}/{serviceKeypriceKey}",method=RequestMethod.GET)
 	public String downloadMedia(HttpServletRequest request,HttpServletResponse response,HttpSession session,Model model,@PathVariable Integer serviceId,@PathVariable Integer mediaId,@PathVariable String serviceKeypriceKey,@RequestParam(value = "channel", required = false,defaultValue="smd") String channel){
 		
-		
-		
 		String msisdn = commonUtils.getMsisdn(request);
 		
+
 		if(request.getParameter("detect")==null && msisdn==null ){
 			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
 			return "redirect:"+msisdnDetectionUrl;
@@ -136,7 +130,9 @@ public class HomeController extends BaseController{
 			return "errorPage";
 		}
 		Boolean isTestMobileNumber = serviceLayer.isTestMobileNumber(msisdn);
+
 		if(!isTestMobileNumber && request.getParameter("responsecode") == null ){
+
 			BillingModel billingModel =	billingUtils.getEventBilling(request,Long.parseLong((String)session.getAttribute("msisdn")), session.getAttribute("operator").toString(), serviceKeypriceKey);
 			billingModel.setServiceKeypriceKey(serviceKeypriceKey);
 			billingModel.setSecretKeyOtherAPI(applicationProperties.getSecretKeyOtherAPI());
@@ -150,8 +146,6 @@ public class HomeController extends BaseController{
 				String responseCode = map.get("responsecode");
 				if(responseCode.equals("101")){
 					logger.info("Billing Success");
-		
-		
 					
 					Purchas purchase =	purchaseAndDownloadDao.checkPurchaseRecordExistForToday(Long.parseLong((String)session.getAttribute("msisdn")),mediaId);
 					
@@ -177,13 +171,12 @@ public class HomeController extends BaseController{
 				return "forward:/service/"+serviceId+"?channel="+channel+"&msisdn="+session.getAttribute("msisdn").toString()+"&operator="+session.getAttribute("operator").toString();
 				
 			}
+
 		
 	}
 	
 	@RequestMapping(value="/service2/cat/{serviceId}/{catId}",method=RequestMethod.GET)
 	public String getServiceByCategory(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer catId,@RequestParam(value = "channel", required = false,defaultValue="smd") String channel){
-		
-	
 		
 		String msisdn = commonUtils.getMsisdn(request);
 		
@@ -200,7 +193,6 @@ public class HomeController extends BaseController{
 		    //
 			Map<Bean<Integer,String>,Bean<Integer,List<MediaBean>>> mediaInfoMap =	serviceLayer.getMediaInfoOfCategory(serviceId,catId,CommonUtils.MEDIA_CONTENT_PRIVIEW,CommonUtils.PRIVIEW_WIDTH,CommonUtils.PRIVIEW_HEIGHT,0,pageCount);
 			
-			
 			model.addAttribute("serviceId",serviceId);
 			model.addAttribute("categoryId",catId);
 			model.addAttribute("mediaInfoMap", mediaInfoMap);
@@ -214,8 +206,6 @@ public class HomeController extends BaseController{
 	
 	@RequestMapping(value="/service2/cat/{serviceId}/{parentCatId}/{catId}",method=RequestMethod.GET)
 	public String getServiceBySubCategory(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer parentCatId,@PathVariable Integer catId,@RequestParam(value="channel", required = false,defaultValue="smd") String channel){
-		
-	
 		
 		String msisdn = commonUtils.getMsisdn(request);
 		
@@ -232,7 +222,6 @@ public class HomeController extends BaseController{
 		    //
 			Map<Bean<Integer,String>,Bean<Integer,List<MediaBean>>> mediaInfoMap =	serviceLayer.getMediaInfoOfSubCategory(serviceId,parentCatId,catId,CommonUtils.MEDIA_CONTENT_PRIVIEW,CommonUtils.PRIVIEW_WIDTH,CommonUtils.PRIVIEW_HEIGHT,0,pageCount);
 			
-			
 			model.addAttribute("serviceId",serviceId);
 			model.addAttribute("categoryId",catId);
 			model.addAttribute("mediaInfoMap", mediaInfoMap);
@@ -247,9 +236,6 @@ public class HomeController extends BaseController{
 	
 	@RequestMapping(value="/service2/cat/pageId/pageCount/{serviceId}/{catId}/{pageId}/{pageCount}",method=RequestMethod.GET)
 	public String getServiceByCategorybyPagination(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer catId,@PathVariable Integer pageId,@PathVariable Integer pageCount,@RequestParam(value="channel", required = false,defaultValue="smd") String channel){
-		
-	
-		
 		String msisdn = commonUtils.getMsisdn(request);
 		
 		if(request.getParameter("detect")==null && msisdn==null ){
@@ -260,8 +246,9 @@ public class HomeController extends BaseController{
 			return "errorPage";
 		}
 		
+
 		Map<String,String> deviceMap =	getDeviceCapbilities(request);
-			Map<Bean<Integer,String>,Bean<Integer,List<MediaBean>>> mediaInfoMap =	serviceLayer.getMediaInfoOfCategory(serviceId,catId,CommonUtils.MEDIA_CONTENT_PRIVIEW,100,100,(pageId-1)*pageCount,pageCount);
+			Map<Bean<Integer,String>,Bean<Integer,List<MediaBean>>> mediaInfoMap =	serviceLayer.getMediaInfoOfCategory(serviceId,catId,CommonUtils.MEDIA_CONTENT_PRIVIEW,commonUtils.PRIVIEW_WIDTH,commonUtils.PRIVIEW_HEIGHT,(pageId-1)*pageCount,pageCount);
 			
 			model.addAttribute("serviceId",serviceId);
 			model.addAttribute("categoryId",catId);
