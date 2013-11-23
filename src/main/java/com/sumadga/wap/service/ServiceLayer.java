@@ -25,6 +25,8 @@ import com.sumadga.dao.PurchaseDetailDao;
 import com.sumadga.dao.PurchasesDao;
 import com.sumadga.dao.ServiceKeyPriceDao;
 import com.sumadga.dao.ServiceMediaGroupDao;
+import com.sumadga.dao.ServicePropertyDao;
+import com.sumadga.dao.TestMobileDao;
 import com.sumadga.dto.MediaGroup;
 import com.sumadga.dto.MediaGroupMedia;
 import com.sumadga.dto.MediaSubGroup;
@@ -32,6 +34,8 @@ import com.sumadga.dto.Purchas;
 import com.sumadga.dto.PurchaseDetail;
 import com.sumadga.dto.ServiceKeyPrice;
 import com.sumadga.dto.ServiceMediaGroup;
+import com.sumadga.dto.ServiceProperty;
+import com.sumadga.dto.TestMobile;
 import com.sumadga.utils.CommonUtils;
 import com.sumadga.wap.model.Bean;
 import com.sumadga.wap.model.MediaBean;
@@ -61,7 +65,13 @@ public class ServiceLayer {
 	PurchasesDao purchasesDao;
 	
 	@Autowired
+	TestMobileDao testMobileDao;
+	
+	@Autowired
 	PurchaseDetailDao purchaseDetailDao;
+	
+	@Autowired
+	ServicePropertyDao servicePropertyDao;
 	
 	 
 
@@ -382,6 +392,23 @@ public class ServiceLayer {
 public	Purchas getPurchas(int purchaseId){
 	Purchas purchas =	purchasesDao.findById(purchaseId);
 	return purchas;
+	}
+
+public void saveFailPurchaseAndPFailPurchaseDetails(HttpServletRequest request,
+		int serviceKeyId, String errorCode) {
+	// TODO Auto-generated method stub
+	
+}
+
+public String getServiceProprety(int serviceId,String propertyName){
+   ServiceProperty serviceProperty =	servicePropertyDao.findByProperty(serviceId, "name", propertyName);
+  return serviceProperty.getValue();
+}
+
+public boolean isTestMobileNumber(String mobileNumber){
+	   TestMobile serviceProperty =	testMobileDao.findByProperty("mobileNumber", mobileNumber);
+	   
+	  return serviceProperty!=null;
 	}
 
 

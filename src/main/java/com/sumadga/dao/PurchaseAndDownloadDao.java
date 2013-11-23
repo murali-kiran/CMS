@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.sumadga.dto.Purchas;
 import com.sumadga.wap.model.Bean;
 
 @Repository
@@ -21,22 +22,33 @@ public class PurchaseAndDownloadDao {
 	@PersistenceContext
 	private EntityManager entityManager;
 	
-	public Boolean checkPurchaseRecordExistForToday(Long msiddn){
+	public Purchas checkPurchaseRecordExistForToday(Long msiddn,int mediaId){
 		
 		
 		logger.info("Finding mediaTypeInfo of mediaGroup");
 		try {
-			final String queryString = "SELECT * FROM purchases WHERE date(last_purchase_time) = curdate() and msisdn = ?;";
+		//	final String queryString = "SELECT * FROM purchases WHERE date(expiry_time) = curdate() and msisdn = ?;";
+			
+			final String queryString ="SELECT p.* FROM purchases p join media_downloads md  on  md.`purchase_id` = p.`purchase_id` and date(expiry_time) = curdate() and p.msisdn = ? and md.`media_id` = ? ";
 			
 			Query query = entityManager.createNativeQuery(queryString);
 			query.setParameter(1,msiddn);
+			query.setParameter(2,mediaId);
 			
 			List<Object[]> list = query.getResultList();
 			
-			return(list.size() > 0);
+			if(!list.isEmpty()){
+				Object [] obj = list.get(0);
+				Purchas purchas = new Purchas();
+				purchas.setPurchaseId((Integer)obj[0]);
+				
+				return purchas;
+			}else{
+				return null;
+			}
 					
 		} catch (RuntimeException re) {
-			return false;
+			return null;
 		}
 		
 	}
