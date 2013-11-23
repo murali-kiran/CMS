@@ -31,6 +31,8 @@ import com.sumadga.wap.model.Bean;
 import com.sumadga.wap.model.MediaBean;
 import com.sumadga.wap.service.ServiceLayer;
 
+
+
 @Controller
 @Scope("request")
 public class HomeController extends BaseController{
