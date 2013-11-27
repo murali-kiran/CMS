@@ -106,6 +106,7 @@ public class MediaUploadService {
 		model.addAttribute("mediaCycleList",mediaUtils.getMediaCycleList());
 		model.addAttribute("languageList",mediaUtils.getLanguageList());
 		model.addAttribute("mimeTypeList",mediaUtils.getMimeTypeList());
+		model.addAttribute("mediaProviderList",mediaUtils.getMediaProviderList());
 		model.addAttribute("osList",mediaUtils.getOsList());
 		
         MediaUploadModel mediaUploadModel = new MediaUploadModel();
@@ -357,6 +358,7 @@ public void saveUploadApp(MediaUploadModel mediaUploadModel) throws Exception{
 	boolean offlineConversion = true;
 	logger.info(" MediaTypeId "+mediaUploadModel.getMediaTypeId());
 	logger.info(" MediaCycleId "+mediaUploadModel.getMediaCycleId());
+	logger.info(" MediaProviderId "+mediaUploadModel.getMediaProviderId());
 	logger.info(" LanguageId "+mediaUploadModel.getLanguageId());
 	logger.info(" MediaName "+mediaUploadModel.getMediaName());
 	logger.info(" MediaTitle "+mediaUploadModel.getMediaTitle());
@@ -379,6 +381,7 @@ public void saveUploadApp(MediaUploadModel mediaUploadModel) throws Exception{
 	media.setMediaType(mediaTypeDao.findById(mediaUploadModel.getMediaTypeId()));
 	media.setDescription(mediaUploadModel.getDescription());
 	media.setLanguage(languageDao.findById(mediaUploadModel.getLanguageId()));
+	media.setMediaProvider(mediaProviderDao.findById(mediaUploadModel.getMediaProviderId()));
 	media.setMediaTitle(mediaUploadModel.getMediaTitle());
 	media.setMediaName(mediaUploadModel.getMediaName());
 	
