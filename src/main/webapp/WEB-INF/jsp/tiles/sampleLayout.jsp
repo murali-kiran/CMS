@@ -14,10 +14,11 @@ body,p,td,div,span,a {
 	padding: 0;
 	/* text-transform: lowercase; */
 	text-decoration: none;
+	font:CALIBRI;
 }
 </style>
 </head>
-<body style="background-color: #EEEEEE;">
+<body style="background-color: #EEEEEE;font-family: verdana;">
 	<table
 		style="border: 0px; padding: 0px; width: 100%; border-spacing: 0px; border-collapse: collapse;">
 		<tr>
