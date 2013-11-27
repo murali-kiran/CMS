@@ -3,11 +3,12 @@
 
 <script type="text/javascript" src="<%=request.getContextPath()%>/resources/script/cms.js"></script>
 <script type="text/javascript">
+var x=1;
 function add(){
-	alert("hi");
-	var x=1;
-	var k=x-1;
-	var $curRow = $('#apptr0');
+	//alert("hi");
+	
+	//var k=x-1;
+	var $curRow = $('#apptr'+k);
     var $newRow = $curRow.clone(true).attr('id','apptr'+x);
     $newRow.find('#heightjs'+k).attr('id','heightjs'+x);
     $newRow.find('#heightjs'+x).attr('name','mediaContentModelList['+x+'].height');
@@ -30,7 +31,7 @@ function add(){
     $newRow.find('#purjs'+k).attr('id','purjs'+x);
     $newRow.find('#purjs'+x).attr('name','mediaContentModelList['+x+'].purpose');
        
-    $('#apptr'+(x-1)).after($newRow);
+    $('#apptr'+k).after($newRow);
     x++;
 }
 
@@ -43,7 +44,6 @@ function add(){
 <table>
 <tr><td style="width: 50%;vertical-align: top;">
 <table>
-
 <tr>
 <td>MediaProvider</td>
 <td><div class="styled-select">
@@ -136,29 +136,16 @@ function add(){
 	  <c:forEach items="${mediaContentModelLst}" var="fileContent" varStatus="fileStatus">
 	  
 			 <tr id="apptr0"> 
-			 <td>
-			 <div><span style="float: left;">Height:</span><span> <form:input id="heightjs0" type="text" path="mediaContentModelList[0].height" /></span> </div>
-				Width : <form:input id="widthjs0" type="text" path="mediaContentModelList[0].width" /> <br/>
-				Purpose : 
-				<select id="purjs0" name="mediaContentModelList[0].purpose">
-					 <option value="Preview">Preview</option>
-					 <option value="Game">Application</option>
-				</select>	<br>
-				Mime Type:
-				<select id="mimejs0" name="mediaContentModelList[0].mimeType">
-				<c:forEach items="${mimeTypeList}" var="mime">
-					 <option value="${mime.mimeTypeId}">${mime.mimeType}</option>
-				</c:forEach>
-				</select><br>
-				OS Type:
-				<select id="osjs0" name="mediaContentModelList[0].osid">
-				<c:forEach items="${osList}" var="os" >
-					 <option value="${os.osId}">${os.osName}</option>
-				</c:forEach>
-				</select>	<br>
-				
-				File : <form:input id="filejs0" type="file" path="mediaContentModelList[0].file" /> </br>
+			 <td style="font-family: verdana;">
+			 <pre>
+				Width    : <form:input id="widthjs0" type="text" path="mediaContentModelList[0].width" /> <br/>
+				Height   : <form:input id="heightjs0" type="text" path="mediaContentModelList[0].height" /><br/>
+				Purpose  : <select id="purjs0" name="mediaContentModelList[0].purpose"><option value="Preview">Preview</option><option value="Game">Application</option></select><br>
+				Mime Type: <select id="mimejs0" name="mediaContentModelList[0].mimeType"><c:forEach items="${mimeTypeList}" var="mime"> <option value="${mime.mimeTypeId}">${mime.mimeType}</option></c:forEach></select><br>
+				OS Type  : <select id="osjs0" name="mediaContentModelList[0].osid"><c:forEach items="${osList}" var="os" ><option value="${os.osId}">${os.osName}</option></c:forEach></select>	<br>
+				File     : <form:input id="filejs0" type="file" path="mediaContentModelList[0].file" /> </br>
 				Description: <form:input id="desjs0" type="text" path="mediaContentModelList[0].duration" /> <br/>
+			</pre>	
 			</td>	
 			</tr>
 			</c:forEach>

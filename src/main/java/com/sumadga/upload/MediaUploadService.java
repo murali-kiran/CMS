@@ -27,6 +27,7 @@ import com.sumadga.dao.TagDao;
 import com.sumadga.dto.Media;
 import com.sumadga.dto.MediaAppContent;
 import com.sumadga.dto.MediaContent;
+import com.sumadga.dto.MediaProvider;
 import com.sumadga.dto.MediaSpecification;
 import com.sumadga.dto.MediaTag;
 import com.sumadga.dto.MediaType;
@@ -108,7 +109,7 @@ public class MediaUploadService {
 		model.addAttribute("mimeTypeList",mediaUtils.getMimeTypeList());
 		model.addAttribute("mediaProviderList",mediaUtils.getMediaProviderList());
 		model.addAttribute("osList",mediaUtils.getOsList());
-		
+		model.addAttribute("mediaProviderList",mediaUtils.getMediaProviderList());
         MediaUploadModel mediaUploadModel = new MediaUploadModel();
         
         MediaContentModel m = new MediaContentModel();
@@ -164,7 +165,10 @@ public void edit(ModelMap model,Integer mediaId){
         	/*Date date1 = originalFormat.parse(media.getMediaStartTime().toString());
         	Date date2 = originalFormat.parse(media.getMediaEndTime().toString());*/
         	 mediaUploadModel.setMediaStartTime(dateFormat.format(media.getMediaStartTime()));
-        	mediaUploadModel.setMediaEndTime(dateFormat.format(media.getMediaStartTime()));
+        	mediaUploadModel.setMediaEndTime(dateFormat.format(media.getMediaEndTime()));
+        /*	MediaProvider mediaProvider = new MediaProvider();
+        	mediaProvider.setMediaProviderId(media.getMediaProvider().getMediaProviderId());*/
+        	mediaUploadModel.setMediaProviderId(media.getMediaProvider().getMediaProviderId());
         	}catch(Exception e){logger.error("error", e);}
         	mediaUploadModel.setDescription(media.getDescription());
         	
@@ -517,7 +521,7 @@ public void saveUploadApp(MediaUploadModel mediaUploadModel) throws Exception{
 		List<Tag> tagList=new ArrayList<Tag>();
 		String[] tagArray=tags.split(",");
 		for (int i = 0; i < tagArray.length; i++) {
-			List<Tag> availabletags=tagDao.findByProperty("tagName", tagArray[0]);
+			List<Tag> availabletags=tagDao.findByProperty("tagName", tagArray[i]);
 			if(availabletags.isEmpty())
 			{
 				Tag tag=new Tag();
@@ -534,6 +538,8 @@ public void saveUploadApp(MediaUploadModel mediaUploadModel) throws Exception{
 			MediaTag mediaTag=new MediaTag();
 			mediaTag.setMedia(media);
 			mediaTag.setTag(tag);
+			List<MediaTag> mediaTagList=mediaTagDao.findByMediaAndTag(media.getMediaId(),tag.getTagId());
+			if(mediaTagList.isEmpty())
 			mediaTagDao.save(mediaTag);
 		}
 		

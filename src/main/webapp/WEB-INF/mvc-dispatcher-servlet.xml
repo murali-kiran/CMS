@@ -38,9 +38,9 @@
 
 <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/CMS?autoReconnect=true" />
-		<property name="username" value="root" />
-		<property name="password" value="root" />
+		<property name="url" value="jdbc:mysql://49.50.68.139:3306/mms?autoReconnect=true" />
+		<property name="username" value="mms" />
+		<property name="password" value="mms" />
 		<property name="minIdle" value="1" />
 		<property name="maxActive" value="5" />
 		<property name="validationQuery" value="select 1" />
