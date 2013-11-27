@@ -1,26 +1,25 @@
 package com.sumadga.interceptor;
 
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Enumeration;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sourceforge.wurfl.core.Device;
-import net.sourceforge.wurfl.core.WURFLEngine;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.sumadga.utils.CommonUtils;
+import com.sumadga.wap.controller.ServiceUtils;
 
 public class CaptureRequestInterceptor extends HandlerInterceptorAdapter{
 	
 	private static final Logger logger = Logger.getLogger(CaptureRequestInterceptor.class);
+	private static final Logger requestLogger = Logger.getLogger("REQUEST_HEADER");
 	
 	@Autowired
 	ServletContext context;
@@ -29,45 +28,60 @@ public class CaptureRequestInterceptor extends HandlerInterceptorAdapter{
 	WebApplicationContext wac;
 	
 
+	@Autowired
+	ServiceUtils serviceUtils;
+	
+	Long beforeTime=null;
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler) throws Exception {
 		
-        WURFLEngine holder = (WURFLEngine)wac.getBean(WURFLEngine.class.getName());
+        	 
+		StringBuffer other_details=new StringBuffer();
 		
-		Device device = holder.getDeviceForRequest(request);
-		logger.info("I am in interceptor ");
-				
-	/*	
-		String deviceCapabilities = device.getCapability("preferred_markup");
-		Map<String, String> deviceCapabilitiesMap = device.getCapabilities();
-	*/	
+		Enumeration<String> headers=request.getHeaderNames();
+		while (headers.hasMoreElements()) {
+			String header = (String) headers.nextElement();
+			other_details.append(header+":"+request.getHeader(header)+"||");
+		}
+		StringBuffer query_string=new StringBuffer();
 		
-		request.setAttribute("resolution_width", device.getCapability("resolution_width"));
-		request.setAttribute("resolution_height", device.getCapability("resolution_height"));
-		 
-		/*StringBuilder captureRequestStr = new StringBuilder();
-		captureRequestStr.append(device.getId());
-		captureRequestStr.append("##");// resolution_height resolution_width
-		captureRequestStr.append(deviceCapabilitiesMap.get("resolution_height"));
-		captureRequestStr.append("##");
-		captureRequestStr.append(deviceCapabilitiesMap.get("resolution_width"));
-		captureRequestStr.append("##");
-		captureRequestStr.append(request.getHeader("User-Agent"));
-		captureRequestStr.append("##");
-		captureRequestStr.append(request.getRemoteAddr());
-		captureRequestStr.append("##");
-		captureRequestStr.append(request.getRemoteHost());
-		captureRequestStr.append("##");
-		captureRequestStr.append(request.getRemoteUser());
-		captureRequestStr.append("##");
-		captureRequestStr.append(request.getRequestURI());
-		captureRequestStr.append("##");
-		captureRequestStr.append(request.getRequestURL()).toString();
-		captureRequestStr.append("\n");
+		Enumeration<String> params=request.getParameterNames();
+		while (params.hasMoreElements()) {
+			String param = (String) params.nextElement();
+			query_string.append(param+":"+request.getParameter(param)+"&");
+		}
 		
-		CommonUtils.AppendInfoToCsv("/home/sravan/Desktop/capture.csv",captureRequestStr.toString());*/
 		
+		
+
+		StringBuilder captureRequestStr = new StringBuilder();
+		captureRequestStr.append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));//created_time
+		captureRequestStr.append("##");
+		captureRequestStr.append(request.getParameter("channel"));// channel
+		captureRequestStr.append("##");
+		captureRequestStr.append(request.getRemoteHost());//host 
+		captureRequestStr.append("##");
+		captureRequestStr.append(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));//modified_time
+		captureRequestStr.append("##");
+		captureRequestStr.append(serviceUtils.getMsisdn(request)); // msisdn
+		captureRequestStr.append("##");
+		captureRequestStr.append(other_details.toString()); // other_details
+		captureRequestStr.append("##");
+		captureRequestStr.append(query_string.toString()); // query_string
+		captureRequestStr.append("##");
+		captureRequestStr.append(request.getHeader("referer")); // referer
+		captureRequestStr.append("##");
+		captureRequestStr.append(request.getRequestURL()); // requestURL
+		captureRequestStr.append("##");
+		captureRequestStr.append(request.getSession().getId());//session id
+		captureRequestStr.append("##");
+		captureRequestStr.append(request.getHeader("user-agent"));
+
+		requestLogger.info(captureRequestStr.toString().replace("null", "NULL"));
+		
+		beforeTime=System.currentTimeMillis();
 		return true;
 	}
 	
@@ -75,6 +89,7 @@ public class CaptureRequestInterceptor extends HandlerInterceptorAdapter{
 	public void postHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
+		logger.info(request.getRequestURL()+" Service Reqeust Processing took : "+((System.currentTimeMillis()-beforeTime)/1000) + " ms");
 	}
 	
 	@Override

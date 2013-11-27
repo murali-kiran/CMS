@@ -1,9 +1,5 @@
 package com.sumadga.dao;
 
-import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -16,43 +12,34 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sumadga.dto.Purchas;
-import com.sumadga.dto.PurchaseDetail;
-import com.sumadga.utils.CommonUtils;
-import com.sumadga.wap.model.MediaBean;
+import com.sumadga.dto.TestMobile;
 
 @Repository
-public class PurchasesDao {
+public class TestMobileDao {
 
-	private static final Logger logger = Logger.getLogger(PurchasesDao.class);
+	private static final Logger logger = Logger.getLogger(TestMobileDao.class);
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataAccessException.class)
-	public Purchas save(Purchas entity) {
-		logger.info("saving Purchas instance");
-		Purchas purchas = null;
+	public void save(TestMobile entity) {
+		logger.info("saving TestMobile instance");
 		try {
-			entity.setModifiedTime(new Timestamp(new Date().getTime()));
-			 purchas = entityManager.merge(entity);
+			entityManager.persist(entity);
 			logger.info("save successful");
 		} catch (RuntimeException re) {
 			logger.error("save failed", re);
-			return purchas;
+			throw re;
 		}
-		
-		return purchas;
-		
-		
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataAccessException.class)
-	public void delete(Purchas entity) {
-		logger.info("deleting Purchas instance");
+	public void delete(TestMobile entity) {
+		logger.info("deleting TestMobile instance");
 		try {
-			entity = entityManager.getReference(Purchas.class,
-					entity.getPurchaseId());
+			entity = entityManager.getReference(TestMobile.class,
+					entity.getMobileNumber());
 			entityManager.remove(entity);
 			logger.info("delete successful");
 		} catch (RuntimeException re) {
@@ -62,11 +49,10 @@ public class PurchasesDao {
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataAccessException.class)
-	public Purchas update(Purchas entity) {
-		logger.info("updating Purchas instance");
+	public TestMobile update(TestMobile entity) {
+		logger.info("updating TestMobile instance");
 		try {
-			entity.setModifiedTime(new Timestamp(new Date().getTime()));
-			Purchas result = entityManager.merge(entity);
+			TestMobile result = entityManager.merge(entity);
 			logger.info("update successful");
 			return result;
 		} catch (RuntimeException re) {
@@ -75,10 +61,10 @@ public class PurchasesDao {
 		}
 	}
 
-	public Purchas findById(Integer id) {
-		logger.info("finding Purchas instance with id: " + id);
+	public TestMobile findById(Integer id) {
+		logger.info("finding TestMobile instance with id: " + id);
 		try {
-			Purchas instance = entityManager.find(Purchas.class, id);
+			TestMobile instance = entityManager.find(TestMobile.class, id);
 			return instance;
 		} catch (RuntimeException re) {
 			logger.error("find failed", re);
@@ -87,19 +73,19 @@ public class PurchasesDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Purchas> findByProperty(String propertyName,
+	public TestMobile findByProperty(String propertyName,
 			final Object value, final int... rowStartIdxAndCount) {
-		logger.info("finding Purchas instance with property: " + propertyName
+		logger.info("finding TestMobile instance with property: " + propertyName
 				+ ", value: " + value);
 		try {
 						
-			String queryString = "select model from Purchas model where model."
+			String queryString = "select model from TestMobile model where model."
 					+ propertyName + "= " + value;
 			if(value.getClass().getName().equals("java.lang.String"))
-				queryString = "select model from Purchas model where model."
-						+ propertyName + "= '" + value+"'";
+				queryString = "select model from TestMobile model where model."
+						+ propertyName + " like '%" + value+"%'";
 			Query query = entityManager
-					.createQuery(queryString, Purchas.class);
+					.createQuery(queryString, TestMobile.class);
 			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
 				int rowStartIdx = Math.max(0, rowStartIdxAndCount[0]);
 				if (rowStartIdx > 0) {
@@ -113,23 +99,25 @@ public class PurchasesDao {
 					}
 				}
 			}
-			return query.getResultList();
+			List<TestMobile> testMobiles = query.getResultList();
+			
+			if(!testMobiles.isEmpty())
+			return testMobiles.get(0);
+			else
+			return null;
 		} catch (RuntimeException re) {
 			logger.error("find by property name failed", re);
-			throw re;
+			return null;
 		}
 	}
-	
-	
-	
 
 	@SuppressWarnings("unchecked")
-	public List<Purchas> findAll(final int... rowStartIdxAndCount) {
-		logger.info("finding all Purchas instances");
+	public List<TestMobile> findAll(final int... rowStartIdxAndCount) {
+		logger.info("finding all TestMobile instances");
 		try {
-			final String queryString = "select model from Purchas model";
+			final String queryString = "select model from TestMobile model";
 			Query query = entityManager
-					.createQuery(queryString, Purchas.class);
+					.createQuery(queryString, TestMobile.class);
 			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
 				int rowStartIdx = Math.max(0, rowStartIdxAndCount[0]);
 				if (rowStartIdx > 0) {

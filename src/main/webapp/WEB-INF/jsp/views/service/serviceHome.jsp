@@ -11,11 +11,11 @@
 		
 	   <c:choose>
 	    <c:when test="${mediaInfo.isSubMediaGroup eq true}">
-  		<a href="${pageContext.servletContext.contextPath}/service2/cat/${serviceId}/${mediaInfo.mediagroupParentId}/${mediaInfo.mediagroupId}?channel=${channel}">
+  		<a href="${pageContext.servletContext.contextPath}/main/ser/cat/${serviceId}/${mediaInfo.mediagroupParentId}/${mediaInfo.mediagroupId}?channel=${channel}">
   		<div>${mediaInfo.mediaName}</div>
   		<div>
 				<img alt="noImage" src="${mediaInfo.storagePath}"
-					width="${previewWidth}" height="${previewHeight}">
+					width="52px" height="52px">
 			</div>
 			
   		
@@ -24,27 +24,26 @@
   		<c:otherwise>
   		<div>${mediaInfo.mediaName}</div>
   		<div>
-  		
-  		<a href="<c:url value="/service2/dwl/${serviceId}/${mediaInfo.mediaId}/${mediaInfo.serviceKeypriceKey}?channel=${channel}&servicKeyId=${mediaInfo.serviceKeyId}"/>">
+  		<a href="${pageContext.servletContext.contextPath}/main/ser/dwl/${serviceId}/${mediaInfo.mediaId}/${mediaInfo.serviceKeypriceKey}?channel=${channel}">
 		<img alt="noImage" src="${mediaInfo.storagePath}"
-					width="${previewWidth}" height="${previewHeight}">
+					width="52px" height="52px">
 		</a>			
 		</div>
 		
   		
   		</c:otherwise>
   		</c:choose>
-  		<div>Buy @ ${mediaInfo.price}</div>
-  		<%-- <div><img alt="noImage"
+  		<div>@ ${mediaInfo.price}</div>
+  		<div><img alt="noImage"
 					src="${pageContext.servletContext.contextPath}/resources/images/buy.png"
-					width="40px" height="15px"></div> --%>
+					width="40px" height="15px"></div>
   		</div>
 	</c:forEach>
 	
 	<br/>
 	<div style="width: 100%;text-align: right;">
 	<c:if test="${media.id eq true}">
-	&nbsp;<a href="${pageContext.servletContext.contextPath}/service2/cat/${serviceId}/${category.id}?channel=${channel}">more</a>&nbsp;
+	&nbsp;<a href="${pageContext.servletContext.contextPath}/main/ser/cat/${serviceId}/${category.id}?channel=${channel}">more</a>&nbsp;
 	</c:if>
 	</div>
 	

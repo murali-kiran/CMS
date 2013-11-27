@@ -1,5 +1,6 @@
 package com.sumadga.wap.billing;
 
+import java.util.Enumeration;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +33,7 @@ public class BillingController {
 	@Autowired
 	RequestDao requestDao;
 	
+	@SuppressWarnings("unused")
 	@RequestMapping(value="/service/detectMsisdn",method=RequestMethod.GET)
 	public  String detectMsisdn(Model model,HttpServletRequest request){
 		String requestid = request.getParameter("requestid");
@@ -53,25 +55,31 @@ public class BillingController {
 		respons.setRequestId(Long.parseLong(requestid));
 		respons.setQueryString(request.getQueryString());
 		
-		//if(StringUtils.isNotBlank(mdn))
+
+		if(mdn!=null && !mdn.trim().isEmpty())
 		respons.setMsisdn(Long.parseLong(mdn));
-		/*else{
-			mdn="9999999999";
-		respons.setMsisdn(Long.parseLong("9999999999"));
-		}*/
+		
 		
 		responsDao.save(respons);
 		
 		Request req=requestDao.findById(Long.parseLong(requestid));
 		
 		String redirectUrl=req.getRedirectURL();
+		if(mdn!=null && !mdn.equalsIgnoreCase("null")){
 		if(redirectUrl.contains("?"))
-			redirectUrl=redirectUrl+"&msisdn="+mdn+"&operator="+operator;
+			redirectUrl=redirectUrl+"&msisdn="+mdn+"&operator="+operator+"&detect";
 		else
-			redirectUrl=redirectUrl+"?msisdn="+mdn+"&operator="+operator;
+			redirectUrl=redirectUrl+"?msisdn="+mdn+"&operator="+operator+"&detect";
+		}else{
+			if(redirectUrl.contains("?"))
+				redirectUrl=redirectUrl+"&detect";
+			else
+				redirectUrl=redirectUrl+"?detect";
+		}
 		return "redirect:"+redirectUrl;
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/service/billing",method=RequestMethod.GET)
 	public  String billingURL(Model model,HttpServletRequest request){
 		String requestid = request.getParameter("requestid");
@@ -93,10 +101,21 @@ public class BillingController {
 		Respons respons= new Respons();
 		
 		respons.setRequestId(Long.parseLong(requestid));
-		respons.setQueryString(request.getQueryString());
+		
+		Enumeration<String> enumeration= request.getParameterNames();
+		StringBuffer buffer=new StringBuffer("t1=t");
+		while (enumeration.hasMoreElements()) {
+			String param = (String) enumeration.nextElement();
+			buffer.append("&"+param+"="+request.getParameter(param));
+			
+		}
+		respons.setQueryString(buffer.toString());
 		
 		if(mdn!=null)
+		{
+			if(!mdn.trim().isEmpty())
 		respons.setMsisdn(Long.parseLong(mdn));
+		}
 		
 		responsDao.save(respons);
 		
@@ -110,5 +129,9 @@ public class BillingController {
 		return "redirect:"+redirectUrl;
 	}
 	
+	@RequestMapping(value="/service/billing",method=RequestMethod.POST)
+	public  String billingInPost(Model model,HttpServletRequest request){
+		return billingURL(model, request);
+	}
 	
 }

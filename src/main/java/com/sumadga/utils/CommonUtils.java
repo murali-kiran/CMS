@@ -8,12 +8,29 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.taglibs.standard.lang.jstl.test.beans.PublicBean1;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
+import org.apache.taglibs.standard.lang.jstl.test.beans.PublicBean1;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.sumadga.wap.controller.ServiceUtils;
+
+@Component
 public class CommonUtils {
+	
+	Logger logger=Logger.getLogger(CommonUtils.class);
 	
 	public static final int MEDIA_CONTENT_PRIVIEW = 1;
 	public static final int MEDIA_CONTENT_NON_PRIVIEW = 2;
+	public static final int PRIVIEW_WIDTH = 100;
+	public static final int PRIVIEW_HEIGHT = 100;
+	
+	@Autowired
+	HttpSession session;
 	
 	public static Map<Integer,Integer> paginationStringToMap(String paginationStr,int typeId,int pageId){
 		
@@ -53,6 +70,47 @@ public class CommonUtils {
 		
 	      return new Timestamp((new Date()).getTime());
 		
+	}
+	
+	public String getMsisdn(HttpServletRequest request){
+		String msisdn = request.getParameter("msisdn");
+		if(msisdn==null)
+			request.getHeader("msisdn");
+		
+		if(msisdn==null)
+		{
+			if(session.getAttribute("msisdn")!=null)
+			msisdn=request.getSession().getAttribute("msisdn").toString();
+		}
+		
+		if(msisdn==null)
+		{
+			Cookie[] cookie=request.getCookies();
+			if(cookie!=null)
+			{
+				for (int i = 0; i < cookie.length; i++) {
+					Cookie cookie2 = cookie[i];
+					if(cookie2.getName().equalsIgnoreCase("msisdn"))
+					{
+						msisdn=cookie2.getValue();
+					}
+				}
+			}
+		}
+		
+		if(msisdn!=null && msisdn.trim().isEmpty())
+			msisdn = null;
+		if(msisdn!=null && msisdn.trim().equalsIgnoreCase("null"))
+			msisdn=null;
+		if(msisdn!=null && msisdn.trim().length()==10)
+			msisdn="91"+msisdn;
+		
+		String operator=request.getParameter("operator");
+		if(operator!=null)
+			session.setAttribute("operator", operator);
+       
+		logger.warn("Msisdn in serviceUtils GetMsisdn Method : " + msisdn);
+		return msisdn;
 	}
 
 }

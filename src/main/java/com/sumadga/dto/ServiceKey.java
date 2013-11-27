@@ -2,6 +2,7 @@ package com.sumadga.dto;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ public class ServiceKey implements Serializable {
 
 	@Id
 	@Column(name="service_key_id")
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int serviceKeyId;
 
 	@Temporal(TemporalType.TIMESTAMP)

@@ -15,6 +15,7 @@ public class ServiceKeyPrice implements Serializable {
 
 	@Id
 	@Column(name="service_key_price_id")
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int serviceKeyPriceId;
 
 	private int duration;

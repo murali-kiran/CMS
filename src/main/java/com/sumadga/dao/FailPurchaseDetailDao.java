@@ -1,8 +1,6 @@
 package com.sumadga.dao;
 
-import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,43 +14,36 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sumadga.dto.Purchas;
-import com.sumadga.dto.PurchaseDetail;
-import com.sumadga.utils.CommonUtils;
-import com.sumadga.wap.model.MediaBean;
+import com.sumadga.dto.FailPurchaseDetail;
 
 @Repository
-public class PurchasesDao {
+public class FailPurchaseDetailDao {
 
-	private static final Logger logger = Logger.getLogger(PurchasesDao.class);
+	private static final Logger logger = Logger.getLogger(FailPurchaseDetailDao.class);
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataAccessException.class)
-	public Purchas save(Purchas entity) {
-		logger.info("saving Purchas instance");
-		Purchas purchas = null;
+	public void save(FailPurchaseDetail entity) {
+		logger.info("saving FailPurchaseDetail instance");
 		try {
+	
 			entity.setModifiedTime(new Timestamp(new Date().getTime()));
-			 purchas = entityManager.merge(entity);
+			entityManager.persist(entity);
 			logger.info("save successful");
 		} catch (RuntimeException re) {
 			logger.error("save failed", re);
-			return purchas;
+			throw re;
 		}
-		
-		return purchas;
-		
-		
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataAccessException.class)
-	public void delete(Purchas entity) {
-		logger.info("deleting Purchas instance");
+	public void delete(FailPurchaseDetail entity) {
+		logger.info("deleting FailPurchaseDetail instance");
 		try {
-			entity = entityManager.getReference(Purchas.class,
-					entity.getPurchaseId());
+			entity = entityManager.getReference(FailPurchaseDetail.class,
+					entity.getFailPurchaseDetailId());
 			entityManager.remove(entity);
 			logger.info("delete successful");
 		} catch (RuntimeException re) {
@@ -62,11 +53,11 @@ public class PurchasesDao {
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = DataAccessException.class)
-	public Purchas update(Purchas entity) {
-		logger.info("updating Purchas instance");
+	public FailPurchaseDetail update(FailPurchaseDetail entity) {
+		logger.info("updating FailPurchaseDetail instance");
 		try {
 			entity.setModifiedTime(new Timestamp(new Date().getTime()));
-			Purchas result = entityManager.merge(entity);
+			FailPurchaseDetail result = entityManager.merge(entity);
 			logger.info("update successful");
 			return result;
 		} catch (RuntimeException re) {
@@ -75,10 +66,10 @@ public class PurchasesDao {
 		}
 	}
 
-	public Purchas findById(Integer id) {
-		logger.info("finding Purchas instance with id: " + id);
+	public FailPurchaseDetail findById(Integer id) {
+		logger.info("finding FailPurchaseDetail instance with id: " + id);
 		try {
-			Purchas instance = entityManager.find(Purchas.class, id);
+			FailPurchaseDetail instance = entityManager.find(FailPurchaseDetail.class, id);
 			return instance;
 		} catch (RuntimeException re) {
 			logger.error("find failed", re);
@@ -87,19 +78,19 @@ public class PurchasesDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Purchas> findByProperty(String propertyName,
+	public List<FailPurchaseDetail> findByProperty(String propertyName,
 			final Object value, final int... rowStartIdxAndCount) {
-		logger.info("finding Purchas instance with property: " + propertyName
+		logger.info("finding FailPurchaseDetail instance with property: " + propertyName
 				+ ", value: " + value);
 		try {
 						
-			String queryString = "select model from Purchas model where model."
+			String queryString = "select model from FailPurchaseDetail model where model."
 					+ propertyName + "= " + value;
 			if(value.getClass().getName().equals("java.lang.String"))
-				queryString = "select model from Purchas model where model."
+				queryString = "select model from FailPurchaseDetail model where model."
 						+ propertyName + "= '" + value+"'";
 			Query query = entityManager
-					.createQuery(queryString, Purchas.class);
+					.createQuery(queryString, FailPurchaseDetail.class);
 			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
 				int rowStartIdx = Math.max(0, rowStartIdxAndCount[0]);
 				if (rowStartIdx > 0) {
@@ -119,17 +110,14 @@ public class PurchasesDao {
 			throw re;
 		}
 	}
-	
-	
-	
 
 	@SuppressWarnings("unchecked")
-	public List<Purchas> findAll(final int... rowStartIdxAndCount) {
-		logger.info("finding all Purchas instances");
+	public List<FailPurchaseDetail> findAll(final int... rowStartIdxAndCount) {
+		logger.info("finding all FailPurchaseDetail instances");
 		try {
-			final String queryString = "select model from Purchas model";
+			final String queryString = "select model from FailPurchaseDetail model";
 			Query query = entityManager
-					.createQuery(queryString, Purchas.class);
+					.createQuery(queryString, FailPurchaseDetail.class);
 			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
 				int rowStartIdx = Math.max(0, rowStartIdxAndCount[0]);
 				if (rowStartIdx > 0) {

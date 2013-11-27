@@ -2,7 +2,7 @@
 <c:forEach var="categoryMap" items="${mediaInfoMap}">
 
 	<c:set var="category" scope="session" value="${categoryMap.key}" />
-	<div style="width: 100%; background-color: red;border-width: 1px;">${category.name}</div>
+	<div style="width: 100%; background-color: #00FF00">${category.name}</div>
 
 	<c:set var="media" scope="request" value="${categoryMap.value}" />
 <div>
@@ -10,29 +10,26 @@
 		<div style="width: 33%; float: left; text-align: center;margin: 2px 0px 2px;">
 			<div>${mediaInfo.mediaName}</div>
 			<div>
-			<a href="${pageContext.servletContext.contextPath}/service2/dwl/${serviceId}/${mediaInfo.mediaId}/${mediaInfo.serviceKeypriceKey}?channel=${channel}">		<img alt="noImage"
+			<a href="${pageContext.servletContext.contextPath}/main/ser/dwl/${serviceId}/${mediaInfo.mediaId}/${mediaInfo.serviceKeypriceKey}?channel=${channel}">		<img alt="noImage"
 					src="${mediaInfo.storagePath}"
-					width="${previewWidth}" height="${previewHeight}">
+					width="52px" height="52px">
 			</a>
 			</div>
-			<div>Buy @ ${mediaInfo.price}</div>
-			<%-- <div>
-			<img alt="noImage"
+			<div>@ ${mediaInfo.price}</div>
+			<div><img alt="noImage"
 					src="${pageContext.servletContext.contextPath}/resources/images/buy.png"
-					width="40px" height="15px">
-					
-					</div> --%>
+					width="40px" height="15px"></div>
 		</div>
 	</c:forEach>
 </div>
 	<br />
 
-	<div style="width: 100%; text-align:center;display: block;">
+	<div style="width: 100%; text-align: right;display: block;">
 
 
 		<c:forEach var="i" begin="1" end="${media.id}">
 	&nbsp;<a
-				href="<c:url value="/service2/cat/pageId/pageCount/${serviceId}/${category.id}/${i}/${PaginationCount}?channel=${channel}"/>">&nbsp;${i}&nbsp;</a>&nbsp;
+				href="<c:url value="/main/ser/cat/pageId/pageCount/${serviceId}/${category.id}/${i}/${PaginationCount}?channel=${channel}"/>">&nbsp;${i}&nbsp;</a>&nbsp;
 	</c:forEach>
 	</div>
 

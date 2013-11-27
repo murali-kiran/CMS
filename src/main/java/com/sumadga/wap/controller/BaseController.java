@@ -174,9 +174,26 @@ public class BaseController {
 		mobileCapbilityMap.put("height", height);
 		mobileCapbilityMap.put("userAgent", userAgent);
 		mobileCapbilityMap.put("device_os", device_os);
-		
+		setPreviewWidthAndHeight(mobileCapbilityMap, width);
 		
 		return mobileCapbilityMap;
+	}
+	
+	public void setPreviewWidthAndHeight(Map<String, String> mobileCapbilityMap,String resolution_width){
+		
+		int width = Integer.parseInt(resolution_width);
+		if(width > 350){
+			mobileCapbilityMap.put("preview_width", "100px");
+			mobileCapbilityMap.put("preview_height", "100px");
+		}else if(width >= 240 && width <= 350){
+			mobileCapbilityMap.put("preview_width", "75px");
+			mobileCapbilityMap.put("preview_height", "75px");
+		}else if(width < 240){
+			mobileCapbilityMap.put("preview_width", "50px");
+			mobileCapbilityMap.put("preview_height", "50px");
+		}
+		
+		
 	}
 	
 	public String getRequestWidthHeight(HttpServletRequest request) {

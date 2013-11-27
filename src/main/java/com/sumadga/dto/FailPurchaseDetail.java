@@ -1,7 +1,6 @@
 package com.sumadga.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.*;
 
 import java.sql.Timestamp;
@@ -9,19 +8,18 @@ import java.util.Date;
 
 
 /**
- * The persistent class for the purchase_details database table.
+ * The persistent class for the fail_purchase_details database table.
  * 
  */
 @Entity
-@Table(name="purchase_details")
-
-public class PurchaseDetail implements Serializable {
+@Table(name="fail_purchase_details")
+public class FailPurchaseDetail implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="purchase_detail_id")
+	@Column(name="fail_purchase_detail_id")
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private int purchaseDetailId;
+	private int failPurchaseDetailId;
 
 	private double amount;
 
@@ -41,20 +39,20 @@ public class PurchaseDetail implements Serializable {
 	
 	private String channel;
 
-	//bi-directional many-to-one association to Purchas
+	//bi-directional many-to-one association to FailPurchas
 	@ManyToOne
-	@JoinColumn(name="purchase_id")
-	private Purchas purchas;
+	@JoinColumn(name="fail_purchase_id")
+	private FailPurchas failPurchas;
 
-	public PurchaseDetail() {
+	public FailPurchaseDetail() {
 	}
 
-	public int getPurchaseDetailId() {
-		return this.purchaseDetailId;
+	public int getFailPurchaseDetailId() {
+		return this.failPurchaseDetailId;
 	}
 
-	public void setPurchaseDetailId(int purchaseDetailId) {
-		this.purchaseDetailId = purchaseDetailId;
+	public void setFailPurchaseDetailId(int failPurchaseDetailId) {
+		this.failPurchaseDetailId = failPurchaseDetailId;
 	}
 
 	public double getAmount() {
@@ -81,7 +79,6 @@ public class PurchaseDetail implements Serializable {
 		this.purchaseTime = purchaseTime;
 	}
 
-	
 	public String getRemarks() {
 		return this.remarks;
 	}
@@ -106,12 +103,12 @@ public class PurchaseDetail implements Serializable {
 		this.status = status;
 	}
 
-	public Purchas getPurchas() {
-		return this.purchas;
+	public FailPurchas getFailPurchas() {
+		return this.failPurchas;
 	}
 
-	public void setPurchas(Purchas purchas) {
-		this.purchas = purchas;
+	public void setFailPurchas(FailPurchas failPurchas) {
+		this.failPurchas = failPurchas;
 	}
 
 	public String getChannel() {

@@ -12,8 +12,10 @@ public class BillingModel {
 	private String message;
 	private String logopath;
 	private String operator;
+	
 	private String serviceKeypriceKey;
 	private String secretKeyOtherAPI;
+	private String url;
 	
 	
 
@@ -94,6 +96,23 @@ public class BillingModel {
 	}
 	public void setOperator(String operator) {
 		this.operator = operator;
+	}
+	public String getUrl() {
+		return url;
+	}
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	@Override
+	public String toString() {
+		return "BillingModel [username=" + username + ", password=" + password
+				+ ", requestid=" + requestid + ", operation=" + operation
+				+ ", productid=" + productid + ", msisdn=" + msisdn + ", key="
+				+ key + ", redirecturl=" + redirecturl + ", message=" + message
+				+ ", logopath=" + logopath + ", operator=" + operator
+				+ ", serviceKeypriceKey=" + serviceKeypriceKey
+				+ ", secretKeyOtherAPI=" + secretKeyOtherAPI + ", url=" + url
+				+ "]";
 	}
 	
 }
