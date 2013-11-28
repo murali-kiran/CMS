@@ -19,6 +19,7 @@ body,p,td,div,span,a {
 	padding: 0;
 	/* text-transform: lowercase; */
 	text-decoration: none;
+	font:CALIBRI;
 }
 </style>
 </head>
