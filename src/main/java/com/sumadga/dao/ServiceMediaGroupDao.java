@@ -86,10 +86,10 @@ public class ServiceMediaGroupDao {
 				+ ", value: " + value);
 		try {
 			 String queryString = "select model from ServiceMediaGroup model where model."
-					+ propertyName + "= " + value;
+					+ propertyName + "= " + value +" order by model.mediaGroupOrder";
 			if(value.getClass().getName().equals("java.lang.String"))
 				queryString = "select model from ServiceMediaGroup model where model."
-						+ propertyName + "= '" + value+"'";
+						+ propertyName + "= '" + value+"'  order by model.mediaGroupOrder";
 			Query query = entityManager
 					.createQuery(queryString, ServiceMediaGroup.class);
 			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {

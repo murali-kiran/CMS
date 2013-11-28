@@ -2,7 +2,7 @@
 <c:forEach var="categoryMap" items="${mediaInfoMap}">
 
 	<c:set var="category" scope="session" value="${categoryMap.key}" />
-	<div style="width: 100%; background-color: #00FF00">${category.name}</div>
+	<div style="width: 100%; background-color: red;border-bottom: 1px; border-color: black;">${category.name}</div>
 
 	<c:set var="media" scope="request" value="${categoryMap.value}" />
 <div>

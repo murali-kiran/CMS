@@ -35,6 +35,9 @@ public class ServiceMediaGroup implements Serializable {
 
 	@Column(name="service_key_id")
 	private int serviceKeyId;
+	
+	@Column(name="media_group_order")
+	private int mediaGroupOrder;  
 
 	//bi-directional many-to-one association to Service
 	@ManyToOne
@@ -98,6 +101,14 @@ public class ServiceMediaGroup implements Serializable {
 
 	public void setService(Service service) {
 		this.service = service;
+	}
+
+	public int getMediaGroupOrder() {
+		return mediaGroupOrder;
+	}
+
+	public void setMediaGroupOrder(int mediaGroupOrder) {
+		this.mediaGroupOrder = mediaGroupOrder;
 	}
 
 }
