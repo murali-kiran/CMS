@@ -12,9 +12,13 @@
 		<li><a href="addGroup">Create Group</a></li>
 		<li><a href="listMediaGroup">Group List</a></li>
 	</ul>
-	<li>Mis</li>
+	<li>Services</li>
 	<ul>
-		<li><a href="mis/show">Mis</a></li>
+		<li><a href="serviceList">Service List</a></li>
+	</ul>
+	<li>MIS</li>
+	<ul>
+		<li><a href="mis/show">MIS</a></li>
 	</ul>
 </ul>
 

@@ -76,4 +76,16 @@
         <put-attribute name="title" value="Mis" />
         <put-attribute name="body" value="/WEB-INF/jsp/media/showMis.jsp" />
      </definition>
+     <definition name="serviceList" extends="base.definition">
+        <put-attribute name="title" value="MediaContents" />
+        <put-attribute name="body" value="/WEB-INF/jsp/service/serviceList.jsp" />
+     </definition>
+      <definition name="showServiceGroupSearch" extends="base.definition">
+        <put-attribute name="title" value="service" />
+        <put-attribute name="body" value="/WEB-INF/jsp/service/showServiceGroupSearch.jsp" />
+     </definition>
+       <definition name="selectServiceMediaGroup" extends="base.definition">
+        <put-attribute name="title" value="Upload" />
+        <put-attribute name="body" value="/WEB-INF/jsp/service/selectServiceMediaGroup.jsp" />
+     </definition>
     </tiles-definitions>

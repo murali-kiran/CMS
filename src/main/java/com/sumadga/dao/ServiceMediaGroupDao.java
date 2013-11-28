@@ -14,7 +14,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sumadga.dto.MediaGroup;
+import com.sumadga.dto.MediaSubGroup;
 import com.sumadga.dto.ServiceMediaGroup;
+import com.sumadga.mediagroup.MediaGroupModel;
 
 @Repository
 public class ServiceMediaGroupDao {
@@ -134,6 +137,38 @@ public class ServiceMediaGroupDao {
 		} catch (RuntimeException re) {
 			logger.error("find all failed", re);
 			throw re;
+		}
+	}
+
+	public List<ServiceMediaGroup> findByServiceId(Integer serviceId) {
+			// TODO Auto-generated method stub
+			try {
+				String queryString = "select model from ServiceMediaGroup model where model.service.serviceId="
+						 + serviceId+" order by model.groupOrder";
+				Query query = entityManager
+						.createQuery(queryString, ServiceMediaGroup.class);
+				return query.getResultList();
+			} catch (RuntimeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				throw e;
+			}
+	}
+
+	public List<MediaGroup> findRemainingMediaGroup(
+			MediaGroupModel mediaGroupModel) {
+		try {
+			String queryString = "select model from MediaGroup model where 1=1 "
+					 +" and model.mediaGroupId not in(select smg.mediaGroup.mediaGroupId from ServiceMediaGroup smg"
+					 +" where smg.service.serviceId="
+					 + mediaGroupModel.getServiceId()+")";
+			Query query = entityManager
+					.createQuery(queryString, MediaGroup.class);
+			return query.getResultList();
+		} catch (RuntimeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
 		}
 	}
 	

@@ -25,6 +25,23 @@ public class MediaGroupModel implements Serializable {
 	private String[] selectedMediaGroup;
 	private Integer parentmgId;
 	private Integer mediaSubGroupId;
+	private Integer serviceMediaGroupId;
+	private Integer serviceId;
+	public Integer getServiceId() {
+		return serviceId;
+	}
+
+	public void setServiceId(Integer serviceId) {
+		this.serviceId = serviceId;
+	}
+
+	public Integer getServiceMediaGroupId() {
+		return serviceMediaGroupId;
+	}
+
+	public void setServiceMediaGroupId(Integer serviceMediaGroupId) {
+		this.serviceMediaGroupId = serviceMediaGroupId;
+	}
 
 	public Integer getMediaSubGroupId() {
 		return mediaSubGroupId;

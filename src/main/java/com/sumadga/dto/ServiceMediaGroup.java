@@ -28,8 +28,13 @@ public class ServiceMediaGroup implements Serializable {
 	@Column(name="is_one_time_charge")
 	private byte isOneTimeCharge;
 
-	@Column(name="media_group_id")
-	private int mediaGroupId;
+	@Column(name="group_order")
+	private Integer groupOrder;
+	
+	/*@Column(name="media_group_id")*/
+	@ManyToOne
+	@JoinColumn(name="media_group_id")
+	private MediaGroup mediaGroup;
 
 	@Column(name="modified_time")
 	private Timestamp modifiedTime;
@@ -68,13 +73,12 @@ public class ServiceMediaGroup implements Serializable {
 	public void setIsOneTimeCharge(byte isOneTimeCharge) {
 		this.isOneTimeCharge = isOneTimeCharge;
 	}
-
-	public int getMediaGroupId() {
-		return this.mediaGroupId;
+	public MediaGroup getMediaGroup() {
+		return mediaGroup;
 	}
 
-	public void setMediaGroupId(int mediaGroupId) {
-		this.mediaGroupId = mediaGroupId;
+	public void setMediaGroup(MediaGroup mediaGroup) {
+		this.mediaGroup = mediaGroup;
 	}
 
 	public Timestamp getModifiedTime() {
@@ -99,6 +103,14 @@ public class ServiceMediaGroup implements Serializable {
 
 	public void setService(Service service) {
 		this.service = service;
+	}
+
+	public Integer getGroupOrder() {
+		return groupOrder;
+	}
+
+	public void setGroupOrder(Integer groupOrder) {
+		this.groupOrder = groupOrder;
 	}
 
 }
