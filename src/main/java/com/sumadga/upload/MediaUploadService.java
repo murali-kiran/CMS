@@ -107,6 +107,7 @@ public class MediaUploadService {
 		model.addAttribute("mediaCycleList",mediaUtils.getMediaCycleList());
 		model.addAttribute("languageList",mediaUtils.getLanguageList());
 		model.addAttribute("mimeTypeList",mediaUtils.getMimeTypeList());
+		model.addAttribute("mediaProviderList",mediaUtils.getMediaProviderList());
 		model.addAttribute("osList",mediaUtils.getOsList());
 		model.addAttribute("mediaProviderList",mediaUtils.getMediaProviderList());
         MediaUploadModel mediaUploadModel = new MediaUploadModel();
@@ -164,7 +165,7 @@ public void edit(ModelMap model,Integer mediaId){
         	/*Date date1 = originalFormat.parse(media.getMediaStartTime().toString());
         	Date date2 = originalFormat.parse(media.getMediaEndTime().toString());*/
         	 mediaUploadModel.setMediaStartTime(dateFormat.format(media.getMediaStartTime()));
-        	mediaUploadModel.setMediaEndTime(dateFormat.format(media.getMediaStartTime()));
+        	mediaUploadModel.setMediaEndTime(dateFormat.format(media.getMediaEndTime()));
         /*	MediaProvider mediaProvider = new MediaProvider();
         	mediaProvider.setMediaProviderId(media.getMediaProvider().getMediaProviderId());*/
         	mediaUploadModel.setMediaProviderId(media.getMediaProvider().getMediaProviderId());
@@ -361,6 +362,7 @@ public void saveUploadApp(MediaUploadModel mediaUploadModel) throws Exception{
 	boolean offlineConversion = true;
 	logger.info(" MediaTypeId "+mediaUploadModel.getMediaTypeId());
 	logger.info(" MediaCycleId "+mediaUploadModel.getMediaCycleId());
+	logger.info(" MediaProviderId "+mediaUploadModel.getMediaProviderId());
 	logger.info(" LanguageId "+mediaUploadModel.getLanguageId());
 	logger.info(" MediaName "+mediaUploadModel.getMediaName());
 	logger.info(" MediaTitle "+mediaUploadModel.getMediaTitle());
@@ -519,7 +521,7 @@ public void saveUploadApp(MediaUploadModel mediaUploadModel) throws Exception{
 		List<Tag> tagList=new ArrayList<Tag>();
 		String[] tagArray=tags.split(",");
 		for (int i = 0; i < tagArray.length; i++) {
-			List<Tag> availabletags=tagDao.findByProperty("tagName", tagArray[0]);
+			List<Tag> availabletags=tagDao.findByProperty("tagName", tagArray[i]);
 			if(availabletags.isEmpty())
 			{
 				Tag tag=new Tag();
@@ -536,6 +538,8 @@ public void saveUploadApp(MediaUploadModel mediaUploadModel) throws Exception{
 			MediaTag mediaTag=new MediaTag();
 			mediaTag.setMedia(media);
 			mediaTag.setTag(tag);
+			List<MediaTag> mediaTagList=mediaTagDao.findByMediaAndTag(media.getMediaId(),tag.getTagId());
+			if(mediaTagList.isEmpty())
 			mediaTagDao.save(mediaTag);
 		}
 		

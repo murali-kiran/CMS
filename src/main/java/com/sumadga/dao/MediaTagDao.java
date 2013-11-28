@@ -136,4 +136,20 @@ public class MediaTagDao {
 			throw re;
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MediaTag> findByMediaAndTag(Integer mediaId,Integer tagId) {
+		logger.info("finding all MediaTag instances");
+		try {
+			final String queryString = "select model.* from media_tags model" +
+					" where model.media_id="+mediaId+" and model.tag_id="+tagId;
+			Query query = entityManager
+					.createNativeQuery(queryString, MediaTag.class);
+			
+			return query.getResultList();
+		} catch (RuntimeException re) {
+			logger.error("find all failed", re);
+			throw re;
+		}
+	}
 }
