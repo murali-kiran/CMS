@@ -17,12 +17,16 @@ jQuery("#list").jqGrid({
 		datatype: "json",
 		height: 250,
 		width: 1000,
-		colNames:['Group Id','Group Name','Group Title','Group Preview Id','Group Desc','Map Media','Map Group'],
+		colNames:['Group Id','Group Name','Group Title','Group Preview Id','Group Desc','Edit', 'Map Media','Map Group'],
 		colModel :[	{name:'mediaGroupId', label:'Group Id',index:'mediaGroupId',align:'center'},
 					{name:'mediaGroupName',label:'Group Name', index:'mediaGroupName',align:'center'},
 					{name:'mediaGroupTitle', label:'Group Title',index:'mediaGroupTitle',align:'center'},
 					{name:'mediaGroupPreviewId', label:'Group Preview Id',index:'mediaGroupPreviewId',align:'center'},
 					{name:'mediaGroupDescription', label:'Group Desc',index:'mediaGroupDescription',align:'center'},
+					
+					{name:'editGroup',label:'Edit Group', index:'editGroup',align:'center',formatter: function (cellvalue, options, rowObject) {
+					    return "<a href=\"editMediaGroup?mgid=" + rowObject.mediaGroupId + "\" style=\"color: #0000FF\" > edit group </a>";
+					}},
 					{name:'mapMedia', label:'Map Media',index:'mapMedia',align:'center',formatter: function (cellvalue, options, rowObject) {
 					    return "<a href=\"showSearchMap?mgid=" + rowObject.mediaGroupId + "\" style=\"color: #0000FF\" > map media </a>";
 					}},

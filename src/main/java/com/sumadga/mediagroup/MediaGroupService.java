@@ -50,7 +50,23 @@ public class MediaGroupService {
 		model.addAttribute("addGroup", mediaGroupModel);
 		
 	}
-
+public void editGroup(ModelMap model,int mgid){
+		
+		logger.info("upload service");
+		
+		model.addAttribute("mediaList",mediaUtils.getMediaList());
+				
+        MediaGroup mediaGroup = mediaGroupDao.findById(mgid);
+        MediaGroupModel mediaGroupModel = new MediaGroupModel();
+        mediaGroupModel.setMediaGroupId(mediaGroup.getMediaGroupId());
+        mediaGroupModel.setMediaGroupName(mediaGroup.getMediaGroupName());
+        mediaGroupModel.setMediaGroupTitle(mediaGroup.getMediaGroupTitle());
+        mediaGroupModel.setMediaId(mediaGroup.getMediaGroupPreviewId());
+        mediaGroupModel.setDescription(mediaGroup.getMediaGroupDescription());
+        
+		model.addAttribute("addGroup", mediaGroupModel);
+		
+	}
 
 	public void validate(MediaGroupModel mediaGroupModel, BindingResult result) {
 		// TODO Auto-generated method stub
@@ -61,14 +77,23 @@ public class MediaGroupService {
 	public void saveGroup(MediaGroupModel mediaGroupModel)throws Exception {
 		// TODO Auto-generated method stub
 		try {
-			MediaGroup mediaGroup = new MediaGroup();
-			mediaGroup.setCreatedTime(new Timestamp(System.currentTimeMillis()));
+			MediaGroup mediaGroup = null;
+			if(mediaGroupModel.getMediaGroupId() == null){
+				mediaGroup = new MediaGroup();
+				mediaGroup.setCreatedTime(new Timestamp(System.currentTimeMillis()));
+			}
+			else
+				mediaGroup = mediaGroupDao.findById(mediaGroupModel.getMediaGroupId());
+			
 			mediaGroup.setModifiedTime(new Timestamp(System.currentTimeMillis()));
 			mediaGroup.setMediaGroupName(mediaGroupModel.getMediaGroupName());
 			mediaGroup.setMediaGroupTitle(mediaGroupModel.getMediaGroupTitle());
 			mediaGroup.setMediaGroupDescription(mediaGroupModel.getDescription());
 			mediaGroup.setMediaGroupPreviewId(mediaGroupModel.getMediaId());
-			mediaGroupDao.save(mediaGroup);
+			if(mediaGroupModel.getMediaGroupId() == null)
+				mediaGroupDao.save(mediaGroup);
+			else
+				mediaGroupDao.update(mediaGroup);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

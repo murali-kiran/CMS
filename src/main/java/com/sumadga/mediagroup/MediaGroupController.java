@@ -236,4 +236,11 @@ public class MediaGroupController {
 		return "welcome";
 		
 	}
+	@RequestMapping(value = "/editMediaGroup",  method=RequestMethod.GET)
+	//@ResponseBody
+	public String editGroup(@RequestParam("mgid") Integer mediaGroupId,ModelMap model){
+		//mediaGroupService.getGroups(model, mediaGroupId);
+		mediaGroupService.editGroup(model,mediaGroupId);
+		return "addGroup";
+	}
 }

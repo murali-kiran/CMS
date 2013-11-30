@@ -28,7 +28,7 @@ public class ServiceMediaGroup implements Serializable {
 	@Column(name="is_one_time_charge")
 	private byte isOneTimeCharge;
 
-	@Column(name="group_order")
+	@Column(name="media_group_order")
 	private Integer groupOrder;
 	
 	/*@Column(name="media_group_id")*/
