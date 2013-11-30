@@ -24,6 +24,16 @@
 		<put-attribute name="body"  value="/WEB-INF/jsp/views/sampleService/landingPage2.jsp" />
 	</definition>
 	
+	<definition name="searchByTag" extends="base.definition">
+		<put-attribute name="title" value="Search Media" />
+		<put-attribute name="body"  value="/WEB-INF/jsp/views/sampleService/searchPage.jsp" />
+	</definition>
+	
+	<definition name="tagMediaPage" extends="base.definition">
+		<put-attribute name="title" value="Search Media" />
+		<put-attribute name="body"  value="/WEB-INF/jsp/views/sampleService/tagMediaPage.jsp" />
+	</definition>
+	
 	<definition name="service2CategoryPage" extends="base.definition">
 		<put-attribute name="title" value="Sample Service" />
 		<put-attribute name="body"  value="/WEB-INF/jsp/views/sampleService/service2CategoryPage.jsp" />

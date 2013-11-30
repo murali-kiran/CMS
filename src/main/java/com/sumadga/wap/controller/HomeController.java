@@ -195,7 +195,8 @@ public class HomeController extends BaseController{
 
 		    int pageCount = Integer.parseInt(serviceLayer.getServiceProprety(serviceId, "pageCount_non_LP"));
 		    Map<String,String> deviceMap =	getDeviceCapbilities(request);
-		    //
+		    
+		    //Map<Bean<mediaGroupId,mediaGroupTitle>,Bean<no. of pages count,List<MediaBean>>>
 			Map<Bean<Integer,String>,Bean<Integer,List<MediaBean>>> mediaInfoMap =	serviceLayer.getMediaInfoOfCategory(serviceId,catId,CommonUtils.MEDIA_CONTENT_PRIVIEW,CommonUtils.PRIVIEW_WIDTH,CommonUtils.PRIVIEW_HEIGHT,0,pageCount);
 			
 			model.addAttribute("serviceId",serviceId);
@@ -265,5 +266,60 @@ public class HomeController extends BaseController{
 		
 		return "service2CategoryPage";
 	}
+	
+	// searchByTag
+	
+	@RequestMapping(value="/service/showSearchPage/{serviceId}",method=RequestMethod.GET)
+	public String showSearchPage(HttpServletRequest request,HttpServletResponse response,HttpSession session,Model model,@PathVariable Integer serviceId,@RequestParam(value="channel", required = false,defaultValue="smd") String channel){
+		Map<String, String> deviceMap = getDeviceCapbilities(request);
+		
+		model.addAttribute("serviceId",serviceId);
+		model.addAttribute("title", "Search");
+		
+		return "searchByTag";
+	}
+	
+	@RequestMapping(value="/service/searchMediaByTag/{serviceId}/{pageId}",method=RequestMethod.GET)
+	public String searchMediaByTag(HttpServletRequest request,HttpServletResponse response,Model model,@PathVariable Integer serviceId,@PathVariable Integer pageId,@RequestParam(value="channel", required = false,defaultValue="smd") String channel,@RequestParam(value="tag", required = false,defaultValue="") String tag){
+		
+		String msisdn = commonUtils.getMsisdn(request);
+		
+		if(request.getParameter("detect")==null && msisdn==null ){
+			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
+			return "redirect:"+msisdnDetectionUrl;
+		}else if(msisdn==null){
+			model.addAttribute("errorMsg", "Unable to detect");
+			return "errorPage";
+		}
+		
+		List<MediaBean> beans = serviceLayer.getMediaInfoUsingTag(tag, serviceId, CommonUtils.MEDIA_CONTENT_PRIVIEW, CommonUtils.PRIVIEW_WIDTH,CommonUtils.PRIVIEW_HEIGHT);
+		model.addAttribute("title", "Search");
+		
+		if(StringUtils.isBlank(tag)){
+			model.addAttribute("error","Enter Something");
+			return "searchByTag";
+		}else if(beans.isEmpty()){
+			model.addAttribute("error","No Match Found");
+			return "searchByTag";
+		}else{
+			Map<String, String> deviceMap = getDeviceCapbilities(request);
+			int pageCount = Integer.parseInt(serviceLayer.getServiceProprety(serviceId, "pageCount_non_LP"));
+		
+			List<MediaBean> mediaBeans = serviceLayer.getMediaInfoUsingTag(tag, serviceId, CommonUtils.MEDIA_CONTENT_PRIVIEW, CommonUtils.PRIVIEW_WIDTH,CommonUtils.PRIVIEW_HEIGHT,(pageId-1)*pageCount,pageCount);
+		
+			model.addAttribute("serviceId",serviceId);
+			model.addAttribute("tagName",tag);
+			model.addAttribute("mediaBeans", mediaBeans);
+			model.addAttribute("totalMediaCount",beans.size());
+			model.addAttribute("paginationCount",Math.ceil((beans.size())/(float)pageCount));
+			model.addAttribute("channel",channel);
+			model.addAttribute("previewWidth",deviceMap.get("preview_width"));
+			model.addAttribute("previewHeight",deviceMap.get("preview_height"));
+		
+			return "tagMediaPage";
+		}
+	}
+	
+	
 	
 }

@@ -29,7 +29,7 @@
 </div>
 	<br />
 
-	<div style="width: 100%; text-align:center;display: block;">
+	<div style="width: 100%;clear: both; text-align:center;display: block;">
 
 
 		<c:forEach var="i" begin="1" end="${media.id}">
@@ -42,4 +42,4 @@
 
 </c:forEach>
 
-<div><a href="${pageContext.servletContext.contextPath}/service/${serviceId}?channel=${channel}">&nbsp;Home</a></div>
+<div style="width: 100%;clear: both;"><a href="${pageContext.servletContext.contextPath}/service/${serviceId}?channel=${channel}">&nbsp;Home</a></div>
