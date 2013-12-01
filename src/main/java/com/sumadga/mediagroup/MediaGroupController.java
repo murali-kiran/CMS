@@ -75,18 +75,18 @@ public class MediaGroupController {
 					mediaGroupService.saveGroup(mediaGroupModel);
 				
 				status.setComplete();
-				message = "Media Group created successfully";
+				message = "Media Group created/updated successfully";
 				mediaGroupService.createGroup(model);
 				mediaGroupService.listGroup(model);
 				model.addAttribute("message",message);
 				return "mediaGroupList";
 				}catch (Exception e) {
 					message=e.getMessage();
-					logger.error("Exception while saving uploaded files", e);
-					message = "Media Group creation falied due to "+e.getMessage();
+					logger.error("Exception while saving/updating uploaded files", e);
+					message = "Media Group creation/updation falied due to "+e.getMessage();
 					model.addAttribute("message",message);
 				}
-				message = "Media Group creation falied due to internal error";
+				message = "Media Group creation/updation falied due to internal error";
 				model.addAttribute("message",message);
 				return "addGroup";
 			}

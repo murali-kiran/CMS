@@ -34,7 +34,7 @@ public class MediaGroup implements Serializable {
 	@Column(name="media_group_preview_id", nullable=false)
 	private Integer mediaGroupPreviewId;
 
-	@Column(name="media_group_title", nullable=false, length=20)
+	@Column(name="media_group_title", nullable=false, length=45)
 	private String mediaGroupTitle;
 
 	@Column(name="modified_time", nullable=false)

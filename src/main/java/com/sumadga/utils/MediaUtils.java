@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -30,6 +31,7 @@ import com.sumadga.dto.MediaProvider;
 import com.sumadga.dto.MediaType;
 import com.sumadga.dto.MimeType;
 import com.sumadga.dto.Os;
+import com.sumadga.mediagroup.MediaModel;
 
 @Component
 public class MediaUtils {
@@ -217,5 +219,19 @@ public class MediaUtils {
 	} 
 	 public List<Media> getMediaList(){
 	    	return mediaDao.findAll();
+	    }
+	 
+	 public List<MediaModel> getMediaModelList(){
+		 
+	    	List<Media> medias = mediaDao.findAll();
+	    	List<MediaModel> mediaModels = new ArrayList<MediaModel>();
+	    	for (Media media : medias) {
+	    		MediaModel mediaModel = new MediaModel();
+	    		mediaModel.setMediaId(media.getMediaId());
+	    		mediaModel.setMediaName(media.getMediaName());
+	    		mediaModel.setMediaTitle(media.getMediaTitle());
+				mediaModels.add(mediaModel);
+			}
+	    	return mediaModels;
 	    }
 }

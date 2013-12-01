@@ -43,7 +43,7 @@ public class MediaGroupService {
 		
 		logger.info("upload service");
 		
-		model.addAttribute("mediaList",mediaUtils.getMediaList());
+		model.addAttribute("mediaList",mediaUtils.getMediaModelList());
 				
         MediaGroupModel mediaGroupModel = new MediaGroupModel();
         
@@ -54,7 +54,7 @@ public void editGroup(ModelMap model,int mgid){
 		
 		logger.info("upload service");
 		
-		model.addAttribute("mediaList",mediaUtils.getMediaList());
+		model.addAttribute("mediaList",mediaUtils.getMediaModelList());
 				
         MediaGroup mediaGroup = mediaGroupDao.findById(mgid);
         MediaGroupModel mediaGroupModel = new MediaGroupModel();
