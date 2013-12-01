@@ -7,7 +7,7 @@ var x=1;
 function add(){
 	//alert("hi");
 	
-	//var k=x-1;
+	var k=x-1;
 	var $curRow = $('#apptr'+k);
     var $newRow = $curRow.clone(true).attr('id','apptr'+x);
     $newRow.find('#heightjs'+k).attr('id','heightjs'+x);
