@@ -23,6 +23,7 @@ import com.sumadga.dao.FailPurchaseDetailDao;
 import com.sumadga.dao.MediaGroupDao;
 import com.sumadga.dao.MediaGroupMediaDao;
 import com.sumadga.dao.MediaSubGroupDao;
+import com.sumadga.dao.MediaTagDao;
 import com.sumadga.dao.NetworkDao;
 import com.sumadga.dao.PurchaseDetailDao;
 import com.sumadga.dao.PurchasesDao;
@@ -85,6 +86,10 @@ public class ServiceLayer {
 	
 	@Autowired
 	ServicePropertyDao servicePropertyDao;
+	
+	@Autowired
+	MediaTagDao mediaTagDao;
+	
 	@Autowired
 	NetworkDao networkDao;
 	 
@@ -458,6 +463,12 @@ public boolean isTestMobileNumber(String mobileNumber){
 	   
 	  return serviceProperty!=null;
 	}
+public List<MediaBean> getMediaInfoUsingTag(String tagName,int serviceId,int mediaContentPurposeId,int width,int height,final int... rowStartIdxAndCount) {
+	List<MediaBean> mediaBeans = mediaTagDao.getMediaInfoUsingTag(tagName, serviceId, mediaContentPurposeId, width, height,rowStartIdxAndCount);
+	
+	return mediaBeans;
+}
+
 
 private int getNetworkFromSession(){
 	String oprt = (String) session.getAttribute("operator");
