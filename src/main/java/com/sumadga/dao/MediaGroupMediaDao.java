@@ -286,7 +286,7 @@ public class MediaGroupMediaDao  {
 			final String queryString = "SELECT m.media_type_id , m.media_id , m.media_title , mc.storage_path , skp.service_key_id , skp.service_key_price_id , skp.price , skp.service_key_price_key FROM  "
 					+ "media_group_media cat JOIN  media m JOIN  media_contents mc JOIN media_specifications ms JOIN service_key_prices skp ON  "
 					+ "media_group_id = ? AND skp.service_key_id = ?  AND cat.media_id = m.media_id  AND "
-					+ "mc.media_id = cat.media_id AND mc.media_specification_id = ms.media_specification_id  AND ms.width = ?  AND ms.height = ?  AND  ms.media_content_purpose_id = ?";
+					+ "mc.media_id = cat.media_id AND mc.media_specification_id = ms.media_specification_id  AND ms.width = ?  AND ms.height = ?  AND  ms.media_content_purpose_id = ? group by m.media_type_id , m.media_id , m.media_title order by cat.media_order";
 			
 			Query query = entityManager.createNativeQuery(queryString);
 			query.setParameter(1, mediaGroupId);

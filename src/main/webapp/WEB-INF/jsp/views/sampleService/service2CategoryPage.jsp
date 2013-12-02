@@ -2,7 +2,9 @@
 <c:forEach var="categoryMap" items="${mediaInfoMap}">
 
 	<c:set var="category" scope="session" value="${categoryMap.key}" />
-	<div style="width: 100%; background-color: red;border-width: 1px;">${category.name}</div>
+
+	<div style="width: 100%; background-color: red;border-bottom: 1px; border-color: black;">${category.name}</div>
+
 
 	<c:set var="media" scope="request" value="${categoryMap.value}" />
 <div>
@@ -27,7 +29,7 @@
 </div>
 	<br />
 
-	<div style="width: 100%; text-align:center;display: block;">
+	<div style="width: 100%;clear: both; text-align:center;display: block;">
 
 
 		<c:forEach var="i" begin="1" end="${media.id}">
@@ -40,4 +42,4 @@
 
 </c:forEach>
 
-<div><a href="${pageContext.servletContext.contextPath}/service/${serviceId}?channel=${channel}">&nbsp;Home</a></div>
+<div style="width: 100%;clear: both;"><a href="${pageContext.servletContext.contextPath}/service/${serviceId}?channel=${channel}">&nbsp;Home</a></div>

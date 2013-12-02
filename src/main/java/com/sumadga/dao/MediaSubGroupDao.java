@@ -123,7 +123,7 @@ public class MediaSubGroupDao  {
 				+ ", value: " + value);
 		try {
 			String queryString = "select model from MediaSubGroup model where model."
-					+ propertyName + "= " + value;
+					+ propertyName + "= " + value +" order by model.groupOrder";
 			if(value.getClass().getName().equals("java.lang.String"))
 				queryString = "select model from MediaSubGroup model where model."
 						+ propertyName + "= '" + value+"'";
