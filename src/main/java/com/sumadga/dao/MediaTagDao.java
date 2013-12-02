@@ -210,8 +210,4 @@ public class MediaTagDao {
 
 	
 }
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> branch 'WAP' of ssh://git@github.com/murali-kiran/CMS
