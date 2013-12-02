@@ -23,6 +23,7 @@ import com.sumadga.dao.FailPurchaseDetailDao;
 import com.sumadga.dao.MediaGroupDao;
 import com.sumadga.dao.MediaGroupMediaDao;
 import com.sumadga.dao.MediaSubGroupDao;
+import com.sumadga.dao.NetworkDao;
 import com.sumadga.dao.PurchaseDetailDao;
 import com.sumadga.dao.PurchasesDao;
 import com.sumadga.dao.ServiceKeyPriceDao;
@@ -34,6 +35,7 @@ import com.sumadga.dto.FailPurchaseDetail;
 import com.sumadga.dto.MediaGroup;
 import com.sumadga.dto.MediaGroupMedia;
 import com.sumadga.dto.MediaSubGroup;
+import com.sumadga.dto.Network;
 import com.sumadga.dto.Purchas;
 import com.sumadga.dto.PurchaseDetail;
 import com.sumadga.dto.ServiceKeyPrice;
@@ -83,7 +85,8 @@ public class ServiceLayer {
 	
 	@Autowired
 	ServicePropertyDao servicePropertyDao;
-	
+	@Autowired
+	NetworkDao networkDao;
 	 
 
 	public List<Bean<Integer,Bean<String,ServiceMediaGroup>>>	getCategoryByServiceId(int serviceId){
@@ -374,7 +377,8 @@ public class ServiceLayer {
 	    purchase.setFirstPurchaseTime(new Date());
 	    purchase.setLastPurchaseTime(new Date());
 	    purchase.setMsisdn(new BigInteger(msisdn));
-	    purchase.setNetworkId(1);
+	    purchase.setNetworkId(getNetworkFromSession());
+	  //  purchase.setNetworkId(1);
 //	    purchase.setPurchaseId(1);
 	    purchase.setPurchaseStatus((byte)0);
 	    purchase.setPurchaseType((byte)0);
@@ -415,7 +419,7 @@ public FailPurchas saveFailPurchaseAndPFailPurchaseDetails(HttpServletRequest re
     purchase.setFirstPurchaseTime(new Date());
     purchase.setLastPurchaseTime(new Date());
     purchase.setMsisdn(new BigInteger(msisdn));
-    purchase.setNetworkId(1);
+    purchase.setNetworkId(getNetworkFromSession());
 //    purchase.setPurchaseId(1);
     purchase.setPurchaseStatus((byte)0);
     purchase.setPurchaseType((byte)0);
@@ -454,6 +458,22 @@ public boolean isTestMobileNumber(String mobileNumber){
 	   
 	  return serviceProperty!=null;
 	}
+
+private int getNetworkFromSession(){
+	String oprt = (String) session.getAttribute("operator");
+	List<Network> networks = null;
+	try {
+		if(oprt != null)
+			networks = networkDao.findByProperty("name", oprt);
+		if(networks != null && networks.size() > 0)
+			return networks.get(0).getNetworkId();
+	} catch (Exception e) {
+		// TODO: handle exception
+		return 1;//hard coded value 
+	}
+	return 1;//hard coded value 
+	
+}
 
 
 }
