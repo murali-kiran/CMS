@@ -42,6 +42,16 @@ public class ServiceUtils {
 			msisdn=null;
 		if(msisdn!=null && msisdn.trim().length()==10)
 			msisdn="91"+msisdn;
+		
+		String operator="Vodafone";
+		if(request.getParameter("operator")!=null)
+		{
+			operator=request.getParameter("operator");
+		}else if(request.getSession().getAttribute("operator")!=null)
+			operator=request.getSession().getAttribute("operator").toString();
+		
+		if(operator!=null && !operator.trim().isEmpty() && !operator.trim().equalsIgnoreCase("null"))
+			request.getSession().setAttribute("operator", operator);
 			
        logger.warn("Msisdn in serviceUtils GetMsisdn Method : " + msisdn);
 		return msisdn;

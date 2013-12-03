@@ -126,6 +126,12 @@ public class BillingController {
 			redirectUrl=redirectUrl+"&responsecode="+responsecode;
 		else
 			redirectUrl=redirectUrl+"?responsecode="+responsecode;
+		
+		if(request.getParameter("msisdn")!=null)
+			redirectUrl=redirectUrl+"&msisdn="+request.getParameter("msisdn");
+		if(request.getParameter("operator")!=null)
+			redirectUrl=redirectUrl+"&operator="+request.getParameter("operator");
+		
 		return "redirect:"+redirectUrl;
 	}
 	

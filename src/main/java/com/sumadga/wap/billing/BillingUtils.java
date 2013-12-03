@@ -57,7 +57,7 @@ public class BillingUtils {
 		url.append("&password="+applicationProperties.getPassword());
 		url.append("&requestid="+request.getRequestId());
 		url.append("&key="+getMD5(applicationProperties.getSecretKey()+request.getRequestId()));
-		url.append("&returnurl=http://49.50.68.139:8080/Wap/service/detectMsisdn");
+		url.append("&returnurl=http://faltutv.co.in/Wap/service/detectMsisdn");
 		//url.append("&returnurl=http://localhost:8080/Wap/service/detectMsisdn");
 		
 		return url.toString();
@@ -91,7 +91,7 @@ public BillingModel getEventBilling(HttpServletRequest httpServletRequest,Long m
 		billingModel.setOperator(operator);
 		billingModel.setPassword(applicationProperties.getPasswordOtherAPI());
 		billingModel.setProductid(productid);
-		billingModel.setRedirecturl("http://49.50.68.139:8080/Wap/service/billing");
+		billingModel.setRedirecturl("http://faltutv.co.in/Wap/service/billing?operator="+httpServletRequest.getSession().getAttribute("operator"));
 		billingModel.setRequestid(request.getRequestId()+"");
 		billingModel.setUsername(applicationProperties.getUsernameOtherAPI());
 		billingModel.setUrl(applicationProperties.getUrlOtherAPI());
