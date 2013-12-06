@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.sumadga.dao.MsisdnDao;
 import com.sumadga.dao.RequestDao;
 import com.sumadga.dto.Request;
 import com.sumadga.utils.ApplicationProperties;
@@ -25,6 +26,7 @@ public class BillingUtils {
 	
 	@Autowired
 	ApplicationProperties applicationProperties;
+	
 	
 	public String getMsisdnDetectionURL(HttpServletRequest httpServletRequest){
 		
@@ -43,6 +45,7 @@ public class BillingUtils {
 		Enumeration<String> enumeration= httpServletRequest.getParameterNames();
 		while(enumeration.hasMoreElements()) {
 			String param=enumeration.nextElement();
+			if(httpServletRequest.getParameter(param)!=null && !httpServletRequest.getParameter(param).trim().isEmpty())
 			redirectUrl.append("&"+param +"="+httpServletRequest.getParameter(param));
 		}
 		request.setRequestedURL(redirectUrl.toString());
@@ -75,11 +78,12 @@ public BillingModel getEventBilling(HttpServletRequest httpServletRequest,Long m
 		Enumeration<String> enumeration= httpServletRequest.getParameterNames();
 		while(enumeration.hasMoreElements()) {
 			String param=enumeration.nextElement();
+			if(httpServletRequest.getParameter(param)!=null && !httpServletRequest.getParameter(param).trim().isEmpty())
 			redirectUrl.append("&"+param +"="+httpServletRequest.getParameter(param));
 		}
 		
 		request.setRedirectURL(redirectUrl.toString());
-		request.setRequestedURL(redirectUrl.toString());
+		request.setRequestedURL(redirectUrl.toString()); 
 		
 		
 		requestDao.save(request);

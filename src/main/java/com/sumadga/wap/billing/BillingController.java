@@ -119,7 +119,7 @@ public class BillingController {
 		
 		responsDao.save(respons);
 		
-		Request req=requestDao.findById(Long.parseLong(requestid));
+		Request req=requestDao.findById(Long.parseLong(requestid)); 
 		
 		String redirectUrl=req.getRedirectURL();
 		if(redirectUrl.contains("?"))
@@ -127,8 +127,11 @@ public class BillingController {
 		else
 			redirectUrl=redirectUrl+"?responsecode="+responsecode;
 		
-		if(request.getParameter("msisdn")!=null)
+		redirectUrl=redirectUrl.replaceAll("&msisdn=", "&msisdn1=");
+		if(request.getParameter("msisdn")!=null && !request.getParameter("msisdn").trim().isEmpty() && !request.getParameter("msisdn").trim().equalsIgnoreCase("null"))
 			redirectUrl=redirectUrl+"&msisdn="+request.getParameter("msisdn");
+		else if(req.getMsisdn()!=null)
+			redirectUrl=redirectUrl+"&msisdn="+req.getMsisdn();
 		if(request.getParameter("operator")!=null)
 			redirectUrl=redirectUrl+"&operator="+request.getParameter("operator");
 		
