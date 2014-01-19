@@ -1,6 +1,6 @@
 
 
-<ul id="accordion">
+<!-- <ul id="accordion">
 	<li>Upload</li>
 	<ul>
 		<li><a href="upload">Upload</a></li>
@@ -20,7 +20,7 @@
 	<ul>
 		<li><a href="mis/show">MIS</a></li>
 	</ul>
-</ul>
+</ul> -->
 
 
 <SCRIPT>

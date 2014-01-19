@@ -1,8 +1,8 @@
 @CHARSET "UTF-8";
 body
 {
-background-color: #B467CF;
-font:normal 14px Arial, Helvetica, sans-serif;
+background-color: #F5F5F5;
+font:normal 16px Arial, Helvetica, sans-serif;
 border-collapse: collapse;
 border: 0ex;
 padding: 0px;
@@ -59,3 +59,8 @@ width: 100%;
 fieldset{
 	border: 1px solid #95B8E7;
 	}
+	
+	
+	
+	
+	

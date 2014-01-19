@@ -4,23 +4,31 @@
 
 
 
-<!-- <div style="width: 70%;float: left;border: 2px;">&nbsp;</div> -->
-
- <table style="width: 100%;height: 145px;s" cellspacing="0" cellpadding="0"  >
-  <tr>
-  <td rowspan="2">
-  <div style="background-image: url('/CMS/resources/logo/SumadgaLogo.png');height: 145px; width: 320px;background-repeat: no-repeat;float: left;border: 0px;border-collapse: collapse;border-spacing: 0px;"></div>
-  </td>
-  </tr>
-   <tr>
-	<sec:authorize access="isAuthenticated()">
-				<td style="width: 200px; vertical-align: top; padding-right: 5px; padding-top: 5px;color:#ffffff">
-					<sec:authentication property="principal.username" /> <br/>
-					<sec:authorize access="isAuthenticated()">
-					<a href="${pageContext.servletContext.contextPath}/logout" style="color:#9966cc;font-size: 12px;">logout</a>
-					</sec:authorize>
-				</td>	
-	</sec:authorize>					
-	</tr>
-	
-</table>
+<div id="templatemo_header_wrapper">
+	<div id="templatemo_header">
+    <div style="float: right;color:#ffffff;font-size: 12px;">
+			<sec:authorize access="isAuthenticated()">
+							<sec:authentication property="principal.username" /> <br/>
+							<sec:authorize access="isAuthenticated()">
+							<a href="${pageContext.servletContext.contextPath}/logout" style="color:#ffffff;font-size: 12px;">logout</a>
+							</sec:authorize>
+			</sec:authorize>					
+	</div>
+    	<div id="site_title">
+            <h1><img src="resources/images_new/sumadga_logo.png" alt="logo" /></h1>
+      	</div> <!-- end of site_title -->
+        
+        <div id="templatemo_menu">
+            <ul>
+                <li><a href="upload">Upload</a></li>
+                <li><a href="appUpload">Game Upload</a></li>
+                <li><a href="showSearch">Search</a></li>
+                <li><a href="addGroup">Group</a></li>
+                <li><a href="listMediaGroup">Group List</a></li>
+                <li><a href="serviceList">Services</a></li>
+                <li><a href="mis/show">MIS</a></li>
+            </ul>    	
+        </div> <!-- end of templatemo_menu -->
+    
+    </div>
+</div>

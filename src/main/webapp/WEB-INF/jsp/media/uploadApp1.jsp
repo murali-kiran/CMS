@@ -45,8 +45,8 @@ function add(){
 <tr><td style="width: 50%;vertical-align: top;">
 <table>
 <tr>
-<td>MediaProvider</td>
-<td><div class="styled-select">
+<td width="20%;">MediaProvider</td>
+<td ><div class="styled-select">
 <form:select path="mediaProviderId" id="mediaProviderId" class="validate">
 <form:option value="-1" label="--- Select ---"/>
 <form:options items="${mediaProviderList}" itemValue="mediaProviderId" itemLabel="mediaProviderName"/>

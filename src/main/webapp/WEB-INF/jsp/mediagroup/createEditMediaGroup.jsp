@@ -50,7 +50,7 @@
 
 
 <tr>
-<td>Group Title </td>
+<td  width="20%;">Group Title </td>
 <td><form:input path="mediaGroupTitle" class="validate" /></td>
 <td><form:errors path="mediaGroupTitle" cssClass="error" /><form:hidden path="mediaGroupId"/></td>
 </tr>
