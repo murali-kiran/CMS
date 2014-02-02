@@ -20,13 +20,13 @@
         
         <div id="templatemo_menu">
             <ul>
-                <li><a href="upload">Upload</a></li>
-                <li><a href="appUpload">Game Upload</a></li>
-                <li><a href="showSearch">Search</a></li>
-                <li><a href="addGroup">Group</a></li>
-                <li><a href="listMediaGroup">Group List</a></li>
-                <li><a href="serviceList">Services</a></li>
-                <li><a href="mis/show">MIS</a></li>
+                <li><a href="${pageContext.servletContext.contextPath}/upload">Upload</a></li>
+                <li><a href="${pageContext.servletContext.contextPath}/appUpload">Game Upload</a></li>
+                <li><a href="${pageContext.servletContext.contextPath}/showSearch">Search</a></li>
+                <li><a href="${pageContext.servletContext.contextPath}/addGroup">Group</a></li>
+                <li><a href="${pageContext.servletContext.contextPath}/listMediaGroup">Group List</a></li>
+                <li><a href="${pageContext.servletContext.contextPath}/serviceList">Services</a></li>
+                <li><a href="${pageContext.servletContext.contextPath}/mis/show">MIS</a></li>
             </ul>    	
         </div> <!-- end of templatemo_menu -->
     
