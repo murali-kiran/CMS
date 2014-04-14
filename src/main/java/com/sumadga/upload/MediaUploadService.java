@@ -448,7 +448,7 @@ public void saveUploadApp(MediaUploadModel mediaUploadModel) throws Exception{
   		mediaContent.setMd5(mediaUtils.getMd5(mediaContentModel.getFile()));
   		
   		
-  		String fileName=mediaUtils.renameMediaContentFile(mediaContentModel.getFile().getOriginalFilename(),
+  		String fileName=mediaUtils.renameMediaContentFile(mediaContentModel.getFile().getOriginalFilename().replaceAll(" ", "_").replaceAll("&", ""),
   				mediaContentModel.getWidth(), mediaContentModel.getHeight(), mediaContentModel.getBitRate(),
   				mediaContentModel.getPurpose());
   		
