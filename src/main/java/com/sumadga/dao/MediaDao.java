@@ -162,7 +162,7 @@ public class MediaDao  {
 		queryString.append(" order by model.createdTime desc, model.modifiedTime desc");
 		Query query = entityManager
 				.createQuery(queryString.toString(), Media.class);
-		query.setMaxResults(20);
+	//	query.setMaxResults(20);
 		return query.getResultList();
 	}
 

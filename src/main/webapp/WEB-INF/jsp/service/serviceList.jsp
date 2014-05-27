@@ -63,7 +63,7 @@ jQuery("#list").jqGrid({
 	<th>Service Id</th>
 	<th>Service Name</th>
 	<th>Service Title</th>
-	<th> Map Groups </th>
+	<!-- <th> Map Groups </th> -->
 </tr>
 <c:forEach items="${serviceList}" var="service">
 	<tr>
@@ -71,7 +71,7 @@ jQuery("#list").jqGrid({
 		<td><c:out value="${service.serviceName}" /></td>
 		<td><c:out value="${service.serviceTitle}" /></td>
 		
-		<td><a href="mapMediaCategories?serviceId=<c:out value="${service.serviceId}" />">Map Categories </a></td>
+		<%-- <td><a href="mapMediaCategories?serviceId=<c:out value="${service.serviceId}" />">Map Categories </a></td> --%>
 	</tr>
 </c:forEach>
 </table>

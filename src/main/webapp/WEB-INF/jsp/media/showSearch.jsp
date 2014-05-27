@@ -1,6 +1,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+
+<%@ taglib prefix="display" uri="http://displaytag.sf.net"%>
+
 <script type="text/javascript" src="<%=request.getContextPath()%>/resources/script/cms.js"></script>
 <script>
 
@@ -175,7 +178,7 @@
     </c:when>
     <c:otherwise> 
 <div class="panel-header panel-title">Media List</div>
-<table border="1">
+<%-- <table border="1">
 <tr>
 	<th>Media Id</th>
 	<th>Media Name</th>
@@ -200,6 +203,36 @@
 		<td><a href="showMediaContent?mediaId=<c:out value="${media.mediaId}" />">MediaContents </a></td>
 	</tr>
 </c:forEach>
-</table>
+</table> --%>
+
+<%-- <display:table id="user" name="sessionScope.mediaList" defaultsort="1" defaultorder="ascending" pagesize="2">
+    <display:column property="mediaId" sortable="true" title="Employee ID"
+        maxLength="25" />
+    <display:column property="mediaName" sortable="true" title="Real Name"
+        maxLength="25" />
+    <display:column property="mediaTitle" sortable="true"
+        title="Email Address" maxLength="25" />
+    <display:column property="description" sortable="true" title="Phone"
+        maxLength="25" />
+    <display:setProperty name="basic.empty.showtable" value="true" />
+    <display:setProperty name="paging.banner.group_size" value="10" />
+    <display:setProperty name="paging.banner.item_name" value="user" />
+    <display:setProperty name="paging.banner.item_names" value="users" />
+    <display:setProperty name="paging.banner.onepage" value="<span class="pagelinks">&nbsp;</span>" />
+</display:table> --%>
+
+
+
+
+<display:table style="border: 1px solid #333333;text-align:left;" pagesize="20" name="mediaList" id="media" requestURI="${pageContext.servletContext.contextPath}/showSearch">
+  <display:column style="border: 1px solid #333333;" sortable="true" title="ID"> <c:out value="${media.mediaId}"/> </display:column>
+  <display:column style="border: 1px solid #333333;" property="mediaTitle" autolink="true"/>
+  <display:column style="border: 1px solid #333333;" property="mediaCycle.mediaCycleState" title="State"/>
+  <display:column style="border: 1px solid #333333;" property="language.languageName" title="Language Name"/>
+  <display:column style="border: 1px solid #333333;" property="mediaType.mediaTypeName" title="Media Type"/>
+  <display:column style="border: 1px solid #333333;" property="description" title="Comments"/>
+  <display:column style="border: 1px solid #333333;"><a href="editMedia?mediaId=<c:out value="${media.mediaId}" />">Edit </a></display:column>
+  <display:column style="border: 1px solid #333333;"><a href="showMediaContent?mediaId=<c:out value="${media.mediaId}" />">MediaContents </a></display:column>
+</display:table>
 </c:otherwise>
 </c:choose>
