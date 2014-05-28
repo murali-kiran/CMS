@@ -35,9 +35,9 @@ public class Language implements Serializable {
 	private Timestamp modifiedTime;
 
 	//bi-directional many-to-one association to Media
-	@OneToMany(mappedBy="language")
+	/*@OneToMany(mappedBy="language")
 	private List<Media> medias;
-
+*/
 	public Language() {
 	}
 
@@ -81,15 +81,15 @@ public class Language implements Serializable {
 		this.modifiedTime = modifiedTime;
 	}
 
-	public List<Media> getMedias() {
+	/*public List<Media> getMedias() {
 		return this.medias;
 	}
 
 	public void setMedias(List<Media> medias) {
 		this.medias = medias;
-	}
+	}*/
 
-	public Media addMedia(Media media) {
+	/*public Media addMedia(Media media) {
 		getMedias().add(media);
 		media.setLanguage(this);
 
@@ -101,14 +101,14 @@ public class Language implements Serializable {
 		media.setLanguage(null);
 
 		return media;
-	}
+	}*/
 
 	@Override
 	public String toString() {
 		return "Language [languageId=" + languageId + ", createdTime="
 				+ createdTime + ", description=" + description
 				+ ", languageName=" + languageName + ", modifiedTime="
-				+ modifiedTime + ", medias=" + medias + "]";
+				+ modifiedTime + /*", medias=" + medias +*/ "]";
 	}
 
 	
