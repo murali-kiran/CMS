@@ -179,6 +179,19 @@ public class MediaUploadController {
 		return "showSearch";
 		//return "searchList";
 	}
+	@RequestMapping(value="/searchMediaPaging",  method=RequestMethod.GET)
+	public String searchMediaPaging(MediaUploadModel mediaUploadModel,
+			BindingResult result, SessionStatus status,ModelMap model){
+	
+        String message = null;		
+		logger.info("uploadfile "+mediaUploadModel.toString()+""+mediaUploadModel.getMediaId());
+		
+		//mediaUploadService.search(model);
+		mediaUploadService.searchMedia(model,mediaUploadModel);
+		
+		return "showSearch";
+		//return "searchList";
+	}
 }
 
 

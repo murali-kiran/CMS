@@ -224,7 +224,7 @@
 
 
 
-<display:table style="border: 1px solid #333333;text-align:left;" pagesize="20" name="mediaList" id="media" requestURI="${pageContext.servletContext.contextPath}/showSearch">
+<display:table style="border: 1px solid #333333;text-align:left;" pagesize="20" name="mediaList" id="media" requestURI="${pageContext.servletContext.contextPath}/searchMediaPaging">
   <display:column style="border: 1px solid #333333;" sortable="true" title="ID"> <c:out value="${media.mediaId}"/> </display:column>
   <display:column style="border: 1px solid #333333;" property="mediaTitle" autolink="true"/>
   <display:column style="border: 1px solid #333333;" property="mediaCycle.mediaCycleState" title="State"/>
