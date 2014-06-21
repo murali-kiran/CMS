@@ -2,6 +2,10 @@ package com.sumadga.mediagroup;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -132,7 +136,8 @@ public class MediaGroupController {
 	public String searchMedia(@ModelAttribute("searchMedia") MediaUploadModel mediaUploadModel,
 			BindingResult result, SessionStatus status,ModelMap model){
 		mediaGroupService.getMedia(model, mediaUploadModel.getMgid());
-		mediaGroupService.getRemainingMedia(mediaUploadModel, model);
+		UserDetails userDetails = currentUserDetails();
+		mediaGroupService.getRemainingMedia(mediaUploadModel, model, userDetails.getUsername());
 		
 		return "selectMedia";//MediaContentModelList;
 		
@@ -242,5 +247,15 @@ public class MediaGroupController {
 		//mediaGroupService.getGroups(model, mediaGroupId);
 		mediaGroupService.editGroup(model,mediaGroupId);
 		return "addGroup";
+	}
+	
+	public static UserDetails currentUserDetails(){
+	    SecurityContext securityContext = SecurityContextHolder.getContext();
+	    Authentication authentication = securityContext.getAuthentication();
+	    if (authentication != null) {
+	        Object principal = authentication.getPrincipal();
+	        return (UserDetails) (principal instanceof UserDetails ? principal : null);
+	    }
+	    return null;
 	}
 }

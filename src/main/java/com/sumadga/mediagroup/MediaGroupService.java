@@ -190,10 +190,10 @@ public void editGroup(ModelMap model,int mgid){
 		}
 		
 	}
-	public void getRemainingMedia(MediaUploadModel mediaUploadModel,ModelMap model ) {
+	public void getRemainingMedia(MediaUploadModel mediaUploadModel,ModelMap model,String userName ) {
 		// TODO Auto-generated method stub
 		try {
-			List<Media> mediaList1 = mediaDao.findRemainingMedia(mediaUploadModel);
+			List<Media> mediaList1 = mediaDao.findRemainingMedia(mediaUploadModel, userName);
 			List<MediaModel> mediaList = new ArrayList<MediaModel>();
 			//List<MediaGroupMedia> mediaGroupMedias = new ArrayList<MediaGroupMedia>();
 			//List<MediaGroupMedia> mediaGroupMedias = mediaGroupMediaDao.findByProperty("mediaGroup", mediaGroupId);

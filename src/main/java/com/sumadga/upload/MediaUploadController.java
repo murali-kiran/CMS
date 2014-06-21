@@ -3,6 +3,10 @@ package com.sumadga.upload;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -18,7 +22,7 @@ import org.springframework.web.bind.support.SessionStatus;
 public class MediaUploadController {
 
 	private static final Logger logger = Logger.getLogger(MediaUploadController.class);
-	
+	//UserDetails userDetails = currentUserDetails();
 	
 	@Autowired
 	MediaUploadService mediaUploadService;
@@ -78,7 +82,8 @@ public class MediaUploadController {
 			}
 			//mediaUploadService.searchMedia(model,null);
 			model.addAttribute("message",message);
-			mediaUploadService.searchMedia(model,null);
+			UserDetails userDetails = currentUserDetails();
+			mediaUploadService.searchMedia(model,null,userDetails.getUsername());
 			mediaUploadService.search(model);
 			
 			return "showSearch";
@@ -147,7 +152,8 @@ public class MediaUploadController {
 			}
 			//mediaUploadService.searchMedia(model,null);
 			model.addAttribute("message",message);
-			mediaUploadService.searchMedia(model,null);
+			UserDetails userDetails = currentUserDetails();
+			mediaUploadService.searchMedia(model,null,userDetails.getUsername());
 			mediaUploadService.search(model);
 			
 			return "showSearch";
@@ -160,7 +166,8 @@ public class MediaUploadController {
 	public String showSearch(ModelMap model){
 		
 		logger.info("upload");
-		mediaUploadService.searchMedia(model,null);
+		UserDetails userDetails = currentUserDetails();
+		mediaUploadService.searchMedia(model,null,userDetails.getUsername());
 		mediaUploadService.search(model);
 		
 		return "showSearch";
@@ -174,7 +181,8 @@ public class MediaUploadController {
 		logger.info("uploadfile "+mediaUploadModel.toString()+""+mediaUploadModel.getMediaId());
 		
 		//mediaUploadService.search(model);
-		mediaUploadService.searchMedia(model,mediaUploadModel);
+		UserDetails userDetails = currentUserDetails();
+		mediaUploadService.searchMedia(model,mediaUploadModel, userDetails.getUsername());
 		
 		return "showSearch";
 		//return "searchList";
@@ -187,10 +195,20 @@ public class MediaUploadController {
 		logger.info("uploadfile "+mediaUploadModel.toString()+""+mediaUploadModel.getMediaId());
 		
 		//mediaUploadService.search(model);
-		mediaUploadService.searchMedia(model,mediaUploadModel);
+		UserDetails userDetails = currentUserDetails();
+		mediaUploadService.searchMedia(model,mediaUploadModel,userDetails.getUsername());
 		
 		return "showSearch";
 		//return "searchList";
+	}
+	public static UserDetails currentUserDetails(){
+	    SecurityContext securityContext = SecurityContextHolder.getContext();
+	    Authentication authentication = securityContext.getAuthentication();
+	    if (authentication != null) {
+	        Object principal = authentication.getPrincipal();
+	        return (UserDetails) (principal instanceof UserDetails ? principal : null);
+	    }
+	    return null;
 	}
 }
 

@@ -141,9 +141,10 @@ public class MediaDao  {
 		}
 	}
 
-	public List<Media> search(MediaUploadModel mediaUploadModel) {
+	public List<Media> search(MediaUploadModel mediaUploadModel, String userName) {
 		// TODO Auto-generated method stub
 		logger.info("search media");
+		String mediaProvList = getMediaProviderFromUser(userName);
 		StringBuffer queryString = new StringBuffer("select model from Media model where 1=1 ");
 		if(mediaUploadModel != null){
 			if(mediaUploadModel.getLanguageId() != null && mediaUploadModel.getLanguageId() != -1)
@@ -152,13 +153,15 @@ public class MediaDao  {
 				queryString.append(" and model.description like '%"+mediaUploadModel.getDescription()+"%'");
 			if(mediaUploadModel.getMediaCycleId() != null && mediaUploadModel.getMediaCycleId() != -1)
 				queryString.append(" and model.mediaCycle="+mediaUploadModel.getMediaCycleId());
-			if(mediaUploadModel.getMediaName() != null && !mediaUploadModel.getMediaName().equals(""));
+			if(mediaUploadModel.getMediaName() != null && !mediaUploadModel.getMediaName().equals("") && !mediaUploadModel.getMediaName().trim().equals("null"));
 				queryString.append(" and model.mediaName like '%"+mediaUploadModel.getMediaName()+"%'");
 			if(mediaUploadModel.getMediaTitle() != null && !mediaUploadModel.getMediaTitle().equals(""))
 				queryString.append(" and model.mediaTitle like '%"+mediaUploadModel.getMediaTitle()+"%'");
 			if(mediaUploadModel.getMediaTypeId() != null && mediaUploadModel.getMediaTypeId() != -1)
 				queryString.append(" and model.mediaType="+mediaUploadModel.getMediaTypeId());
 		}
+		if(mediaProvList != null)
+			queryString.append("and model.mediaProvider.mediaProviderId in ("+mediaProvList+")");
 		queryString.append(" order by model.createdTime desc, model.modifiedTime desc");
 		Query query = entityManager
 				.createQuery(queryString.toString(), Media.class);
@@ -166,9 +169,10 @@ public class MediaDao  {
 		return query.getResultList();
 	}
 
-	public List<Media> findRemainingMedia(MediaUploadModel mediaUploadModel) {
+	public List<Media> findRemainingMedia(MediaUploadModel mediaUploadModel, String userName) {
 		// TODO Auto-generated method stub
 		StringBuffer queryString = new StringBuffer("select model from Media model where 1=1 ");
+		String mediaProvList = getMediaProviderFromUser(userName);
 		if(mediaUploadModel != null){
 			if(mediaUploadModel.getLanguageId() != null && mediaUploadModel.getLanguageId() != -1)
 				queryString.append(" and model.language="+mediaUploadModel.getLanguageId());
@@ -184,7 +188,8 @@ public class MediaDao  {
 				queryString.append(" and model.mediaType="+mediaUploadModel.getMediaTypeId());
 		}
 		queryString.append("and model.mediaId not in (select mgm.media.mediaId from MediaGroupMedia mgm where mgm.mediaGroup.mediaGroupId="+mediaUploadModel.getMgid()+")");
-		
+		if(mediaProvList != null)
+			queryString.append("and model.mediaProvider.mediaProviderId in ("+mediaProvList+")");
 		Query query = entityManager
 				.createQuery(queryString.toString(), Media.class);
 		
@@ -213,6 +218,21 @@ public class MediaDao  {
 				.createNativeQuery(queryString.toString(), MisModel.class);
 		
 		return query.getResultList();
+	}
+	
+	public String getMediaProviderFromUser(String userName){
+		Query query = entityManager.createNativeQuery("Select ump.media_provider_id from user_media_providers ump " +
+				" where ump.user_name='"+userName+"'");
+		List<Object> ls = query.getResultList();
+		String s = "";
+		int x=0;
+		for (Object object : ls) {
+			if(x!=0)
+				s=s+",";
+			s = s+object;
+			x++;
+		}
+		return s;
 	}
 }
 

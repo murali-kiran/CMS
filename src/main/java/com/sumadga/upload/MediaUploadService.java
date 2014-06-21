@@ -620,8 +620,8 @@ public void saveUploadApp(MediaUploadModel mediaUploadModel) throws Exception{
 		model.addAttribute("searchMedia", mediaUploadModel);
 		
 	}
-	public void searchMedia(ModelMap model,MediaUploadModel mediaUploadModel) {
-		List<Media> mediaModels = mediaDao.search(mediaUploadModel);
+	public void searchMedia(ModelMap model,MediaUploadModel mediaUploadModel, String userName) {
+		List<Media> mediaModels = mediaDao.search(mediaUploadModel, userName);
 		model.addAttribute("mediaList",mediaModels);
 		
 		model.addAttribute("mediaTypeList",mediaUtils.getMediaTypeList());
