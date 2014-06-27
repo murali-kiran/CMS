@@ -146,7 +146,12 @@
 		<property name="passwordOtherAPI" value="U2FsdGVkX1/7cIm5/fBQY9ALU6BNgh0qQSe0z81nIHW0ce9RQstSmpFy16asQqaF"/>
 		<property name="urlOtherAPI" value="http://180.179.212.80/xena/v3/api/operation.php"/>
 		<property name="secretKeyOtherAPI" value="ce3f102ea449465a835bb294f931f2ea"/>
-				
+		<!-- Ipayy -->
+		<property name="merchantKey" value="DAx0CpkM5w3A68YM86oSeA"/>
+		<property name="faltutv_applicationKey" value="SELZkRalhP_jQNxZX_leEg"/>
+		<property name="ipayyBillingURL" value="http://api.ipayy.com/v001/c/oc/dopayment?gh="/>
+		
+		<!-- Ipay -->
 	</bean>
 	
 </beans>

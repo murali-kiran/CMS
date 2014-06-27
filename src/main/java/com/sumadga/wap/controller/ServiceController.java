@@ -1,5 +1,8 @@
 package com.sumadga.wap.controller;
 
+import in.verse.ipayy.crypto.CryptoException;
+import in.verse.ipayy.crypto.CryptoUtils;
+
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.sumadga.dto.Purchas;
 import com.sumadga.dto.ServiceMediaGroup;
 import com.sumadga.utils.ApplicationProperties;
 import com.sumadga.utils.CommonUtils;
@@ -52,7 +56,7 @@ public class ServiceController extends BaseController{
 		String channel = request.getParameter("channel");
 		if(channel==null)
 			channel="smd";
-		
+		if(serviceId != 20){
 		String msisdn = serviceUtils.getMsisdn(request);
 		if(request.getParameter("detect")==null && msisdn==null ){
 			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
@@ -77,6 +81,19 @@ public class ServiceController extends BaseController{
 		model.addAttribute("mediaInfoMap", mediaInfoMap);
 		model.addAttribute("channel",channel);
 		model.addAttribute("title", "Home");
+		}
+		else{
+			int previewCount = 3;
+
+			List<Bean<Integer,Bean<String,ServiceMediaGroup>>> categories =	serviceLayer.getCategoryByServiceId(serviceId);
+			
+			Map<Bean<Integer,String>,Bean<Boolean,List<MediaBean>>> mediaInfoMap = serviceLayer.getMediaInfoOfCategoriesForLandingPage(serviceId,categories,CommonUtils.MEDIA_CONTENT_PRIVIEW,100,100,previewCount);
+			
+			model.addAttribute("serviceId",serviceId);
+			model.addAttribute("mediaInfoMap", mediaInfoMap);
+			model.addAttribute("channel",channel);
+			model.addAttribute("title", "Home");
+		}
 		
 		return "serviceHome";
 		
@@ -104,22 +121,32 @@ public class ServiceController extends BaseController{
 	@RequestMapping(value="/main/ser/dwl/{serviceId}/{mediaId}/{serviceKeypriceKey}",method=RequestMethod.GET)
 	public String downloadMedia(HttpServletRequest request,HttpServletResponse response,HttpSession session,Model model,@PathVariable Integer serviceId,@PathVariable Integer mediaId,@PathVariable String serviceKeypriceKey){
 		
-		
-	if(request.getParameter("responsecode") ==null ){
-	BillingModel billingModel =	billingUtils.getEventBilling(request,Long.parseLong((String)session.getAttribute("msisdn")), session.getAttribute("operator").toString(), serviceKeypriceKey);
-	billingModel.setServiceKeypriceKey(serviceKeypriceKey);
-	billingModel.setSecretKeyOtherAPI(applicationProperties.getSecretKeyOtherAPI());
-	
-	model.addAttribute("billingModel", billingModel);
-	return "views/sampleService/billingModel";
-	}else {
-		billingResponse(request, session);
-		return  "forward:/main/ser/"+serviceId+"?channel="+request.getParameter("channel");
+		if(serviceId != 20){
+			if(request.getParameter("responsecode") ==null ){
+			BillingModel billingModel =	billingUtils.getEventBilling(request,Long.parseLong((String)session.getAttribute("msisdn")), session.getAttribute("operator").toString(), serviceKeypriceKey);
+			billingModel.setServiceKeypriceKey(serviceKeypriceKey);
+			billingModel.setSecretKeyOtherAPI(applicationProperties.getSecretKeyOtherAPI());
+			
+			model.addAttribute("billingModel", billingModel);
+			return "views/sampleService/billingModel";
+			}else {
+				billingResponse(request, session);
+				return  "forward:/main/ser/"+serviceId+"?channel="+request.getParameter("channel");
+			}
+		}
+		else{
+			String billReq = billingUtils.getPaymentURLIpayy(request);
+			saveRequest(request, billReq);
+			return "redirect:"+billReq;
+		}
+			
 	}
-}
-	
-	
-	
+
+	private void saveRequest(HttpServletRequest request, String redirectUrl) {
+		// TODO Auto-generated method stub
+		//Saving record in response purchase
+	}
+
 	@RequestMapping(value="/main/ser/cat/{serviceId}/{catId}",method=RequestMethod.GET)
 	public String getSecondServiceByCategory(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer catId){
 
@@ -169,5 +196,54 @@ public class ServiceController extends BaseController{
 			model.addAttribute("channel",channel);
 		
 		return "serviceMorePage";
+	}
+	
+	@RequestMapping(value="/main/service/ipayBillingResponse",method=RequestMethod.GET)
+	public String ipayBillingResponse(HttpServletRequest request,HttpSession session){
+		String encryptedString = request.getParameter("gh");
+		String errorMessage = null;
+		try
+		{
+		  Map<String, String> paramaterMap = CryptoUtils.getDecryptedString(encryptedString);
+		 System.out.println(paramaterMap );
+		
+		 
+		HttpSession httpSession = request.getSession();
+		httpSession.setAttribute("msisdn", paramaterMap.get("mn"));
+		httpSession.setAttribute("operator", request.getParameter("op"));
+		
+		String billingStatus = paramaterMap.get("ts");
+		String failureReason = paramaterMap.get("tf");
+		String requestId = paramaterMap.get("r");
+		if(billingStatus != null && billingStatus.equals("S")){
+			
+			downloadMedia(request, session);
+		}else{
+			errorMessage = billingUtils.getipayErrorMessage(paramaterMap);
+		}
+		int previewCount = 3;
+
+//		List<Bean<Integer,Bean<String,ServiceMediaGroup>>> categories =	serviceLayer.getCategoryByServiceId(serviceId);
+		
+//		Map<Bean<Integer,String>,Bean<Boolean,List<MediaBean>>> mediaInfoMap = serviceLayer.getMediaInfoOfCategoriesForLandingPage(serviceId,categories,CommonUtils.MEDIA_CONTENT_PRIVIEW,100,100,previewCount);
+		
+		/*model.addAttribute("serviceId",serviceId);
+		model.addAttribute("mediaInfoMap", mediaInfoMap);
+		model.addAttribute("channel",channel);
+		model.addAttribute("title", "Home");*/
+		}
+		catch (CryptoException e)
+		{
+		  e.printStackTrace();
+		}catch (Exception e)
+		{
+			  e.printStackTrace();
+		}
+		return "";//return to home page
+	}
+
+	private void downloadMedia(HttpServletRequest request, HttpSession session) {
+		// TODO Auto-generated method stub
+		
 	}
 }
