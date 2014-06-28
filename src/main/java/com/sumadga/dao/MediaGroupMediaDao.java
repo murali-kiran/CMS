@@ -4,7 +4,10 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sumadga.dto.MediaGroupMedia;
+import com.sumadga.dto.MediaType;
 import com.sumadga.utils.ApplicationProperties;
 import com.sumadga.utils.CommonUtils;
 import com.sumadga.wap.model.Bean;
@@ -274,6 +278,38 @@ public class MediaGroupMediaDao  {
 	}	
 	
 	@SuppressWarnings("unchecked")
+	public MediaBean getMediaInfoOfGame(int mediaId,int mediaContentPurposeId,int width,int height) {
+		logger.info("Finding media info of mediaGroup");
+		try {
+			
+			final String queryString = "SELECT m.media_type_id as mediaTypeId, m.media_id  as mediaId, m.media_title  as mediaName, mc.storage_path as storagePath ,mc.media_app_content_id FROM media m JOIN   media_app_contents mc ON   m.media_id = ?  AND m.media_id = mc.media_id  AND mc.width <= ?  AND mc.height <= ?  order by mc.width desc, mc.height desc limit 1";
+			
+			Query query = entityManager.createNativeQuery(queryString);
+			query.setParameter(1, mediaId);
+			query.setParameter(2, width);
+			query.setParameter(3, height);
+			
+			Object [] obj = (Object [])query.getSingleResult();
+			MediaBean mediaBean = new MediaBean();
+			mediaBean.setMediaTypeId((Integer)obj[0]);
+			mediaBean.setMediaId((Integer)obj[1]);
+			mediaBean.setMediaName((String)obj[2]);
+			
+			if(mediaContentPurposeId==CommonUtils.MEDIA_CONTENT_NON_PRIVIEW)
+			mediaBean.setStoragePath(applicationProperties.getMediaCompletePath()+(String)obj[3]);
+			else
+			mediaBean.setStoragePath((String)obj[3]);
+			
+			mediaBean.setMediaContentId((Integer)obj[4]);
+			
+			return mediaBean;
+		} catch (RuntimeException re) {
+			logger.error("Failed to retrive record ", re);
+			throw re;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<MediaBean> getMediaInfoOfMediaGroup(int mediaGroupId,int mediaContentPurposeId,int serviceKeyId,int width,int height,final int... rowStartIdxAndCount) {
 		logger.info("Finding media info of mediaGroup");
 		try {
@@ -288,14 +324,13 @@ public class MediaGroupMediaDao  {
 					+ "media_group_id = ? AND skp.service_key_id = ?  AND cat.media_id = m.media_id  AND "
 					+ "mc.media_id = cat.media_id AND mc.media_specification_id = ms.media_specification_id  AND ms.width = ?  AND ms.height = ?  AND  ms.media_content_purpose_id = ? group by m.media_type_id , m.media_id , m.media_title order by cat.media_order";
 			
+			
 			Query query = entityManager.createNativeQuery(queryString);
 			query.setParameter(1, mediaGroupId);
 			query.setParameter(2, serviceKeyId);
 			query.setParameter(3, width);
 			query.setParameter(4, height);
-			
-		
-			
+								
 			query.setParameter(5, mediaContentPurposeId);
 			
 			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
@@ -338,6 +373,111 @@ public class MediaGroupMediaDao  {
 			}
 			
 			return mediaBeans;
+		} catch (RuntimeException re) {
+			logger.error("find all failed", re);
+			throw re;
+		}
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public Map<MediaType,List<MediaBean>> getMediaInfoOfCatgoryOnMediaTypeBases(int mediaGroupId,int mediaContentPurposeId,int serviceKeyId,int width,int height,final int... rowStartIdxAndCount) {
+		logger.info("Finding media info of mediaGroup");
+		try {
+			
+			Map<MediaType, List<MediaBean>> mediaInfoMap = new LinkedHashMap<MediaType, List<MediaBean>>();
+			
+/*			final String queryString = "SELECT m.media_type_id , m.media_id , m.media_title , mc.storage_path FROM  "
+					+ "media_group_media cat JOIN  media m JOIN  media_contents mc JOIN media_specifications ms "
+					+ "ON  media_group_id = ? AND cat.media_id = m.media_id  AND mc.media_id = cat.media_id AND "
+					+ "mc.media_specification_id = ms.media_specification_id  AND ms.width = ?  AND ms.height = ?  AND  ms.media_content_purpose_id = ?";
+*/			
+			
+			final String queryString = "SELECT m.media_type_id ,mt.media_type_name,mt. media_type_title, m.media_id , m.media_title , "
+					+ "mc.storage_path , skp.service_key_id , skp.service_key_price_id , skp.price , skp.service_key_price_key FROM  "
+					+ "media_group_media cat JOIN  media m JOIN  media_contents mc JOIN media_specifications ms JOIN service_key_prices skp "
+					+ "JOIN media_types mt ON  media_group_id = ? AND skp.service_key_id = ?  AND cat.media_id = m.media_id  AND mc.media_id = "
+					+ "cat.media_id AND mc.media_specification_id = ms.media_specification_id AND m.media_type_id = mt.media_type_id  AND ms.width = ?  "
+					+ "AND ms.height = ?  AND  ms.media_content_purpose_id = ? group by m.media_type_id , m.media_id , m.media_title order by m.media_type_id";
+			
+			
+			Query query = entityManager.createNativeQuery(queryString);
+			query.setParameter(1, mediaGroupId);
+			query.setParameter(2, serviceKeyId);
+			query.setParameter(3, width);
+			query.setParameter(4, height);								
+			query.setParameter(5, mediaContentPurposeId);
+			
+			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
+				int rowStartIdx = Math.max(0, rowStartIdxAndCount[0]);
+				if (rowStartIdx > 0) {
+					query.setFirstResult(rowStartIdx);
+				}
+
+				if (rowStartIdxAndCount.length > 1) {
+					int rowCount = Math.max(0, rowStartIdxAndCount[1]);
+					if (rowCount > 0) {
+						query.setMaxResults(rowCount);
+					}
+				}
+			}
+			
+			List<Object[]> list = query.getResultList();
+			
+			
+			int previousMediaTypeId = -1;
+			MediaType mediaType = null;
+			List<MediaBean> mediaBeans = null;
+	
+			for(Object[] obj : list){
+				
+				// mt.media_type_name,mt. media_type_title
+				
+				MediaBean bean = new MediaBean();
+					
+				int mediaTypeId = (Integer)obj[0];
+				if( mediaTypeId != previousMediaTypeId){
+					
+					if(previousMediaTypeId != -1){
+						mediaInfoMap.put(mediaType,mediaBeans);
+					}
+					
+					mediaType = new MediaType();
+					mediaBeans = new ArrayList<MediaBean>();
+					
+					previousMediaTypeId = mediaTypeId;
+				}
+				
+				mediaType.setMediaTypeId((Integer)obj[0]);
+				bean.setMediaTypeId((Integer)obj[0]);
+				
+				mediaType.setMediaTypeTitle((String)obj[1]);
+				mediaType.setMediaTypeName((String)obj[2]);
+				
+				
+				bean.setMediaId((Integer)obj[3]);
+				bean.setMediaName((String)obj[4]);
+				
+				if(mediaContentPurposeId == CommonUtils.MEDIA_CONTENT_PRIVIEW)
+				bean.setStoragePath(applicationProperties.getMediaAbsolutePath()+(String)obj[5]);
+				else
+				bean.setStoragePath((String)obj[5]);	
+				
+				bean.setServiceKeyId((Integer)obj[6]);
+				bean.setServiceKeypriceId((Integer)obj[7]);
+				bean.setPrice((Double)obj[8]);
+				bean.setServiceKeypriceKey((String)obj[9]);
+			
+				// 	cat.service_key_id , skp.service_key_price_id , skp.price
+				
+				bean.setIsSubMediaGroup(false);
+				mediaBeans.add(bean);
+			}
+			
+			if(mediaType!=null && mediaBeans !=null)
+				mediaInfoMap.put(mediaType,mediaBeans);
+			
+			return mediaInfoMap;
 		} catch (RuntimeException re) {
 			logger.error("find all failed", re);
 			throw re;
