@@ -31,7 +31,6 @@
 							<c:choose>
 								<c:when test="${status.first}">
 									<td rowspan="3" width="10%" >
-
 										<%-- <div>${mediaInfo.mediaName}</div> --%>
 										<div>
 											<a

@@ -67,6 +67,7 @@
 		<put-attribute name="body"  value="/WEB-INF/jsp/views/vdo/vdoLandingPage.jsp" />
 	</definition>
 	
+	
 	<definition name="vdoCategoryPage" extends="vdo.definition">
 		<put-attribute name="title" value="Video Service" />
 		<put-attribute name="body"  value="/WEB-INF/jsp/views/vdo/vdoCategoryPage.jsp" />

@@ -37,8 +37,8 @@
 			</div>
 		</c:forEach>
 	</div>
+	
 	<br />
-
 	<div style="width: 100%; clear: both; text-align: right; display: block;">
 
 
