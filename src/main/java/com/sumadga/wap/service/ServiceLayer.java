@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -35,6 +36,7 @@ import com.sumadga.dto.FailPurchaseDetail;
 import com.sumadga.dto.MediaGroup;
 import com.sumadga.dto.MediaGroupMedia;
 import com.sumadga.dto.MediaSubGroup;
+import com.sumadga.dto.MediaType;
 import com.sumadga.dto.Purchas;
 import com.sumadga.dto.PurchaseDetail;
 import com.sumadga.dto.ServiceKeyPrice;
@@ -122,6 +124,33 @@ public class ServiceLayer {
 
 		return beans;
 	}
+	
+	public List<Bean<Integer,Bean<MediaGroup,ServiceMediaGroup>>> getCategoriesOfService(int serviceId){
+		
+		List<ServiceMediaGroup> categories =  serviceMediaGroupDao.findByProperty("service",serviceId);
+
+		//List<Bean<categoryId,Bean<category,ServiceMediaGroup>>>
+		
+		List<Bean<Integer,Bean<MediaGroup,ServiceMediaGroup>>> beans = new ArrayList<Bean<Integer,Bean<MediaGroup,ServiceMediaGroup>>>();
+		
+		for(ServiceMediaGroup category  : categories){
+			Bean<Integer,Bean<MediaGroup,ServiceMediaGroup>> outerBean = new Bean<Integer,Bean<MediaGroup,ServiceMediaGroup>>();
+			outerBean.setId(category.getMediaGroupId());
+			
+			Bean<MediaGroup,ServiceMediaGroup> innerBean = new Bean<MediaGroup,ServiceMediaGroup>();
+			
+			MediaGroup mediaGroup =	mediaGroupDao.findById(category.getMediaGroupId());
+			
+			innerBean.setId(mediaGroup);
+			innerBean.setName(category);
+			
+			outerBean.setName(innerBean);
+			
+			beans.add(outerBean);
+		}
+
+		return beans;
+	}
 
 	public List<MediaGroupMedia>	getMediaByCategoryId(int categoryId){
 
@@ -145,36 +174,7 @@ public class ServiceLayer {
 		return mediaSubGroups;
 	}
 
-	public Map<Bean<Integer,String>,Bean<Integer,List<MediaBean>>> getMediaInfoOfCategoryOfMediaType(int serviceId,int categoryId,Map<Integer,Integer> paginationMap,final int pageCount ,int mediaContentPurposeId,int width,int height){
 
-		ServiceMediaGroup serviceMediaGroup = serviceMediaGroupDao.findByServiceIdAndMediagroupId(serviceId, categoryId);
-		List<MediaBean> mediaBeans = mediaGroupMediaDao.getMediaInfoOfMediaGroup(categoryId,mediaContentPurposeId,serviceMediaGroup.getServiceKeyId(),width,height);
-
-		Map<Bean<Integer,String>,Bean<Integer,List<MediaBean>>> mediaInfoMap = new LinkedHashMap<Bean<Integer,String>,Bean<Integer,List<MediaBean>>>();
-
-		if(!mediaBeans.isEmpty()){
-			List<Bean<Integer,String>> mediaTypes = mediaGroupMediaDao.getMediaTypeOfMediaGroup(categoryId);
-
-			for(Bean<Integer,String> mediaType : mediaTypes){
-
-				Bean<Integer,List<MediaBean>> bean = new Bean<Integer,List<MediaBean>>();
-
-				List<MediaBean> mediaInfoBeans = mediaGroupMediaDao.getMediaInfoOfMediaGroupOfSpecificMediaType(categoryId, mediaType.getId(), paginationMap.get(mediaType.getId()),pageCount);
-				bean.setName(mediaInfoBeans);
-
-				int mediaCount = mediaGroupMediaDao.getCountOfMediaInMediaGroupOfSpecificMediaType(categoryId, mediaType.getId());
-				bean.setId(mediaCount);
-
-				mediaInfoMap.put(mediaType, bean);
-
-			}
-
-			return mediaInfoMap;
-		}else{
-			return null;
-		}
-
-	}
 
 	public Map<Bean<Integer,String>,Bean<Boolean,List<MediaBean>>> getMediaInfoOfCategoriesForLandingPage(int serviceId,List<Bean<Integer,Bean<String,ServiceMediaGroup>>> categories,int mediaContentPurposeId,int width,int height,int previewCount){
 
@@ -230,6 +230,113 @@ public class ServiceLayer {
 		return mediaInfoMap;
 
 	}
+	
+	public Map<Bean<Integer,MediaGroup>,Bean<Boolean,List<MediaBean>>> getMediaInfoOfCategories(int serviceId,List<Bean<Integer,Bean<MediaGroup,ServiceMediaGroup>>> categories,int mediaContentPurposeId,int width,int height,int previewCount){
+		//map<cat<catId,catgory>,bean<isMoreMedia's,List<mediaInfo>>>
+		Map<Bean<Integer,MediaGroup>,Bean<Boolean,List<MediaBean>>> mediaInfoMap = new LinkedHashMap<Bean<Integer,MediaGroup>,Bean<Boolean,List<MediaBean>>>();
+
+		// LIke Bean<categoryId,Bean<categoryName,ServiceMediaGroup>>
+		for(Bean<Integer,Bean<MediaGroup,ServiceMediaGroup>> category : categories){
+
+			int serviceKeyId = category.getName().getName().getServiceKeyId();
+			List<MediaBean> mediaBeans = mediaGroupMediaDao.getMediaInfoOfMediaGroup(category.getId(),mediaContentPurposeId,serviceKeyId,width,height);
+			List<MediaSubGroup>  mediaSubGroups = mediaSubGroupDao.findByProperty("parentMediaGroup",category.getId());
+
+			List<MediaBean> mediaList = new LinkedList<MediaBean>();
+
+			if(!mediaSubGroups.isEmpty() || !mediaBeans.isEmpty()){
+				
+				for(MediaSubGroup mediaSubGroup : mediaSubGroups){
+					MediaGroup childMediaGroup   =	mediaSubGroup.getChildMediaGroup();
+					MediaGroup parentMediaGroup   =	mediaSubGroup.getParentMediaGroup();
+					ServiceMediaGroup serviceMediaGroup = serviceMediaGroupDao.findByServiceIdAndMediagroupId(serviceId, parentMediaGroup.getMediaGroupId());
+					ServiceKeyPrice serviceKeyPrice = serviceKeyPriceDao.findByProperty("serviceKey", serviceMediaGroup.getServiceKeyId()).get(0);
+					
+					MediaBean mediaBean = mediaGroupMediaDao.getMediaInfoOfMediaSubGroup(childMediaGroup.getMediaGroupId(),serviceMediaGroup.getServiceKeyId(),CommonUtils.MEDIA_CONTENT_PRIVIEW,width,height);
+					mediaBean.setServiceKeyId((Integer)serviceMediaGroup.getServiceKeyId());
+					mediaBean.setServiceKeypriceId((Integer)serviceKeyPrice.getServiceKeyPriceId());
+					mediaBean.setPrice((Double)serviceKeyPrice.getPrice());
+					mediaBean.setMediagroupParentId(category.getId());
+					mediaList.add(mediaBean);
+				}
+				
+				mediaList.addAll(mediaBeans);
+
+				Bean<Boolean,List<MediaBean>> bean = new Bean<Boolean,List<MediaBean>>();
+				if(mediaList.size() > previewCount){
+					bean.setName(mediaList.subList(0,previewCount));
+					bean.setId(true);
+				}else{
+					bean.setName(mediaList);
+					bean.setId(false);
+				}
+				
+				Bean<Integer,MediaGroup> catIdAndName= new Bean<Integer,MediaGroup>();
+				catIdAndName.setId(category.getId());
+				catIdAndName.setName(category.getName().getId());
+
+				mediaInfoMap.put(catIdAndName, bean);
+
+			}
+
+		}
+
+		return mediaInfoMap;
+
+	}
+	
+	public Bean<MediaGroup, Map<MediaType,Bean<Integer,List<MediaBean>>>> getMediaInfoOfCategoryOnMediaTypeBases(int serviceId,int catId,int mediaTypeId,int mediaContentPurposeId,int width,int height,int ...pageIdxPageCount){
+				
+		Bean<MediaGroup, Map<MediaType,Bean<Integer,List<MediaBean>>>> categoryInfoOnMediaTypeBases = new Bean<MediaGroup, Map<MediaType,Bean<Integer,List<MediaBean>>>>();
+		//Map<Bean<mediaGroupId,mediaGroupTitle>,Bean<no. of pages count,List<MediaBean>>>
+		Map<MediaType,Bean<Integer,List<MediaBean>>> mediaInfoMap = new LinkedHashMap<MediaType,Bean<Integer,List<MediaBean>>>();
+
+		MediaGroup mediaGroup = mediaGroupDao.findById(catId);
+		categoryInfoOnMediaTypeBases.setId(mediaGroup);
+		
+		ServiceMediaGroup serviceMediaGroup =  serviceMediaGroupDao.findByServiceIdAndMediagroupId(serviceId,catId);
+		
+
+		Map<MediaType,List<MediaBean>> mediaBeansMap = mediaGroupMediaDao.getMediaInfoOfCatgoryOnMediaTypeBases(mediaGroup.getMediaGroupId(),mediaContentPurposeId,serviceMediaGroup.getServiceKeyId(),width,height);
+//		List<MediaSubGroup>  mediaSubGroups = mediaSubGroupDao.findByProperty("parentMediaGroup",category.getId());
+
+		for(Entry<MediaType,List<MediaBean>> entry: mediaBeansMap.entrySet()){
+			
+			Bean<Integer,List<MediaBean>> bean = new Bean<Integer,List<MediaBean>>();
+			
+			if(entry.getValue().size() > pageIdxPageCount[1]){
+
+				if(entry.getKey().getMediaTypeId() != mediaTypeId){
+					
+				if((pageIdxPageCount[0]+pageIdxPageCount[1]) > entry.getValue().size())	
+					bean.setName(entry.getValue().subList(0,entry.getValue().size()));
+				else
+					bean.setName(entry.getValue().subList(0,pageIdxPageCount[1]));
+				
+				}else{
+					
+					if((pageIdxPageCount[0]+pageIdxPageCount[1]) > entry.getValue().size())	
+						bean.setName(entry.getValue().subList(pageIdxPageCount[0],entry.getValue().size()));
+					else
+						bean.setName(entry.getValue().subList(pageIdxPageCount[0],pageIdxPageCount[1]+pageIdxPageCount[0]));
+				}
+
+			}else{
+				bean.setName(entry.getValue());
+			}
+
+			bean.setId((int)Math.ceil((entry.getValue().size())/(float)pageIdxPageCount[1]));
+			
+			mediaInfoMap.put(entry.getKey(), bean);
+		}
+		
+		categoryInfoOnMediaTypeBases.setName(mediaInfoMap);
+		
+		return categoryInfoOnMediaTypeBases;
+
+	}
+	
+	
 
 	public Map<Bean<Integer,String>,Bean<Integer,List<MediaBean>>> getMediaInfoOfCategory(int serviceId,int catId,int mediaContentPurposeId,int width,int height,int ...pageIdxPageCount){
 
@@ -368,6 +475,10 @@ public class ServiceLayer {
 	
 	public MediaBean getMediaInfoOfMedia(int mediaId,int mediaContentPurposeId,int width,int height){
 		return mediaGroupMediaDao.getMediaInfoOfMedia(mediaId, mediaContentPurposeId, width, height);
+	}
+	
+	public MediaBean getMediaInfoOfGame(int mediaId,int mediaContentPurposeId,int width,int height){
+		return mediaGroupMediaDao.getMediaInfoOfGame(mediaId, mediaContentPurposeId, width, height);
 	}
 	
 	public Purchas savePurchaseAndPurchaseDetails(HttpServletRequest request,int servicKeyId,String channel,String msisdn,String remark){

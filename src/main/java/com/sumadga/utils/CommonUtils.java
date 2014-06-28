@@ -12,10 +12,14 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import net.sourceforge.wurfl.core.Device;
+import net.sourceforge.wurfl.core.WURFLEngine;
+
 import org.apache.log4j.Logger;
 import org.apache.taglibs.standard.lang.jstl.test.beans.PublicBean1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.sumadga.wap.controller.ServiceUtils;
 
@@ -31,6 +35,8 @@ public class CommonUtils {
 	
 	@Autowired
 	HttpSession session;
+	@Autowired
+	WebApplicationContext wac;
 	
 	public static Map<Integer,Integer> paginationStringToMap(String paginationStr,int typeId,int pageId){
 		
@@ -111,6 +117,53 @@ public class CommonUtils {
        
 		logger.warn("Msisdn in serviceUtils GetMsisdn Method : " + msisdn);
 		return msisdn;
+	}
+	
+	public Map<String,String> getDeviceCapbilities(HttpServletRequest request){
+		WURFLEngine wurflHolder = (WURFLEngine)wac.getBean(WURFLEngine.class.getName());
+		Device device = wurflHolder.getDeviceForRequest(request);
+		String width = device.getCapability("resolution_width");
+		String height = device.getCapability("resolution_height");
+		String userAgent = request.getHeader("User-Agent");
+		String device_os = device.getCapability("device_os");
+		
+		if(device_os.contains("Android")||device_os.contains("iPhone")){
+			if(height.equals("264")){
+				width = "320";height = "240";
+			}
+		}else{
+			if(height.equals("264")){
+				width = "320";height = "240";
+			}
+		}
+		
+		Map<String, String> mobileCapbilityMap = new HashMap<String, String>();
+		
+		// Android
+		mobileCapbilityMap.put("width", width);
+		mobileCapbilityMap.put("height", height);
+		mobileCapbilityMap.put("userAgent", userAgent);
+		mobileCapbilityMap.put("device_os", device_os);
+		setPreviewWidthAndHeight(mobileCapbilityMap, width);
+		
+		return mobileCapbilityMap;
+	}
+	
+public void setPreviewWidthAndHeight(Map<String, String> mobileCapbilityMap,String resolution_width){
+		
+		int width = Integer.parseInt(resolution_width);
+		if(width > 350){
+			mobileCapbilityMap.put("preview_width", "100px");
+			mobileCapbilityMap.put("preview_height", "100px");
+		}else if(width >= 240 && width <= 350){
+			mobileCapbilityMap.put("preview_width", "75px");
+			mobileCapbilityMap.put("preview_height", "75px");
+		}else if(width < 240){
+			mobileCapbilityMap.put("preview_width", "50px");
+			mobileCapbilityMap.put("preview_height", "50px");
+		}
+		
+		
 	}
 
 }

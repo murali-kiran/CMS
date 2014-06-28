@@ -12,6 +12,15 @@
 		<put-attribute name="footer"
 			value="/WEB-INF/jsp/tiles/sampleFooter.jsp" />
 	</definition>
+	
+	<definition name="vdo.definition" template="/WEB-INF/jsp/tiles/vdo/vdoLayout.jsp">
+		<put-attribute name="title" value="" />
+		<put-attribute name="header"
+			value="/WEB-INF/jsp/tiles/vdo/vdoHeader.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer"
+			value="/WEB-INF/jsp/tiles/vdo/vdoFooter.jsp" />
+	</definition>
 
 	<definition name="sampleLandingPage" extends="base.definition">
 		<put-attribute name="title" value="Sample Service" />
@@ -53,5 +62,14 @@
 		<put-attribute name="body"  value="/WEB-INF/jsp/views/service/serviceMorePage.jsp" />
 	</definition>
 	
-
+	<definition name="vdoLandingPage" extends="vdo.definition">
+		<put-attribute name="title" value="Video Service" />
+		<put-attribute name="body"  value="/WEB-INF/jsp/views/vdo/vdoLandingPage.jsp" />
+	</definition>
+	
+	<definition name="vdoCategoryPage" extends="vdo.definition">
+		<put-attribute name="title" value="Video Service" />
+		<put-attribute name="body"  value="/WEB-INF/jsp/views/vdo/vdoCategoryPage.jsp" />
+	</definition>
+	
 </tiles-definitions>
