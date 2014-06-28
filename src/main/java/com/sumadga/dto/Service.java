@@ -2,6 +2,7 @@ package com.sumadga.dto;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -36,10 +37,19 @@ public class Service implements Serializable {
 
 	@Column(name="service_title")
 	private String serviceTitle;
+	
+	@ManyToOne
+	@Column(name="network_id")
+	private Network network;
+	
+	
+	@Column(name="service_group")
+	private Integer serviceGroup;
+	
 
 	//bi-directional many-to-one association to ServiceMediaGroup
-	@OneToMany(mappedBy="service")
-	private List<ServiceMediaGroup> serviceMediaGroups;
+	/*@OneToMany(mappedBy="service")
+	private List<ServiceMediaGroup> serviceMediaGroups;*/
 
 	public Service() {
 	}
@@ -92,7 +102,23 @@ public class Service implements Serializable {
 		this.serviceTitle = serviceTitle;
 	}
 
-	public List<ServiceMediaGroup> getServiceMediaGroups() {
+	public Network getNetwork() {
+		return network;
+	}
+
+	public void setNetwork(Network network) {
+		this.network = network;
+	}
+
+	public Integer getServiceGroup() {
+		return serviceGroup;
+	}
+
+	public void setServiceGroup(Integer serviceGroup) {
+		this.serviceGroup = serviceGroup;
+	}
+
+	/*public List<ServiceMediaGroup> getServiceMediaGroups() {
 		return this.serviceMediaGroups;
 	}
 
@@ -112,6 +138,6 @@ public class Service implements Serializable {
 		serviceMediaGroup.setService(null);
 
 		return serviceMediaGroup;
-	}
+	}*/
 
 }

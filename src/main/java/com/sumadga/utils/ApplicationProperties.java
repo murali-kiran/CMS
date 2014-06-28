@@ -16,6 +16,29 @@ public class ApplicationProperties {
 	private String urlOtherAPI;
 	private String secretKeyOtherAPI;
 	
+	//Ipayy
+	private String merchantKey;
+	private String faltutv_applicationKey;
+	private String ipayyBillingURL;
+	
+	public String getMerchantKey() {
+		return merchantKey;
+	}
+	public void setMerchantKey(String merchantKey) {
+		this.merchantKey = merchantKey;
+	}
+	public String getFaltutv_applicationKey() {
+		return faltutv_applicationKey;
+	}
+	public void setFaltutv_applicationKey(String faltutv_applicationKey) {
+		this.faltutv_applicationKey = faltutv_applicationKey;
+	}
+	public String getIpayyBillingURL() {
+		return ipayyBillingURL;
+	}
+	public void setIpayyBillingURL(String ipayyBillingURL) {
+		this.ipayyBillingURL = ipayyBillingURL;
+	}
 	public String getQubeCellURL() {
 		return qubeCellURL;
 	}

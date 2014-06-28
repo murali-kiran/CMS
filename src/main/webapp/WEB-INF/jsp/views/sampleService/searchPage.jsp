@@ -5,5 +5,6 @@
 <div align="center" style="vertical-align: middle;height: 100px;">
 <c:if test="${not empty error}">${error}</c:if>
 <input type="text" name="tag" width="85%;"/> &nbsp; <input type="submit" value="Search" style="background-color: #822DD7"/>
+
 </div>
 </form>

@@ -25,6 +25,7 @@ import com.sumadga.dao.MediaGroupDao;
 import com.sumadga.dao.MediaGroupMediaDao;
 import com.sumadga.dao.MediaSubGroupDao;
 import com.sumadga.dao.MediaTagDao;
+import com.sumadga.dao.NetworkDao;
 import com.sumadga.dao.PurchaseDetailDao;
 import com.sumadga.dao.PurchasesDao;
 import com.sumadga.dao.ServiceKeyPriceDao;
@@ -37,6 +38,7 @@ import com.sumadga.dto.MediaGroup;
 import com.sumadga.dto.MediaGroupMedia;
 import com.sumadga.dto.MediaSubGroup;
 import com.sumadga.dto.MediaType;
+import com.sumadga.dto.Network;
 import com.sumadga.dto.Purchas;
 import com.sumadga.dto.PurchaseDetail;
 import com.sumadga.dto.ServiceKeyPrice;
@@ -90,6 +92,9 @@ public class ServiceLayer {
 	@Autowired
 	MediaTagDao mediaTagDao;
 	
+	@Autowired
+	NetworkDao networkDao;
+
 	 
 
 	public List<Bean<Integer,Bean<String,ServiceMediaGroup>>>	getCategoryByServiceId(int serviceId){
@@ -489,7 +494,8 @@ public class ServiceLayer {
 	    purchase.setFirstPurchaseTime(new Date());
 	    purchase.setLastPurchaseTime(new Date());
 	    purchase.setMsisdn(new BigInteger(msisdn));
-	    purchase.setNetworkId(1);
+	    purchase.setNetworkId(getNetworkFromSession());
+	  //  purchase.setNetworkId(1);
 //	    purchase.setPurchaseId(1);
 	    purchase.setPurchaseStatus((byte)0);
 	    purchase.setPurchaseType((byte)0);
@@ -530,7 +536,7 @@ public FailPurchas saveFailPurchaseAndPFailPurchaseDetails(HttpServletRequest re
     purchase.setFirstPurchaseTime(new Date());
     purchase.setLastPurchaseTime(new Date());
     purchase.setMsisdn(new BigInteger(msisdn));
-    purchase.setNetworkId(1);
+    purchase.setNetworkId(getNetworkFromSession());
 //    purchase.setPurchaseId(1);
     purchase.setPurchaseStatus((byte)0);
     purchase.setPurchaseType((byte)0);
@@ -574,6 +580,29 @@ public List<MediaBean> getMediaInfoUsingTag(String tagName,int serviceId,int med
 	List<MediaBean> mediaBeans = mediaTagDao.getMediaInfoUsingTag(tagName, serviceId, mediaContentPurposeId, width, height,rowStartIdxAndCount);
 	
 	return mediaBeans;
+}
+
+/*public List<MediaBean> getMediaInfoUsingTag(String tagName,int serviceId,int mediaContentPurposeId,int width,int height,final int... rowStartIdxAndCount) {
+	List<MediaBean> mediaBeans = mediaTagDao.getMediaInfoUsingTag(tagName, serviceId, mediaContentPurposeId, width, height,rowStartIdxAndCount);
+	
+	return mediaBeans;
+}*/
+
+
+private int getNetworkFromSession(){
+	String oprt = (String) session.getAttribute("operator");
+	List<Network> networks = null;
+	try {
+		if(oprt != null)
+			networks = networkDao.findByProperty("name", oprt);
+		if(networks != null && networks.size() > 0)
+			return networks.get(0).getNetworkId();
+	} catch (Exception e) {
+		// TODO: handle exception
+		return 1;//hard coded value 
+	}
+	return 1;//hard coded value 
+	
 }
 
 

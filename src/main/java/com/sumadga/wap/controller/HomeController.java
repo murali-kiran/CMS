@@ -65,6 +65,13 @@ public class HomeController extends BaseController{
 		
 		String msisdn = commonUtils.getMsisdn(request);
 		
+		if(channel==null)
+			 channel="smd";
+		 else if(channel.contains(","))
+			 {
+			 	String[] s=channel.split(",");
+			 	channel=s[0];
+			 }
 
 		if(request.getParameter("detect")==null && msisdn==null ){
 			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
@@ -123,6 +130,11 @@ public class HomeController extends BaseController{
 		
 		 if(channel==null)
 			 channel="smd";
+		 else if(channel.contains(","))
+			 {
+			 	String[] s=channel.split(",");
+			 	channel=s[0];
+			 }
 		if(request.getParameter("detect")==null && msisdn==null ){
 			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
 			return "redirect:"+msisdnDetectionUrl;
@@ -185,6 +197,14 @@ public class HomeController extends BaseController{
 		
 		String msisdn = commonUtils.getMsisdn(request);
 		
+		if(channel==null)
+			 channel="smd";
+		 else if(channel.contains(","))
+			 {
+			 	String[] s=channel.split(",");
+			 	channel=s[0];
+			 }
+		
 		if(request.getParameter("detect")==null && msisdn==null ){
 			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
 			return "redirect:"+msisdnDetectionUrl;
@@ -223,6 +243,13 @@ public class HomeController extends BaseController{
 			return "errorPage";
 		}
 
+		if(channel==null)
+			 channel="smd";
+		 else if(channel.contains(","))
+			 {
+			 	String[] s=channel.split(",");
+			 	channel=s[0];
+			 }
 		    int pageCount = Integer.parseInt(serviceLayer.getServiceProprety(serviceId, "pageCount_non_LP"));
 		    Map<String,String> deviceMap =	getDeviceCapbilities(request);
 		    //
@@ -251,7 +278,13 @@ public class HomeController extends BaseController{
 			model.addAttribute("errorMsg", "Unable to detect");
 			return "errorPage";
 		}
-		
+		if(channel==null)
+			 channel="smd";
+		 else if(channel.contains(","))
+			 {
+			 	String[] s=channel.split(",");
+			 	channel=s[0];
+			 }
 
 		Map<String,String> deviceMap =	getDeviceCapbilities(request);
 			Map<Bean<Integer,String>,Bean<Integer,List<MediaBean>>> mediaInfoMap =	serviceLayer.getMediaInfoOfCategory(serviceId,catId,CommonUtils.MEDIA_CONTENT_PRIVIEW,commonUtils.PRIVIEW_WIDTH,commonUtils.PRIVIEW_HEIGHT,(pageId-1)*pageCount,pageCount);
@@ -275,7 +308,7 @@ public class HomeController extends BaseController{
 		
 		model.addAttribute("serviceId",serviceId);
 		model.addAttribute("title", "Search");
-		
+		model.addAttribute("channel", channel);
 		return "searchByTag";
 	}
 	
@@ -292,6 +325,13 @@ public class HomeController extends BaseController{
 			return "errorPage";
 		}
 		
+		if(channel==null)
+			 channel="smd";
+		 else if(channel.contains(","))
+			 {
+			 	String[] s=channel.split(",");
+			 	channel=s[0];
+			 }
 		List<MediaBean> beans = serviceLayer.getMediaInfoUsingTag(tag, serviceId, CommonUtils.MEDIA_CONTENT_PRIVIEW, CommonUtils.PRIVIEW_WIDTH,CommonUtils.PRIVIEW_HEIGHT);
 		model.addAttribute("title", "Search");
 		
