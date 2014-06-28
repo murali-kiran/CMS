@@ -157,6 +157,7 @@ public class VdoController {
 			model.addAttribute("previewWidth",deviceMap.get("preview_width"));
 			model.addAttribute("previewHeight",deviceMap.get("preview_height"));
 		
+			
 		return "vdoCategoryPage";
 	}
 	

@@ -137,6 +137,7 @@ public class CommonUtils {
 			}
 		}
 		
+		
 		Map<String, String> mobileCapbilityMap = new HashMap<String, String>();
 		
 		// Android

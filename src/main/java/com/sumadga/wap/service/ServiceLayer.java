@@ -52,6 +52,7 @@ import com.sumadga.wap.model.MediaBean;
 @Component
 public class ServiceLayer {
 
+	
 	@Autowired
 	private ServiceMediaGroupDao serviceMediaGroupDao;
 

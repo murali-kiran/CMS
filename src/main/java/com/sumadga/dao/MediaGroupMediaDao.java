@@ -408,6 +408,7 @@ public class MediaGroupMediaDao  {
 			query.setParameter(4, height);								
 			query.setParameter(5, mediaContentPurposeId);
 			
+			
 			if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
 				int rowStartIdx = Math.max(0, rowStartIdxAndCount[0]);
 				if (rowStartIdx > 0) {
