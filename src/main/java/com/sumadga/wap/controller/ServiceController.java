@@ -135,9 +135,10 @@ public class ServiceController extends BaseController{
 			}
 		}
 		else{
-			String billReq = billingUtils.getPaymentURLIpayy(request);
+		/*	String billReq = billingUtils.getPaymentURLIpayy(request);
 			saveRequest(request, billReq);
-			return "redirect:"+billReq;
+			return "redirect:"+billReq;*/
+			return "";
 		}
 			
 	}
@@ -219,7 +220,7 @@ public class ServiceController extends BaseController{
 			
 			downloadMedia(request, session);
 		}else{
-			errorMessage = billingUtils.getipayErrorMessage(paramaterMap);
+			//errorMessage = billingUtils.getipayErrorMessage(paramaterMap);
 		}
 		int previewCount = 3;
 

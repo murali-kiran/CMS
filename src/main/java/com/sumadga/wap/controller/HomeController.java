@@ -1,5 +1,9 @@
 package com.sumadga.wap.controller;
 
+import in.verse.ipayy.crypto.CryptoException;
+import in.verse.ipayy.crypto.CryptoUtils;
+
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +23,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sumadga.dao.PurchaseAndDownloadDao;
+import com.sumadga.dao.RequestDao;
+import com.sumadga.dao.ResponsDao;
 import com.sumadga.dto.Purchas;
+import com.sumadga.dto.Request;
+import com.sumadga.dto.Respons;
 import com.sumadga.dto.ServiceMediaGroup;
 import com.sumadga.utils.ApplicationProperties;
 import com.sumadga.utils.CommonUtils;
@@ -58,6 +66,12 @@ public class HomeController extends BaseController{
 	PurchaseAndDownloadDao purchaseAndDownloadDao;
 	
 	@Autowired
+	ResponsDao responsDao;
+	
+	@Autowired
+	RequestDao requestDao;
+	
+	@Autowired
 	HttpSession session;
 
 	@RequestMapping(value="/service/{serviceId}",method=RequestMethod.GET)
@@ -72,7 +86,7 @@ public class HomeController extends BaseController{
 			 	String[] s=channel.split(",");
 			 	channel=s[0];
 			 }
-
+		if(serviceId != 20){
 		if(request.getParameter("detect")==null && msisdn==null ){
 			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
 			return "redirect:"+msisdnDetectionUrl;
@@ -80,7 +94,7 @@ public class HomeController extends BaseController{
 			model.addAttribute("errorMsg", "Unable to detect");
 			return "views/sampleService/errorPage";
 		}
-		
+		}
 		
 		
 		Map<String,String> deviceMap =	getDeviceCapbilities(request);
@@ -123,7 +137,7 @@ public class HomeController extends BaseController{
 	}
 	
 	
-	@RequestMapping(value="/service2/dwl/{serviceId}/{mediaId}/{serviceKeypriceKey}",method=RequestMethod.GET)
+	/*@RequestMapping(value="/service2/dwl/{serviceId}/{mediaId}/{serviceKeypriceKey}",method=RequestMethod.GET)
 	public String downloadMedia(HttpServletRequest request,HttpServletResponse response,HttpSession session,Model model,@PathVariable Integer serviceId,@PathVariable Integer mediaId,@PathVariable String serviceKeypriceKey,@RequestParam(value = "channel", required = false,defaultValue="smd") String channel){
 		
 		String msisdn = commonUtils.getMsisdn(request);
@@ -190,7 +204,85 @@ public class HomeController extends BaseController{
 			}
 
 		
+	}*/
+@RequestMapping(value="/service2/dwl/{serviceId}/{mediaId}/{serviceKeypriceKey}",method=RequestMethod.GET)	
+public String downloadMedia(HttpServletRequest request,HttpServletResponse response,HttpSession session,Model model,@PathVariable Integer serviceId,@PathVariable Integer mediaId,@PathVariable String serviceKeypriceKey,@RequestParam(value = "channel", required = false,defaultValue="smd") String channel){
+		
+		/*String msisdn = commonUtils.getMsisdn(request);
+		
+		 if(channel==null)
+			 channel="smd";
+		 else if(channel.contains(","))
+			 {
+			 	String[] s=channel.split(",");
+			 	channel=s[0];
+			 }
+		if(request.getParameter("detect")==null && msisdn==null ){
+			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
+			return "redirect:"+msisdnDetectionUrl;
+		}else if(msisdn==null){
+			model.addAttribute("errorMsg", "Unable to detect");
+			return "errorPage";
+		}
+		Boolean isTestMobileNumber = serviceLayer.isTestMobileNumber(msisdn);*/
+
+		/*if(!isTestMobileNumber && request.getParameter("responsecode") == null ){
+
+			BillingModel billingModel =	billingUtils.getEventBilling(request,Long.parseLong(msisdn), session.getAttribute("operator").toString(), serviceKeypriceKey);
+			billingModel.setServiceKeypriceKey(serviceKeypriceKey);
+			billingModel.setSecretKeyOtherAPI(applicationProperties.getSecretKeyOtherAPI());
+			
+			model.addAttribute("billingModel", billingModel);
+			return "views/sampleService/billingModel";
+			}else {*/
+				String msisdn = commonUtils.getMsisdn(request);
+				Boolean isTestMobileNumber = serviceLayer.isTestMobileNumber(msisdn);
+				int serviceKeyId = Integer.parseInt(request.getParameter("servicKeyId"));
+				Map<String,String> map =	RequestUtil.INSTANCE.dumpRequestScope(request);
+				String responseCode = map.get("responsecode");
+				/*Map<String,String> map =	RequestUtil.INSTANCE.dumpRequestScope(request);
+				logger.info(map);
+				String responseCode = map.get("responsecode");*/
+				Long msisdnLong = 0L;
+				if(msisdn != null)
+					msisdnLong = Long.parseLong(msisdn);
+				if(!isTestMobileNumber && request.getParameter("responsecode") == null ){
+					String billingURL = billingUtils.getPaymentURLIpayy(request, msisdnLong);
+					logger.info("ipay billing url:"+billingURL);
+					return "redirect:"+billingURL;
+				}
+				if(isTestMobileNumber || responseCode.equals("101")){
+					logger.info("Billing Success");
+					
+					Purchas purchase =	purchaseAndDownloadDao.checkPurchaseRecordExistForToday(Long.parseLong((String)session.getAttribute("msisdn")),mediaId);
+					String remark="";
+					if(isTestMobileNumber)
+						remark="test number";
+					else 
+						remark="101:SUCCESS";
+					// if purchase is not done for that id
+						if(purchase ==null)
+						purchase =	serviceLayer.savePurchaseAndPurchaseDetails(request,serviceKeyId,channel,msisdn,remark);
+					    
+				
+					//	return "forward:/service2/dwlFile/"+serviceId+"/"+mediaId+"/"+purchase.getPurchaseId();
+				
+					
+					model.addAttribute("isDownloadURL", true);
+					model.addAttribute("downloadURL", request.getContextPath()+"/service2/dwlFile/"+serviceId+"/"+mediaId+"/"+purchase.getPurchaseId()+"?channel="+channel);
+					return getService(model, serviceId, request, channel);
+				}else{
+					String errorCode = billingUtils.getipayErrorMessage(responseCode);
+					String remark=responseCode.equals("101")+":"+errorCode;
+					
+					serviceLayer.saveFailPurchaseAndPFailPurchaseDetails(request,serviceKeyId,errorCode,channel,msisdn,remark);
+					
+					logger.info("Billing Failed due to :"+errorCode);
+				}
+				return "forward:/service/"+serviceId+"?channel="+channel+"&msisdn="+msisdn+"&operator="+session.getAttribute("operator").toString();
+				
 	}
+
 	
 	@RequestMapping(value="/service2/cat/{serviceId}/{catId}",method=RequestMethod.GET)
 	public String getServiceByCategory(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer catId,@RequestParam(value = "channel", required = false,defaultValue="smd") String channel){
@@ -360,6 +452,82 @@ public class HomeController extends BaseController{
 		}
 	}
 	
-	
+	@RequestMapping(value="/main/service/ipayBillingResponse",method=RequestMethod.GET)
+	public String ipayBillingResponse(HttpServletRequest request,HttpSession session, Model model){
+		String encryptedString = request.getParameter("gh");
+		String errorMessage = null;
+		try
+		{
+		  Map<String, String> paramaterMap = CryptoUtils.getDecryptedString(encryptedString);
+		 System.out.println(paramaterMap );
+		
+		 
+		HttpSession httpSession = request.getSession();
+		httpSession.setAttribute("msisdn", paramaterMap.get("mn"));
+		httpSession.setAttribute("operator", request.getParameter("op"));
+		
+		String billingStatus = paramaterMap.get("ts");
+		String failureReason = paramaterMap.get("tf");
+		String requestId = paramaterMap.get("r");
+		String msisdn = paramaterMap.get("mn");
+		String operator = paramaterMap.get("op");
+		httpSession.setAttribute("msisdn", msisdn);
+		httpSession.setAttribute("operator", operator);
+		String responseCode = null;
+		if(billingStatus != null && billingStatus.equals("S")){
+			responseCode = "101";
+		}else{
+			errorMessage = billingUtils.getipayErrorMessage(paramaterMap.get("ec"));
+		}
+	//	int previewCount = 3;
+
+		Respons respons= new Respons();
+		
+		respons.setRequestId(Long.parseLong(requestId));
+		
+		Enumeration<String> enumeration= request.getParameterNames();
+		StringBuffer buffer=new StringBuffer("t1=t");
+		while (enumeration.hasMoreElements()) {
+			String param = (String) enumeration.nextElement();
+			buffer.append("&"+param+"="+request.getParameter(param));
+			
+		}
+		respons.setQueryString(buffer.toString());
+		
+		if(msisdn!=null)
+		{
+			if(!msisdn.trim().isEmpty())
+		respons.setMsisdn(Long.parseLong(msisdn));
+		}
+		
+		responsDao.save(respons);
+		
+		Request req=requestDao.findById(Long.parseLong(requestId)); 
+		
+		String redirectUrl=req.getRedirectURL();
+		if(redirectUrl.contains("?"))
+			redirectUrl=redirectUrl+"&responsecode="+responseCode;
+		else
+			redirectUrl=redirectUrl+"?responsecode="+responseCode;
+		
+		redirectUrl=redirectUrl.replaceAll("&msisdn=", "&msisdn1=");
+		if(request.getParameter("msisdn")!=null && !request.getParameter("msisdn").trim().isEmpty() && !request.getParameter("msisdn").trim().equalsIgnoreCase("null"))
+			redirectUrl=redirectUrl+"&msisdn="+request.getParameter("msisdn");
+		else if(req.getMsisdn()!=null)
+			redirectUrl=redirectUrl+"&msisdn="+req.getMsisdn();
+		if(request.getParameter("operator")!=null)
+			redirectUrl=redirectUrl+"&operator="+request.getParameter("operator");
+		
+		return "redirect:"+redirectUrl;
+		}
+		catch (CryptoException e)
+		{
+		  e.printStackTrace();
+		}catch (Exception e)
+		{
+			  e.printStackTrace();
+		}
+		return "";//return to home page
+	}
 	
 }
