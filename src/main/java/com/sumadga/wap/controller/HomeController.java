@@ -86,7 +86,7 @@ public class HomeController extends BaseController{
 			 	String[] s=channel.split(",");
 			 	channel=s[0];
 			 }
-		if(serviceId != 20){
+		if(serviceId != 2){
 		if(request.getParameter("detect")==null && msisdn==null ){
 			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
 			return "redirect:"+msisdnDetectionUrl;
@@ -236,7 +236,9 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 			return "views/sampleService/billingModel";
 			}else {*/
 				String msisdn = commonUtils.getMsisdn(request);
-				Boolean isTestMobileNumber = serviceLayer.isTestMobileNumber(msisdn);
+				Boolean isTestMobileNumber = false;
+				if(msisdn != null)
+					isTestMobileNumber = serviceLayer.isTestMobileNumber(msisdn);
 				int serviceKeyId = Integer.parseInt(request.getParameter("servicKeyId"));
 				Map<String,String> map =	RequestUtil.INSTANCE.dumpRequestScope(request);
 				String responseCode = map.get("responsecode");
@@ -452,7 +454,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 		}
 	}
 	
-	@RequestMapping(value="/main/service/ipayBillingResponse",method=RequestMethod.GET)
+	@RequestMapping(value="main/service/ipayBillingResponse",method=RequestMethod.GET)
 	public String ipayBillingResponse(HttpServletRequest request,HttpSession session, Model model){
 		String encryptedString = request.getParameter("gh");
 		String errorMessage = null;
@@ -511,19 +513,19 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 			redirectUrl=redirectUrl+"?responsecode="+responseCode;
 		
 		redirectUrl=redirectUrl.replaceAll("&msisdn=", "&msisdn1=");
-		if(request.getParameter("msisdn")!=null && !request.getParameter("msisdn").trim().isEmpty() && !request.getParameter("msisdn").trim().equalsIgnoreCase("null"))
-			redirectUrl=redirectUrl+"&msisdn="+request.getParameter("msisdn");
+		if(request.getParameter("msisdn")!=null && !paramaterMap.get("mn").trim().isEmpty() && !paramaterMap.get("mn").trim().equalsIgnoreCase("null"))
+			redirectUrl=redirectUrl+"&msisdn="+paramaterMap.get("mn");
 		else if(req.getMsisdn()!=null)
 			redirectUrl=redirectUrl+"&msisdn="+req.getMsisdn();
 		if(request.getParameter("operator")!=null)
-			redirectUrl=redirectUrl+"&operator="+request.getParameter("operator");
+			redirectUrl=redirectUrl+"&operator="+paramaterMap.get("op");
 		
 		return "redirect:"+redirectUrl;
 		}
-		catch (CryptoException e)
+		/*catch (CryptoException e)
 		{
 		  e.printStackTrace();
-		}catch (Exception e)
+		}*/catch (Exception e)
 		{
 			  e.printStackTrace();
 		}

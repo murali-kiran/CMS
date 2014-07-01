@@ -183,13 +183,16 @@ public String getPaymentURLIpayy(HttpServletRequest httpServletRequest, Long msi
 	     //Using encryption library to create encryption string
 	      encryptedString = CryptoUtils.getEncryptedString(parameterMap);
 	}
-	catch (CryptoException e)
+	/*catch (CryptoException e)
 	{
 	    // Handle Encryption error
-	}catch (Exception e) {
+	}*/catch (Exception e) {
 		// TODO: handle exception
 	}
-	return encryptedString;
+	
+	String rediURL = applicationProperties.getIpayyBillingURL()+encryptedString;
+	logger.info("ipay billing url:"+rediURL);
+	return rediURL;
 }
 	
 	private String getMD5(String string){

@@ -150,13 +150,16 @@ public class BaseController {
 	}
 	
 	public Map<String,String> getDeviceCapbilities(HttpServletRequest request){
-		WURFLEngine wurflHolder = (WURFLEngine)wac.getBean(WURFLEngine.class.getName());
+		/*WURFLEngine wurflHolder = (WURFLEngine)wac.getBean(WURFLEngine.class.getName());
 		Device device = wurflHolder.getDeviceForRequest(request);
 		String width = device.getCapability("resolution_width");
 		String height = device.getCapability("resolution_height");
 		String userAgent = request.getHeader("User-Agent");
-		String device_os = device.getCapability("device_os");
-		
+		String device_os = device.getCapability("device_os");*/
+		String device_os = "windows";
+		String width = "320";
+		String height = "264";
+		String userAgent = request.getHeader("User-Agent");
 		if(device_os.contains("Android")||device_os.contains("iPhone")){
 			if(height.equals("264")){
 				width = "320";height = "240";

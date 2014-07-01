@@ -199,7 +199,7 @@ public class ServiceController extends BaseController{
 		return "serviceMorePage";
 	}
 	
-	@RequestMapping(value="/main/service/ipayBillingResponse",method=RequestMethod.GET)
+//	@RequestMapping(value="/main/service/ipayBillingResponse",method=RequestMethod.GET)
 	public String ipayBillingResponse(HttpServletRequest request,HttpSession session){
 		String encryptedString = request.getParameter("gh");
 		String errorMessage = null;
@@ -233,10 +233,10 @@ public class ServiceController extends BaseController{
 		model.addAttribute("channel",channel);
 		model.addAttribute("title", "Home");*/
 		}
-		catch (CryptoException e)
+		/*catch (CryptoException e)
 		{
 		  e.printStackTrace();
-		}catch (Exception e)
+		}*/catch (Exception e)
 		{
 			  e.printStackTrace();
 		}
