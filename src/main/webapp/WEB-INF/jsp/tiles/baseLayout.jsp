@@ -139,11 +139,11 @@ $("#sort tbody").sortable({
 <div >
 	<tiles:insertAttribute name="header" />
 </div>
-<div style="width: 100%;height: 70%;background-color: #F5F5F5;padding-top: 0px;border-collapse: collapse;padding-bottom: 20px;" align="center">
+<div style="width: 100%;height: 70%;background-color: #D8D8D8;padding-top: 0px;border-collapse: collapse;padding-bottom: 20px;" align="center">
 	<%-- <div style="width: 18%;height:auto; text-align: left;float: left;background-color:#B467CF;padding-left: 5px;"><tiles:insertAttribute name="menu" /></div> --%>
 	<div style="width: 70%;padding-top: 20px;" align="center"><tiles:insertAttribute name="body" /></div>
 </div>
-<div style="width: 100%;height: 20px;float: left;background-image: url('<%=request.getContextPath()%>/resources/images/headbg1.jpg');width: 100%;background-repeat: repeat-x;position:fixed;
+<div style="width: 100%;height: 20px;float: left;background-image: url('<%=request.getContextPath()%>/resources/images/download1.jpg');width: 100%;background-repeat: repeat-x;position:fixed;
    left:0px;
    bottom:0px;">
 	<tiles:insertAttribute name="footer" />

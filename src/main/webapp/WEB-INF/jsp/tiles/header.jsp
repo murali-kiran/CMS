@@ -16,7 +16,7 @@
 			</sec:authorize>					
 	</div>
     	<div id="site_title">
-            <h1><img src="resources/images_new/sumadga_logo.png" alt="logo" /></h1>
+            <!-- <h1><img src="resources/images_new/sumadga_logo.png" alt="logo" /></h1> -->
       	</div> <!-- end of site_title -->
         
         <div id="templatemo_menu">
