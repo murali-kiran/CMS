@@ -15,6 +15,8 @@ public class MediaContentModel {
 	private String remoteUrl;
 	private Integer id;
 	private Integer osid;
+	private String textMessage;
+	private Boolean isFile;
 	
 	
 	public Integer getOsid() {
@@ -94,6 +96,20 @@ public class MediaContentModel {
 	}
 	public void setRemoteUrl(String remoteUrl) {
 		this.remoteUrl = remoteUrl;
+	}
+	
+	public String getTextMessage() {
+		return textMessage;
+	}
+	public void setTextMessage(String textMessage) {
+		this.textMessage = textMessage;
+	}
+	
+	public Boolean getIsFile() {
+		return isFile;
+	}
+	public void setIsFile(Boolean isFile) {
+		this.isFile = isFile;
 	}
 	@Override
 	public String toString() {

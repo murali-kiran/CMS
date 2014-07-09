@@ -23,6 +23,9 @@ public class MediaContent implements Serializable {
 
 	@Column(name="storage_path", nullable=false, length=1024)
 	private String storagePath;
+	
+	@Column(name="text_message")
+	private String textMessage;
 
 	//bi-directional many-to-one association to Media
 	@ManyToOne
@@ -75,6 +78,15 @@ public class MediaContent implements Serializable {
 
 	public void setMediaSpecification(MediaSpecification mediaSpecification) {
 		this.mediaSpecification = mediaSpecification;
+	}
+	
+	
+	public String getTextMessage() {
+		return textMessage;
+	}
+
+	public void setTextMessage(String textMessage) {
+		this.textMessage = textMessage;
 	}
 
 	@Override

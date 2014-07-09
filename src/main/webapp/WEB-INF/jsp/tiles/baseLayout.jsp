@@ -143,7 +143,7 @@ $("#sort tbody").sortable({
 	<%-- <div style="width: 18%;height:auto; text-align: left;float: left;background-color:#B467CF;padding-left: 5px;"><tiles:insertAttribute name="menu" /></div> --%>
 	<div style="width: 70%;padding-top: 20px;" align="center"><tiles:insertAttribute name="body" /></div>
 </div>
-<div style="width: 100%;height: 20px;float: left;background-image: url('<%=request.getContextPath()%>/resources/images/download1.jpg');width: 100%;background-repeat: repeat-x;position:fixed;
+<div style="width: 100%;height: 20px;float: left;background-image: url('<%=request.getContextPath()%>/resources/images/graytest1.jpg');width: 100%;background-repeat: repeat-x;position:fixed;
    left:0px;
    bottom:0px;">
 	<tiles:insertAttribute name="footer" />

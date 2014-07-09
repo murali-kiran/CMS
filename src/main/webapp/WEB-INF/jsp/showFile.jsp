@@ -10,11 +10,24 @@
 			  <c:forEach items="${uploadFile.mediaContentModelList}" var="fileContent" varStatus="fileStatus">
 		
 			 <tr>
+			 <td>${fileContent.label} :</td><td>
+			 <c:choose>
+			 <c:when test="${fileContent.isFile}">
+      <td> <form:input type="file" path="uploadFile.mediaContentModelList[${fileContent.id}].file" /></td>
+      <td><form:errors path="uploadFile.mediaContentModelList[${fileContent.id}].file" cssClass="error" /></td>
+  
+      </c:when>
+
+      <c:otherwise>
+        <td> <form:textarea path="uploadFile.mediaContentModelList[${fileContent.id}].textMessage"/><td>
+      </c:otherwise>
+</c:choose>
 			
-				 <td>${fileContent.label} :</td><td>
+				<%--  <td>${fileContent.label} :</td><td>
+				 
 				 <form:input type="file" path="uploadFile.mediaContentModelList[${fileContent.id}].file" /></td>
-				<td><form:errors path="uploadFile.mediaContentModelList[${fileContent.id}].file" cssClass="error" /></td>
-			
+				<td><form:errors path="uploadFile.mediaContentModelList[${fileContent.id}].file" cssClass="error" /></td> --%>
+			<form:hidden path="uploadFile.mediaContentModelList[${fileContent.id}].isFile"  />
 				<form:hidden path="uploadFile.mediaContentModelList[${fileContent.id}].mediaSpecificationId"  />
 				<form:hidden path="uploadFile.mediaContentModelList[${fileContent.id}].mimeType"  />
 				<form:hidden path="uploadFile.mediaContentModelList[${fileContent.id}].bitRate"  />

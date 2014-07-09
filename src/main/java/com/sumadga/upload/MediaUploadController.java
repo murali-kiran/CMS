@@ -1,6 +1,8 @@
 
 package com.sumadga.upload;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 
+import com.sumadga.utils.MediaUtils;
+
 
 
 @Controller
@@ -27,16 +31,32 @@ public class MediaUploadController {
 	@Autowired
 	MediaUploadService mediaUploadService;
 	
+	@Autowired
+	MediaUtils mediaUtils;
+	
 	@RequestMapping("/show")
 	public void show(){
 		
 		logger.info("log4j");
 	}
 	
+	@RequestMapping("/welcome")
+	public String home(ModelMap model,HttpServletRequest request){
+		
+		logger.info("welcome");
+		
+		mediaUtils.getUserPermission(request);
+		
+		return "welcome";
+		
+	}
+	
 	@RequestMapping("/upload")
-	public String upload(ModelMap model){
+	public String upload(ModelMap model,HttpServletRequest request){
 		
 		logger.info("upload");
+		
+		mediaUtils.getUserPermission(request);
 		
 		mediaUploadService.upload(model);
 		

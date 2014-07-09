@@ -234,13 +234,13 @@ public class MediaGroupController {
 		model.addAttribute("message",message);
 		return "mediaGroupList";
 	}
-	@RequestMapping("/welcome")
+	/*@RequestMapping("/welcome")
 	public String welcome(ModelMap model){
 		
 		logger.info("upload");
 		return "welcome";
 		
-	}
+	}*/
 	@RequestMapping(value = "/editMediaGroup",  method=RequestMethod.GET)
 	//@ResponseBody
 	public String editGroup(@RequestParam("mgid") Integer mediaGroupId,ModelMap model){

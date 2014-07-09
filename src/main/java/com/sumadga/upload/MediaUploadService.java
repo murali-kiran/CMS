@@ -254,6 +254,7 @@ public void edit(ModelMap model,Integer mediaId){
 				/*mediaContentModel.setIsLocal(mediaSpecification.get);*/
 				mediaContentModel.setMediaSpecificationId(mediaSpecification.getMediaSpecificationId());
 				mediaContentModel.setId(i);
+				mediaContentModel.setIsFile(mediaSpecification.getIsFile());
 				mediaContentModelList.add(mediaContentModel);
 				    i=i+1;	
 			} 
@@ -444,7 +445,7 @@ public void saveUploadApp(MediaUploadModel mediaUploadModel) throws Exception{
   		
   		mediaContent.setMedia(media);
   		mediaContent.setMediaSpecification(mediaSpecificationDao.findById(mediaContentModel.getMediaSpecificationId()));
-  		
+  		if(mediaContentModel.getIsFile()) {
   		mediaContent.setMd5(mediaUtils.getMd5(mediaContentModel.getFile()));
   		
   		
@@ -466,6 +467,12 @@ public void saveUploadApp(MediaUploadModel mediaUploadModel) throws Exception{
 		mediaContentModel.getFile().transferTo(fileToCreate);
   		
   		mediaContent.setStoragePath(relativePath);
+  		mediaContent.setTextMessage("");
+  		}else{
+  			mediaContent.setMd5("");
+  			mediaContent.setStoragePath("");
+  			mediaContent.setTextMessage(mediaContentModel.getTextMessage());
+  		}
   		
   		mediaContentDao.save(mediaContent);
   		}catch(Throwable e)

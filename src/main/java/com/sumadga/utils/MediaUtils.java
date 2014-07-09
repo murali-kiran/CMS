@@ -9,11 +9,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +27,7 @@ import com.sumadga.dao.MediaProviderDao;
 import com.sumadga.dao.MediaSpecificationDao;
 import com.sumadga.dao.MediaTypeDao;
 import com.sumadga.dao.MimeTypeDao;
+import com.sumadga.dao.UserPermissionsDao;
 import com.sumadga.dto.Language;
 import com.sumadga.dto.Media;
 import com.sumadga.dto.MediaCycle;
@@ -31,6 +35,7 @@ import com.sumadga.dto.MediaProvider;
 import com.sumadga.dto.MediaType;
 import com.sumadga.dto.MimeType;
 import com.sumadga.dto.Os;
+import com.sumadga.dto.UserPermissions;
 import com.sumadga.mediagroup.MediaModel;
 
 @Component
@@ -60,6 +65,10 @@ public class MediaUtils {
     
     @Autowired
     ApplicationProperties applicationProperties;
+    
+    @Autowired
+    UserPermissionsDao userPermissionsDao;
+    
     
     public List<Language> getLanguageList(){
     	return languageDao.findAll();
@@ -94,6 +103,27 @@ public class MediaUtils {
     	}
     	
     	return mediaProviderDao.findAll();
+    }
+    
+public void getUserPermission(HttpServletRequest request){
+    	
+    	try{
+	    	SecurityContext context=SecurityContextHolder.getContext();
+	    	Authentication authentication=context.getAuthentication();
+	    	if(authentication !=null){
+	    		String userName=authentication.getName();
+	    		logger.info("User name "+userName);
+	    		if(request.getSession().getAttribute("userPermissions")==null)
+	    		{
+	    			List<UserPermissions> permissionsList=userPermissionsDao.findByProperty("user", userName);
+	    			if(!permissionsList.isEmpty())
+	    				request.getSession().setAttribute("userPermissions", permissionsList.get(0));
+	    		}
+	    	}
+    	}catch(Exception e){
+    		logger.error("Exception caught : ",e);
+    	}
+    	
     }
     
     public java.util.Date parseDate(String dateString){ 

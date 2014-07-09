@@ -83,7 +83,7 @@
 		<security:form-login login-page="/login" default-target-url="/welcome" authentication-failure-url="/loginfailed" always-use-default-target="true" />
 		<security:logout logout-url="/logout" logout-success-url="/login" />
 	</security:http>
-
+ 
 	<security:authentication-manager>
 		<security:authentication-provider>
 			<security:jdbc-user-service id="userDetailsService"

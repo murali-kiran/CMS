@@ -30,7 +30,8 @@
 		<td><c:out value="${mediaContent.mediaSpecification.width}" /></td>
 		<td><c:out value="${mediaContent.mediaSpecification.height}" /></td>
 		 <td><c:out value="${mediaContent.mediaSpecification.bitrate}" /></td> 
-		 <td><a href="<%=request.getContextPath()%><c:out value="${relativePath}" /><c:out value="${mediaContent.storagePath}" />">download</a></td>
+		 <td><c:choose><c:when test="${mediaContent.mediaSpecification.isFile}" ><a href="<%=request.getContextPath()%><c:out value="${relativePath}" /><c:out value="${mediaContent.storagePath}" />">download</a></c:when>
+		  <c:otherwise><c:out value="${mediaContent.textMessage}" /></c:otherwise></c:choose></td>
 	</tr>
 </c:forEach>
 </table>

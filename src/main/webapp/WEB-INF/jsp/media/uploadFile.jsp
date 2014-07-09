@@ -137,11 +137,25 @@
 		
 			 <tr>
 			
-				 <td>${fileContent.label} :</td><td>
-				 <form:input type="file" path="mediaContentModelList[${fileContent.id}].file" /></td>
+				 <td>${fileContent.label} asv ${fileContent.isFile} :</td>
+		<c:choose>
+		 
+      <c:when test="${fileContent.isFile}">
+      <td> <form:input type="file" path="mediaContentModelList[${fileContent.id}].file" /></td>
+      <td><form:errors path="mediaContentModelList[${fileContent.id}].file" cssClass="error" /></td>
+  
+      </c:when>
+
+      <c:otherwise>
+        <td> <form:textarea path="mediaContentModelList[${fileContent.id}].textMessage"/><td>
+      </c:otherwise>
+</c:choose></td>
+
+				 
 				<td><form:errors path="mediaContentModelList[${fileContent.id}].file" cssClass="error" /></td>
 			
 				<form:hidden path="mediaContentModelList[${fileContent.id}].mediaSpecificationId"  />
+				<form:hidden path="mediaContentModelList[${fileContent.id}].isFile"  />
 				<form:hidden path="mediaContentModelList[${fileContent.id}].mimeType"  />
 				<form:hidden path="mediaContentModelList[${fileContent.id}].bitRate"  />
 				<form:hidden path="mediaContentModelList[${fileContent.id}].width"  />

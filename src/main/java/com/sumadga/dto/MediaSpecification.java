@@ -64,6 +64,17 @@ public class MediaSpecification implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="media_type_id", nullable=false)
 	private MediaType mediaType;
+	
+	@Column(name="is_file")
+	private Boolean isFile;
+
+	public Boolean getIsFile() {
+		return isFile;
+	}
+
+	public void setIsFile(Boolean isFile) {
+		this.isFile = isFile;
+	}
 
 	public MediaSpecification() {
 	}

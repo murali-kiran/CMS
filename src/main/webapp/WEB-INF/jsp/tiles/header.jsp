@@ -23,19 +23,40 @@
         	
             <ul>
             	<sec:authorize access="hasAnyRole('ROLE_ADMIN')">
+            	
+            	<c:if test="${sessionScope.userPermissions.mediaUpload}">
+                            
                 <li><a href="${pageContext.servletContext.contextPath}/upload">Upload</a></li>
+                </c:if> 
+                <c:if test="${sessionScope.userPermissions.gameUpload}">
                 <li><a href="${pageContext.servletContext.contextPath}/appUpload">Game Upload</a></li>
+                </c:if>
+                 <c:if test="${sessionScope.userPermissions.mediaSearch}">
                 <li><a href="${pageContext.servletContext.contextPath}/showSearch">Search</a></li>
+                </c:if>
+                 <c:if test="${sessionScope.userPermissions.mediaGroup}">
                 <li><a href="${pageContext.servletContext.contextPath}/addGroup">Group</a></li>
+                </c:if>
+                
+                 <c:if test="${sessionScope.userPermissions.mediaGroupList}">
                 <li><a href="${pageContext.servletContext.contextPath}/listMediaGroup">Group List</a></li>
+                </c:if>
+                 <c:if test="${sessionScope.userPermissions.mediaService}">
                 <li><a href="${pageContext.servletContext.contextPath}/serviceList">Services</a></li>
+                </c:if>
+                 <c:if test="${sessionScope.userPermissions.mis}">
                 <li><a href="${pageContext.servletContext.contextPath}/mis/show">MIS</a></li>
+                </c:if>
                 </sec:authorize>
+               
                 
                 <sec:authorize access="hasAnyRole('ROLE_USER')">
+                	<c:if test="${sessionScope.userPermissions.mediaUpload}">
                 <li><a href="${pageContext.servletContext.contextPath}/upload">Upload</a></li>
+                </c:if> 
+                <c:if test="${sessionScope.userPermissions.mediaSearch}">
                 <li><a href="${pageContext.servletContext.contextPath}/showSearch">Search</a></li>
-                
+                </c:if> 
                 <%-- <li><a href="${pageContext.servletContext.contextPath}/appUpload">Game Upload</a></li>
                 <li><a href="${pageContext.servletContext.contextPath}/addGroup">Group</a></li>
                 <li><a href="${pageContext.servletContext.contextPath}/listMediaGroup">Group List</a></li>
