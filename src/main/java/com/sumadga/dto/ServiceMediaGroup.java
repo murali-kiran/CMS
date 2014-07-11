@@ -43,6 +43,19 @@ public class ServiceMediaGroup implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="service_id")
 	private Service service;
+	
+	
+	@Column(name="isSpecial_media_group")
+	private byte isSpecialMediaGroup;
+
+
+	public byte getIsSpecialMediaGroup() {
+		return isSpecialMediaGroup;
+	}
+
+	public void setIsSpecialMediaGroup(byte isSpecialMediaGroup) {
+		this.isSpecialMediaGroup = isSpecialMediaGroup;
+	}
 
 	public ServiceMediaGroup() {
 	}
