@@ -135,9 +135,10 @@ public class ServiceController extends BaseController{
 			}
 		}
 		else{
-			String billReq = billingUtils.getPaymentURLIpayy(request);
+		/*	String billReq = billingUtils.getPaymentURLIpayy(request);
 			saveRequest(request, billReq);
-			return "redirect:"+billReq;
+			return "redirect:"+billReq;*/
+			return "";
 		}
 			
 	}
@@ -198,7 +199,7 @@ public class ServiceController extends BaseController{
 		return "serviceMorePage";
 	}
 	
-	@RequestMapping(value="/main/service/ipayBillingResponse",method=RequestMethod.GET)
+//	@RequestMapping(value="/main/service/ipayBillingResponse",method=RequestMethod.GET)
 	public String ipayBillingResponse(HttpServletRequest request,HttpSession session){
 		String encryptedString = request.getParameter("gh");
 		String errorMessage = null;
@@ -219,7 +220,7 @@ public class ServiceController extends BaseController{
 			
 			downloadMedia(request, session);
 		}else{
-			errorMessage = billingUtils.getipayErrorMessage(paramaterMap);
+			//errorMessage = billingUtils.getipayErrorMessage(paramaterMap);
 		}
 		int previewCount = 3;
 
@@ -232,10 +233,10 @@ public class ServiceController extends BaseController{
 		model.addAttribute("channel",channel);
 		model.addAttribute("title", "Home");*/
 		}
-		catch (CryptoException e)
+		/*catch (CryptoException e)
 		{
 		  e.printStackTrace();
-		}catch (Exception e)
+		}*/catch (Exception e)
 		{
 			  e.printStackTrace();
 		}

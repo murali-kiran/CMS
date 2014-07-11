@@ -38,7 +38,7 @@ public class Service implements Serializable {
 	@Column(name="service_title")
 	private String serviceTitle;
 	
-	@ManyToOne
+	//@ManyToOne
 	@Column(name="network_id")
 	private Network network;
 	

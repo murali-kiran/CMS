@@ -137,21 +137,40 @@ public String getBillingErrorMessage(int errorCode){
 	return status;
 }
 
-public String getPaymentURLIpayy(HttpServletRequest httpServletRequest){
+public String getPaymentURLIpayy(HttpServletRequest httpServletRequest, Long msisdn){
 	
 	String merchantKey = applicationProperties.getMerchantKey(); // your merchant_key
 	String applicationKey = applicationProperties.getFaltutv_applicationKey(); //your application_key
-	 
-	String requestId = "1"; // unique identifier for each request
-	 
+	String  encryptedString = null;
+	try
+	{
+	//String requestId = "1"; // unique identifier for each request
+	Request request=new Request();
+	
+	request.setMsisdn(msisdn);
+	
+	StringBuffer redirectUrl=httpServletRequest.getRequestURL();
+	redirectUrl.append("?t1=t");
+	@SuppressWarnings("unchecked")
+	Enumeration<String> enumeration= httpServletRequest.getParameterNames();
+	while(enumeration.hasMoreElements()) {
+		String param=enumeration.nextElement();
+		if(httpServletRequest.getParameter(param)!=null && !httpServletRequest.getParameter(param).trim().isEmpty())
+		redirectUrl.append("&"+param +"="+httpServletRequest.getParameter(param));
+	}
+	
+	request.setRedirectURL(redirectUrl.toString());
+	request.setRequestedURL(redirectUrl.toString()); 
+	
+	
+	requestDao.save(request); 
 	//create payment request item 
 	String itemCode="item1";
 	String itemName="item1";
 	String itemPrice="2";
 	String currencyCode="INR";
-	String  encryptedString = null;
-	try
-	{
+	
+	
 	      Map<String, String> parameterMap = new HashMap<String, String>();
 	      parameterMap.put(CryptoUtils.MERCHANT_KEY_PARAM, merchantKey);
 	      parameterMap.put(CryptoUtils.APPLICATION_KEY_PARAM, applicationKey);
@@ -159,18 +178,21 @@ public String getPaymentURLIpayy(HttpServletRequest httpServletRequest){
 	      parameterMap.put(CryptoUtils.ITEM_NAME_PARAM, itemName);
 	      parameterMap.put(CryptoUtils.ITEM_PRICE_PARAM,itemPrice);
 	      parameterMap.put(CryptoUtils.CURRENCY_PARAM, currencyCode);
-	      parameterMap.put(CryptoUtils.REQUEST_TOKEN_PARAM, requestId);
+	      parameterMap.put(CryptoUtils.REQUEST_TOKEN_PARAM, request.getRequestId()+"");
 	 
 	     //Using encryption library to create encryption string
 	      encryptedString = CryptoUtils.getEncryptedString(parameterMap);
 	}
-	catch (CryptoException e)
+	/*catch (CryptoException e)
 	{
 	    // Handle Encryption error
-	}catch (Exception e) {
+	}*/catch (Exception e) {
 		// TODO: handle exception
 	}
-	return encryptedString;
+	
+	String rediURL = applicationProperties.getIpayyBillingURL()+encryptedString;
+	logger.info("ipay billing url:"+rediURL);
+	return rediURL;
 }
 	
 	private String getMD5(String string){
@@ -232,11 +254,11 @@ public String getPaymentURLIpayy(HttpServletRequest httpServletRequest){
 		
 		
 	}
-	public String getipayErrorMessage(Map<String, String> paramaterMap) {
+	public String getipayErrorMessage(String responseCode) {
 		// TODO Auto-generated method stub
-		String ec = paramaterMap.get("ec");
-		String em = paramaterMap.get("em");
-		String errorReason = errorMessages.get(ec);
+		/*String ec = paramaterMap.get("ec");
+		String em = paramaterMap.get("em");*/
+		String errorReason = errorMessages.get(responseCode);
 		return errorReason;
 	}
 }
