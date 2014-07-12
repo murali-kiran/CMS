@@ -132,4 +132,19 @@ public class ServiceKeyPriceDao {
 			throw re;
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ServiceKeyPrice> findByServiceIdAndServiceKey(Integer serviceId,String serviceKeyPrice) {
+		logger.info("finding all ServiceKeyPrice instances");
+		try {
+			final String queryString = "select model from ServiceKeyPrice model where model.serviceKeyPriceKey='"+serviceKeyPrice+"' and model.serviceKey = "+serviceId;
+			Query query = entityManager
+					.createQuery(queryString, ServiceKeyPrice.class);
+			
+			return query.getResultList();
+		} catch (RuntimeException re) {
+			logger.error("find all failed", re);
+			throw re;
+		}
+	}
 }

@@ -64,17 +64,17 @@ public class VdoController {
 	@RequestMapping(value="/service/vdo/{serviceId}",method=RequestMethod.GET)
 	public String getService(Model model,@PathVariable Integer serviceId,HttpServletRequest request,@RequestParam(value="channel", required = false,defaultValue="smd") String channel){
 		
-		String msisdn = commonUtils.getMsisdn(request);
-		//String msisdn = "911234567890";
+	//	String msisdn = commonUtils.getMsisdn(request);
+		String msisdn = "911234567890";
 		
-		if(request.getParameter("detect")==null && msisdn==null ){
+		/*if(request.getParameter("detect")==null && msisdn==null ){
 			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
 			return "redirect:"+msisdnDetectionUrl;
 		}else if(msisdn==null){
 			model.addAttribute("errorMsg", "Unable to detect");
 			return "views/sampleService/errorPage";
-		}
-		
+		} 
+		*/
 		
 		
 		Map<String,String> deviceMap =	commonUtils.getDeviceCapbilities(request);
@@ -110,16 +110,16 @@ public class VdoController {
 	@RequestMapping(value="/vdo/cat/{serviceId}/{catId}",method=RequestMethod.GET)
 	public String getServiceByCategory(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer catId,@RequestParam(value = "channel", required = false,defaultValue="smd") String channel){
 		
-		String msisdn = commonUtils.getMsisdn(request);
-//		String msisdn = "911234567890";
+//		String msisdn = commonUtils.getMsisdn(request);
+		String msisdn = "911234567890";
 		
-		if(request.getParameter("detect")==null && msisdn==null ){
+		/*if(request.getParameter("detect")==null && msisdn==null ){
 			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
 			return "redirect:"+msisdnDetectionUrl;
 		}else if(msisdn==null){
 			model.addAttribute("errorMsg", "Unable to detect");
 			return "errorPage";
-		}
+		}*/
 
 		    int pageCount = Integer.parseInt(serviceLayer.getServiceProprety(serviceId, "pageCount_non_LP"));
 		    pageCount = 6;
@@ -144,16 +144,16 @@ public class VdoController {
 	
 	@RequestMapping(value="/vdo/cat/pageId/pageCount/{serviceId}/{catId}/{pageId}/{pageCount}",method=RequestMethod.GET)
 	public String getServiceByCategorybyPagination(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer catId,@PathVariable Integer pageId,@PathVariable Integer pageCount,@RequestParam(value="channel", required = false,defaultValue="smd") String channel,@RequestParam(value="mediaTypeId",defaultValue="-1") Integer mediaTypeId){
-		String msisdn = commonUtils.getMsisdn(request);
-//		String msisdn = "911234567890";
+		//String msisdn = commonUtils.getMsisdn(request);
+		String msisdn = "911234567890";
 		
-		if(request.getParameter("detect")==null && msisdn==null ){
+		/*if(request.getParameter("detect")==null && msisdn==null ){
 			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
 			return "redirect:"+msisdnDetectionUrl;
 		}else if(msisdn==null){
 			model.addAttribute("errorMsg", "Unable to detect");
 			return "errorPage";
-		}
+		}*/
 		
 
 			Map<String,String> deviceMap =	commonUtils.getDeviceCapbilities(request);
@@ -176,18 +176,18 @@ public class VdoController {
 	public String downloadMedia(HttpServletRequest request,HttpServletResponse response,HttpSession session,Model model,@PathVariable Integer serviceId,@PathVariable Integer mediaId,@PathVariable String serviceKeypriceKey,@RequestParam(value = "channel", required = false,defaultValue="smd") String channel)
 	{
 		
-		String msisdn = commonUtils.getMsisdn(request);
-//		String msisdn = "911234567890";
+	//	String msisdn = commonUtils.getMsisdn(request);
+		String msisdn = "911234567890";
 		
 		 if(channel==null)
 			 channel="smd";
-		if(request.getParameter("detect")==null && msisdn==null ){
+		/*if(request.getParameter("detect")==null && msisdn==null ){
 			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
 			return "redirect:"+msisdnDetectionUrl;
 		}else if(msisdn==null){
 			model.addAttribute("errorMsg", "Unable to detect");
 			return "errorPage";
-		}
+		}*/
 		Boolean isTestMobileNumber = serviceLayer.isTestMobileNumber(msisdn);
 
 		if(!isTestMobileNumber && request.getParameter("responsecode") == null ){
@@ -206,7 +206,7 @@ public class VdoController {
 				if(isTestMobileNumber || responseCode.equals("101")){
 					logger.info("Billing Success");
 					
-					Purchas purchase =	purchaseAndDownloadDao.checkPurchaseRecordExistForToday(Long.parseLong((String)session.getAttribute("msisdn")),mediaId);
+					Purchas purchase =	purchaseAndDownloadDao.checkPurchaseRecordExistForToday(Long.parseLong((String)session.getAttribute("msisdn")),mediaId,null);
 					String remark="";
 					if(isTestMobileNumber)
 						remark="test number";
@@ -214,7 +214,7 @@ public class VdoController {
 						remark="101:SUCCESS";
 					// if purchase is not done for that id
 						if(purchase ==null)
-						purchase =	serviceLayer.savePurchaseAndPurchaseDetails(request,serviceKeyId,channel,msisdn,remark);
+						purchase =	serviceLayer.savePurchaseAndPurchaseDetails(request,serviceKeyId,channel,msisdn,remark,null);
 					    
 				
 					//	return "forward:/service2/dwlFile/"+serviceId+"/"+mediaId+"/"+purchase.getPurchaseId();
@@ -228,7 +228,7 @@ public class VdoController {
 					String remark=responseCode.equals("101")+":"+errorCode;
 					
 		
-					serviceLayer.saveFailPurchaseAndPFailPurchaseDetails(request,serviceKeyId,errorCode,channel,msisdn,remark);
+					serviceLayer.saveFailPurchaseAndPFailPurchaseDetails(request,serviceKeyId,errorCode,channel,msisdn,remark,null);
 					
 					logger.info("Billing Failed due to :"+errorCode);
 				}

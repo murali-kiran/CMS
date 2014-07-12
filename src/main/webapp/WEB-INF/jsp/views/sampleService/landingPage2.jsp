@@ -7,7 +7,7 @@
 function function_callback() {
  // window.alert("new func");
   for (var i = 0; i < arguments.length; i++) {
-  //  window.alert(arguments[i]);
+   // window.alert(arguments[i]);
   }
  // newAjax(arguments[1]);
  //var respCode = arguments[1];
@@ -39,9 +39,8 @@ function newAjax(data1) {
  
 <script type="text/javascript" src="${ipaymsisdnUrl}"> </script>
 
-<div id="resultip">
-	before
-	
+<div id="resultip" style="color:red;font-weight: bold;">
+	${message}
 </div>
 <c:forEach var="categoryMap" items="${mediaInfoMap}">
 
