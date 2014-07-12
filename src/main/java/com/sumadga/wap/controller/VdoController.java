@@ -59,10 +59,13 @@ public class VdoController {
 	@Autowired
 	HttpSession session;
 	
+	
+	
 	@RequestMapping(value="/service/vdo/{serviceId}",method=RequestMethod.GET)
 	public String getService(Model model,@PathVariable Integer serviceId,HttpServletRequest request,@RequestParam(value="channel", required = false,defaultValue="smd") String channel){
 		
 		String msisdn = commonUtils.getMsisdn(request);
+		//String msisdn = "911234567890";
 		
 		if(request.getParameter("detect")==null && msisdn==null ){
 			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
@@ -71,6 +74,8 @@ public class VdoController {
 			model.addAttribute("errorMsg", "Unable to detect");
 			return "views/sampleService/errorPage";
 		}
+		
+		
 		
 		Map<String,String> deviceMap =	commonUtils.getDeviceCapbilities(request);
 
@@ -85,8 +90,12 @@ public class VdoController {
 		//map<cat<id,title>,bean<isMoreMedia's,List<mediaInfo>>>
 		Map<Bean<Integer,MediaGroup>,Bean<Boolean,List<MediaBean>>> mediaInfoMap = serviceLayer.getMediaInfoOfCategories(serviceId,categories,CommonUtils.MEDIA_CONTENT_PRIVIEW,CommonUtils.PRIVIEW_WIDTH,CommonUtils.PRIVIEW_HEIGHT,previewCount);
 		
+		//Map<categoryId,Bean<MediaGroup,ServiceMediaGroup>>
+		Map<Integer,Bean<MediaGroup,ServiceMediaGroup>> categoryMap = serviceLayer.getMediaGroupOfService(serviceId);
+		
 		model.addAttribute("serviceId",serviceId);
 		model.addAttribute("mediaInfoMap", mediaInfoMap);
+		model.addAttribute("mediaGroupMap", categoryMap);
 		model.addAttribute("channel",channel);
 		model.addAttribute("title", "Home");
 		model.addAttribute("previewWidth",deviceMap.get("preview_width"));
@@ -102,6 +111,7 @@ public class VdoController {
 	public String getServiceByCategory(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer catId,@RequestParam(value = "channel", required = false,defaultValue="smd") String channel){
 		
 		String msisdn = commonUtils.getMsisdn(request);
+//		String msisdn = "911234567890";
 		
 		if(request.getParameter("detect")==null && msisdn==null ){
 			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
@@ -135,6 +145,7 @@ public class VdoController {
 	@RequestMapping(value="/vdo/cat/pageId/pageCount/{serviceId}/{catId}/{pageId}/{pageCount}",method=RequestMethod.GET)
 	public String getServiceByCategorybyPagination(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer catId,@PathVariable Integer pageId,@PathVariable Integer pageCount,@RequestParam(value="channel", required = false,defaultValue="smd") String channel,@RequestParam(value="mediaTypeId",defaultValue="-1") Integer mediaTypeId){
 		String msisdn = commonUtils.getMsisdn(request);
+//		String msisdn = "911234567890";
 		
 		if(request.getParameter("detect")==null && msisdn==null ){
 			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
@@ -166,6 +177,7 @@ public class VdoController {
 	{
 		
 		String msisdn = commonUtils.getMsisdn(request);
+//		String msisdn = "911234567890";
 		
 		 if(channel==null)
 			 channel="smd";

@@ -157,6 +157,30 @@ public class ServiceLayer {
 
 		return beans;
 	}
+	
+	
+public Map<Integer,Bean<MediaGroup,ServiceMediaGroup>> getMediaGroupOfService(int serviceId){
+		
+		List<ServiceMediaGroup> categories =  serviceMediaGroupDao.findByProperty("service",serviceId);
+
+		//Map<categoryId,Bean<category,ServiceMediaGroup>>
+		
+		Map<Integer,Bean<MediaGroup,ServiceMediaGroup>> map = new HashMap<Integer,Bean<MediaGroup,ServiceMediaGroup>>();
+		
+		for(ServiceMediaGroup serviceMediaGroup  : categories){
+			
+			Bean<MediaGroup,ServiceMediaGroup> innerBean = new Bean<MediaGroup,ServiceMediaGroup>();
+			
+			MediaGroup mediaGroup =	mediaGroupDao.findById(serviceMediaGroup.getMediaGroupId());
+			
+			innerBean.setId(mediaGroup);
+			innerBean.setName(serviceMediaGroup);
+			
+			map.put(serviceMediaGroup.getMediaGroupId(), innerBean);
+		}
+
+		return map;
+	}
 
 	public List<MediaGroupMedia>	getMediaByCategoryId(int categoryId){
 
@@ -245,6 +269,8 @@ public class ServiceLayer {
 		for(Bean<Integer,Bean<MediaGroup,ServiceMediaGroup>> category : categories){
 
 			int serviceKeyId = category.getName().getName().getServiceKeyId();
+			int isSpecialCategory = category.getName().getName().getIsSpecialMediaGroup();
+			
 			List<MediaBean> mediaBeans = mediaGroupMediaDao.getMediaInfoOfMediaGroup(category.getId(),mediaContentPurposeId,serviceKeyId,width,height);
 			List<MediaSubGroup>  mediaSubGroups = mediaSubGroupDao.findByProperty("parentMediaGroup",category.getId());
 
