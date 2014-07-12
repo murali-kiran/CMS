@@ -281,7 +281,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 				Boolean isTestMobileNumber = false;
 				if(msisdn != null)
 					isTestMobileNumber = serviceLayer.isTestMobileNumber(msisdn);
-				int serviceKeyId = Integer.parseInt(request.getParameter("servicKeyId"));
+				int serviceKeyId = Integer.parseInt(request.getParameter("serviceKeyId"));
 				Map<String,String> map = RequestUtil.INSTANCE.dumpRequestScope(request);
 				String responseCode = map.get("responsecode");
 				/*Map<String,String> map =	RequestUtil.INSTANCE.dumpRequestScope(request);
@@ -344,6 +344,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 	public String getServiceByCategory(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer catId,@RequestParam(value = "channel", required = false,defaultValue="smd") String channel){
 		
 		//String msisdn = commonUtils.getMsisdn(request);
+		String serviceKeyId = request.getParameter("serviceKeyId");
 		HttpSession session = request.getSession();
 		String msisdn = (String)session.getAttribute("msisdn");
 		String respCode = request.getParameter("respCode");
@@ -384,7 +385,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 			model.addAttribute("channel",channel);
 			model.addAttribute("previewWidth",deviceMap.get("preview_width"));
 			model.addAttribute("previewHeight",deviceMap.get("preview_height"));
-		
+			model.addAttribute("serviceKeyId",serviceKeyId);
 		return "service2CategoryPage";
 	}
 	
@@ -400,6 +401,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 			model.addAttribute("errorMsg", "Unable to detect");
 			return "errorPage";
 		}*/
+		String serviceKeyId = request.getParameter("serviceKeyId");
 		HttpSession session = request.getSession();
 		String msisdn = (String)session.getAttribute("msisdn");
 		String respCode = request.getParameter("respCode");
@@ -429,7 +431,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 			model.addAttribute("channel",channel);
 			model.addAttribute("previewWidth",deviceMap.get("preview_width"));
 			model.addAttribute("previewHeight",deviceMap.get("preview_height"));
-			
+			model.addAttribute("serviceKeyId",serviceKeyId);
 		
 		return "service2CategoryPage";
 	}
@@ -437,6 +439,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 	@RequestMapping(value="/service2/cat/pageId/pageCount/{serviceId}/{catId}/{pageId}/{pageCount}",method=RequestMethod.GET)
 	public String getServiceByCategorybyPagination(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer catId,@PathVariable Integer pageId,@PathVariable Integer pageCount,@RequestParam(value="channel", required = false,defaultValue="smd") String channel){
 		HttpSession session = request.getSession();
+		String serviceKeyId = request.getParameter("serviceKeyId");
 		String msisdn = (String)session.getAttribute("msisdn");
 		String respCode = request.getParameter("respCode");
 		if(msisdn == null && respCode != null){
@@ -473,7 +476,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 			model.addAttribute("channel",channel);
 			model.addAttribute("previewWidth",deviceMap.get("preview_width"));
 			model.addAttribute("previewHeight",deviceMap.get("preview_height"));
-		
+			model.addAttribute("serviceKeyId",serviceKeyId);
 		return "service2CategoryPage";
 	}
 	

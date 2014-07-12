@@ -51,9 +51,11 @@ function newAjax(data1) {
 	
 	<c:forEach var="mediaInfo" items="${media.name}">
 		<div style="width: 33%;float: left;text-align: center;margin: 2px 0px 2px;">
-		
+		<c:set var="serkeyid" value="${mediaInfo.serviceKeyId}" />
+	    
 	   <c:choose>
 	    <c:when test="${mediaInfo.isSubMediaGroup eq true}">
+	    
   		<a href="${pageContext.servletContext.contextPath}/service2/cat/${serviceId}/${mediaInfo.mediagroupParentId}/${mediaInfo.mediagroupId}?channel=${channel}">
   		<div>${mediaInfo.mediaName}</div>
   		<div>
@@ -68,7 +70,7 @@ function newAjax(data1) {
   		<div>${mediaInfo.mediaName}</div>
   		<div>
   		
-  		<a href="<c:url value="/service2/dwl/${serviceId}/${mediaInfo.mediaId}/${mediaInfo.serviceKeypriceKey}?channel=${channel}&servicKeyId=${mediaInfo.serviceKeyId}"/>">
+  		<a href="<c:url value="/service2/dwl/${serviceId}/${mediaInfo.mediaId}/${mediaInfo.serviceKeypriceKey}?channel=${channel}&serviceKeyId=${mediaInfo.serviceKeyId}"/>">
 		<img alt="noImage" src="${mediaInfo.storagePath}"
 					width="${previewWidth}" height="${previewHeight}">
 		</a>			
@@ -87,7 +89,7 @@ function newAjax(data1) {
 	<br/>
 	<div style="width: 100%;text-align: right;">
 	<c:if test="${media.id eq true}">
-	&nbsp;<a href="${pageContext.servletContext.contextPath}/service2/cat/${serviceId}/${category.id}?channel=${channel}">More</a>&nbsp;
+	&nbsp;<a href="${pageContext.servletContext.contextPath}/service2/cat/${serviceId}/${category.id}?channel=${channel}&serviceKeyId=${serkeyid}">More</a>&nbsp;
 	</c:if>
 	</div>
 	
