@@ -15,7 +15,7 @@ public class ApplicationProperties {
 	private String passwordOtherAPI;
 	private String urlOtherAPI;
 	private String secretKeyOtherAPI;
-	
+	private String ipayyMsisdnURL;
 	//Ipayy
 	private String merchantKey;
 	private String faltutv_applicationKey;
@@ -129,6 +129,12 @@ public class ApplicationProperties {
 	}
 	public void setSecretKeyOtherAPI(String secretKeyOtherAPI) {
 		this.secretKeyOtherAPI = secretKeyOtherAPI;
+	}
+	public String getIpayyMsisdnURL() {
+		return ipayyMsisdnURL;
+	}
+	public void setIpayyMsisdnURL(String ipayyMsisdnURL) {
+		this.ipayyMsisdnURL = ipayyMsisdnURL;
 	}
 
 }

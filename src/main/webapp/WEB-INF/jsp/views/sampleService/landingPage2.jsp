@@ -1,4 +1,48 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+ <head>
+<script src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
+      <script src="http://code.jquery.com/mobile/1.0a4/jquery.mobile-1.0a4.min.js"></script>
+      </head>
+<script>
+function function_callback() {
+ // window.alert("new func");
+  for (var i = 0; i < arguments.length; i++) {
+  //  window.alert(arguments[i]);
+  }
+ // newAjax(arguments[1]);
+ //var respCode = arguments[1];
+ var respCode = arguments[1];
+ var a = document.getElementsByTagName('a');
+//alert("before forloop");
+ for (var idx= 0; idx < a.length; ++idx){
+	// alert("inside forloop");
+   var x = a[idx].href;
+   a[idx].href = x + "&respCode="+respCode;
+   
+ }
+}
+function newAjax(data1) {
+	window.alert(data1);
+	$.ajax({
+        type: "POST",
+        url: "http://49.50.68.139:8080/Wap/temp/temp.jsp",
+        data: ({name: data1}),
+        cache: false,
+        dataType: "text",
+        success: function(msg){
+            $('#resultip').html(msg);
+        }
+      });
+}
+
+</script>
+ 
+<script type="text/javascript" src="${ipaymsisdnUrl}"> </script>
+
+<div id="resultip">
+	before
+	
+</div>
 <c:forEach var="categoryMap" items="${mediaInfoMap}">
 
 	<c:set var="category" scope="request" value="${categoryMap.key}" />

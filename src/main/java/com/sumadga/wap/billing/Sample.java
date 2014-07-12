@@ -12,9 +12,10 @@ public class Sample {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		getMD5("f2543951365f4d608ec212ff9b21ad91"+"test_4");
+		//getMD5("f2543951365f4d608ec212ff9b21ad91"+"test_4");
 		
-		
+		BillingUtils billingUtils = new BillingUtils();
+		//System.out.println(":"+billingUtils.getIpayMsisdnDetectionUrl());
 	}
 
 	

@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,7 +78,7 @@ public class HomeController extends BaseController{
 	@RequestMapping(value="/service/{serviceId}",method=RequestMethod.GET)
 	public String getService(Model model,@PathVariable Integer serviceId,HttpServletRequest request,@RequestParam(value="channel", required = false,defaultValue="smd") String channel){
 		
-		String msisdn = commonUtils.getMsisdn(request);
+	//	String msisdn = commonUtils.getMsisdn(request);
 		
 		if(channel==null)
 			 channel="smd";
@@ -86,7 +87,7 @@ public class HomeController extends BaseController{
 			 	String[] s=channel.split(",");
 			 	channel=s[0];
 			 }
-		if(serviceId != 2){
+		/*if(serviceId != 2){
 		if(request.getParameter("detect")==null && msisdn==null ){
 			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
 			return "redirect:"+msisdnDetectionUrl;
@@ -94,13 +95,23 @@ public class HomeController extends BaseController{
 			model.addAttribute("errorMsg", "Unable to detect");
 			return "views/sampleService/errorPage";
 		}
+		}*/
+		HttpSession session = request.getSession();
+		String msisdn = (String)session.getAttribute("msisdn");
+		String respCode = request.getParameter("respCode");
+		if(msisdn == null && respCode != null){
+			setMesisdnOperator(respCode, request);
+		}
+		else{
+			logger.info("Unable to detect msisdn");
+			//return "forward:/service/"+serviceId+"?channel="+channel;
 		}
 		
 		
 		Map<String,String> deviceMap =	getDeviceCapbilities(request);
 
-		session.setAttribute("msisdn", msisdn);
-		session.setAttribute("operator", request.getParameter("operator"));
+		String ms = (String) session.getAttribute("msisdn");
+		String op = (String) session.getAttribute("operator");
 		
 		int previewCount = Integer.parseInt(serviceLayer.getServiceProprety(serviceId, "pageCount_LP"));
 		
@@ -109,14 +120,23 @@ public class HomeController extends BaseController{
 		
 		//map<cat<id,title>,bean<isMoreMedia's,List<mediaInfo>>>
 		Map<Bean<Integer,String>,Bean<Boolean,List<MediaBean>>> mediaInfoMap = serviceLayer.getMediaInfoOfCategoriesForLandingPage(serviceId,categories,CommonUtils.MEDIA_CONTENT_PRIVIEW,CommonUtils.PRIVIEW_WIDTH,CommonUtils.PRIVIEW_HEIGHT,previewCount);
-		
+		String msisdnDetectionUrl = null;
+		if(ms == null || op==null){
+			
+			Request request2 = new Request();
+			request2.setRequestedURL(request.getRequestURL().toString());
+			request2.setRedirectURL("msisdn_det");
+			requestDao.save(request2);
+			msisdnDetectionUrl = billingUtils.getIpayMsisdnDetectionUrl(request2.getRequestId());
+		}
+		System.out.println("ms"+msisdnDetectionUrl);
 		model.addAttribute("serviceId",serviceId);
 		model.addAttribute("mediaInfoMap", mediaInfoMap);
 		model.addAttribute("channel",channel);
 		model.addAttribute("title", "Home");
 		model.addAttribute("previewWidth",deviceMap.get("preview_width"));
 		model.addAttribute("previewHeight",deviceMap.get("preview_height"));
-		
+		model.addAttribute("ipaymsisdnUrl",msisdnDetectionUrl);
 		
 		return "landingPage2";
 		
@@ -235,7 +255,14 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 			model.addAttribute("billingModel", billingModel);
 			return "views/sampleService/billingModel";
 			}else {*/
-				String msisdn = commonUtils.getMsisdn(request);
+			String msisdn = null;
+			if(session.getAttribute("msisdn") == null && session.getAttribute("operator") == null){
+				String msisdnRespCode = request.getParameter("respCode");
+				msisdn = setMesisdnOperator(msisdnRespCode, request);
+			}else{
+				msisdn = (String) session.getAttribute("msisdn");
+			}
+				//String msisdn = request.getSession().
 				Boolean isTestMobileNumber = false;
 				if(msisdn != null)
 					isTestMobileNumber = serviceLayer.isTestMobileNumber(msisdn);
@@ -248,15 +275,15 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 				Long msisdnLong = 0L;
 				if(msisdn != null)
 					msisdnLong = Long.parseLong(msisdn);
-				if(!isTestMobileNumber && request.getParameter("responsecode") == null ){
+				if(msisdn != null){
+				Purchas purchase =	purchaseAndDownloadDao.checkPurchaseRecordExistForToday(Long.parseLong((String)session.getAttribute("msisdn")),mediaId);
+				if(!isTestMobileNumber && request.getParameter("responsecode") == null && purchase == null){
 					String billingURL = billingUtils.getPaymentURLIpayy(request, msisdnLong);
 					logger.info("ipay billing url:"+billingURL);
 					return "redirect:"+billingURL;
 				}
-				if(isTestMobileNumber || responseCode.equals("101")){
+				if(isTestMobileNumber || responseCode.equals("101") || purchase != null){
 					logger.info("Billing Success");
-					
-					Purchas purchase =	purchaseAndDownloadDao.checkPurchaseRecordExistForToday(Long.parseLong((String)session.getAttribute("msisdn")),mediaId);
 					String remark="";
 					if(isTestMobileNumber)
 						remark="test number";
@@ -276,12 +303,16 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 				}else{
 					String errorCode = billingUtils.getipayErrorMessage(responseCode);
 					String remark=responseCode.equals("101")+":"+errorCode;
-					
-					serviceLayer.saveFailPurchaseAndPFailPurchaseDetails(request,serviceKeyId,errorCode,channel,msisdn,remark);
-					
+					if(msisdn != null)
+						serviceLayer.saveFailPurchaseAndPFailPurchaseDetails(request,serviceKeyId,errorCode,channel,msisdn,remark);
 					logger.info("Billing Failed due to :"+errorCode);
 				}
 				return "forward:/service/"+serviceId+"?channel="+channel+"&msisdn="+msisdn+"&operator="+session.getAttribute("operator").toString();
+				}
+				else{
+					logger.info("unable to detect MSISDN");
+					return "forward:/service/"+serviceId+"?channel="+channel.toString();
+				}
 				
 	}
 
@@ -289,8 +320,17 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 	@RequestMapping(value="/service2/cat/{serviceId}/{catId}",method=RequestMethod.GET)
 	public String getServiceByCategory(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer catId,@RequestParam(value = "channel", required = false,defaultValue="smd") String channel){
 		
-		String msisdn = commonUtils.getMsisdn(request);
-		
+		//String msisdn = commonUtils.getMsisdn(request);
+		HttpSession session = request.getSession();
+		String msisdn = (String)session.getAttribute("msisdn");
+		String respCode = request.getParameter("respCode");
+		if(msisdn == null && respCode != null){
+			setMesisdnOperator(respCode, request);
+		}
+		else{
+			logger.info("Unable to detect msisdn");
+			return "forward:/service/"+serviceId+"?channel="+channel;
+		}
 		if(channel==null)
 			 channel="smd";
 		 else if(channel.contains(","))
@@ -299,13 +339,14 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 			 	channel=s[0];
 			 }
 		
-		if(request.getParameter("detect")==null && msisdn==null ){
+		/*if(request.getParameter("detect")==null && msisdn==null ){
 			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
 			return "redirect:"+msisdnDetectionUrl;
 		}else if(msisdn==null){
 			model.addAttribute("errorMsg", "Unable to detect");
 			return "errorPage";
-		}
+		}*/
+		
 
 		    int pageCount = Integer.parseInt(serviceLayer.getServiceProprety(serviceId, "pageCount_non_LP"));
 		    Map<String,String> deviceMap =	getDeviceCapbilities(request);
@@ -327,7 +368,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 	@RequestMapping(value="/service2/cat/{serviceId}/{parentCatId}/{catId}",method=RequestMethod.GET)
 	public String getServiceBySubCategory(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer parentCatId,@PathVariable Integer catId,@RequestParam(value="channel", required = false,defaultValue="smd") String channel){
 		
-		String msisdn = commonUtils.getMsisdn(request);
+		/*String msisdn = commonUtils.getMsisdn(request);
 		
 		if(request.getParameter("detect")==null && msisdn==null ){
 			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
@@ -335,8 +376,17 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 		}else if(msisdn==null){
 			model.addAttribute("errorMsg", "Unable to detect");
 			return "errorPage";
+		}*/
+		HttpSession session = request.getSession();
+		String msisdn = (String)session.getAttribute("msisdn");
+		String respCode = request.getParameter("respCode");
+		if(msisdn == null && respCode != null){
+			setMesisdnOperator(respCode, request);
 		}
-
+		else{
+			logger.info("Unable to detect msisdn");
+			return "forward:/service/"+serviceId+"?channel="+channel;
+		}//
 		if(channel==null)
 			 channel="smd";
 		 else if(channel.contains(","))
@@ -363,15 +413,25 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 	
 	@RequestMapping(value="/service2/cat/pageId/pageCount/{serviceId}/{catId}/{pageId}/{pageCount}",method=RequestMethod.GET)
 	public String getServiceByCategorybyPagination(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer catId,@PathVariable Integer pageId,@PathVariable Integer pageCount,@RequestParam(value="channel", required = false,defaultValue="smd") String channel){
-		String msisdn = commonUtils.getMsisdn(request);
+		HttpSession session = request.getSession();
+		String msisdn = (String)session.getAttribute("msisdn");
+		String respCode = request.getParameter("respCode");
+		if(msisdn == null && respCode != null){
+			setMesisdnOperator(respCode, request);
+		}
+		else{
+			logger.info("Unable to detect msisdn");
+			return "forward:/service/"+serviceId+"?channel="+channel;
+		}
+			
 		
-		if(request.getParameter("detect")==null && msisdn==null ){
+		/*if(request.getParameter("detect")==null && msisdn==null ){
 			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
 			return "redirect:"+msisdnDetectionUrl;
 		}else if(msisdn==null){
 			model.addAttribute("errorMsg", "Unable to detect");
 			return "errorPage";
-		}
+		}*/
 		if(channel==null)
 			 channel="smd";
 		 else if(channel.contains(","))
@@ -463,16 +523,18 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 		  Map<String, String> paramaterMap = CryptoUtils.getDecryptedString(encryptedString);
 		 System.out.println(paramaterMap );
 		
-		 
+		String msisdn = paramaterMap.get("mn");
+		String operator = paramaterMap.get("op");
 		HttpSession httpSession = request.getSession();
-		httpSession.setAttribute("msisdn", paramaterMap.get("mn"));
-		httpSession.setAttribute("operator", request.getParameter("op"));
+		if(session.getAttribute("msisdn") == null)
+			httpSession.setAttribute("msisdn", paramaterMap.get("mn"));
+		if(session.getAttribute("msisdn") == null)
+			httpSession.setAttribute("operator", request.getParameter("op"));
 		
 		String billingStatus = paramaterMap.get("ts");
 		String failureReason = paramaterMap.get("tf");
 		String requestId = paramaterMap.get("r");
-		String msisdn = paramaterMap.get("mn");
-		String operator = paramaterMap.get("op");
+		
 		httpSession.setAttribute("msisdn", msisdn);
 		httpSession.setAttribute("operator", operator);
 		String responseCode = null;
@@ -512,13 +574,13 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 		else
 			redirectUrl=redirectUrl+"?responsecode="+responseCode;
 		
-		redirectUrl=redirectUrl.replaceAll("&msisdn=", "&msisdn1=");
+		/*redirectUrl=redirectUrl.replaceAll("&msisdn=", "&msisdn1=");
 		if(request.getParameter("msisdn")!=null && !paramaterMap.get("mn").trim().isEmpty() && !paramaterMap.get("mn").trim().equalsIgnoreCase("null"))
 			redirectUrl=redirectUrl+"&msisdn="+paramaterMap.get("mn");
 		else if(req.getMsisdn()!=null)
 			redirectUrl=redirectUrl+"&msisdn="+req.getMsisdn();
 		if(request.getParameter("operator")!=null)
-			redirectUrl=redirectUrl+"&operator="+paramaterMap.get("op");
+			redirectUrl=redirectUrl+"&operator="+paramaterMap.get("op");*/
 		
 		return "redirect:"+redirectUrl;
 		}
@@ -531,5 +593,25 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 		}
 		return "";//return to home page
 	}
-	
+	private String setMesisdnOperator(String respCode,HttpServletRequest request){
+	//	String x = (String)request.getAttribute("name");
+		logger.info("response data:"+respCode);
+		try {
+			if(respCode != null){
+				HttpSession httpSession = request.getSession();
+				Map<String, String> paramaterMap = CryptoUtils.getDecryptedString(respCode);
+				logger.info("msisdn:"+paramaterMap.get("mn")+" operator:"+paramaterMap.get("op"));
+				httpSession.setAttribute("msisdn", paramaterMap.get("mn"));
+				httpSession.setAttribute("operator", paramaterMap.get("op"));
+				return paramaterMap.get("mn");
+			}
+		} catch (CryptoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

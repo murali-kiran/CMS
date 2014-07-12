@@ -261,4 +261,30 @@ public String getPaymentURLIpayy(HttpServletRequest httpServletRequest, Long msi
 		String errorReason = errorMessages.get(responseCode);
 		return errorReason;
 	}
+
+	public String getIpayMsisdnDetectionUrl(Long requestId) {
+		// TODO Auto-generated method stub
+		applicationProperties.getIpayyMsisdnURL();
+		String merchantKey = applicationProperties.getMerchantKey(); // your merchant_key
+		String applicationKey = applicationProperties.getFaltutv_applicationKey();
+		String msisdnDetUrl = applicationProperties.getIpayyMsisdnURL();
+		
+		Map<String, String> parameterMap = new HashMap<String, String>();
+	      parameterMap.put(CryptoUtils.MERCHANT_KEY_PARAM, merchantKey);
+	      parameterMap.put(CryptoUtils.APPLICATION_KEY_PARAM, applicationKey);
+	     
+	      parameterMap.put(CryptoUtils.CALLBACK_FUNCTION_PARAM, "function_callback");
+	      parameterMap.put(CryptoUtils.REQUEST_TOKEN_PARAM, requestId+"");
+	 
+	     //Using encryption library to create encryption string
+	      String encryptedString="";
+		try {
+			encryptedString = msisdnDetUrl+CryptoUtils.getEncryptedString(parameterMap);
+		} catch (CryptoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		logger.info("call back msisdn"+encryptedString);
+		return encryptedString;
+	}
 }
