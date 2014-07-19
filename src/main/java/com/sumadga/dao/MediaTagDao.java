@@ -152,13 +152,23 @@ public class MediaTagDao {
 		try {
 			
 			
-			final String queryString = "select media.id,media.title,media.path,media.servicekeyId,media.serviceKeyPriceId,media.price,media.serviceKeyPriceKey  "
+/*			final String queryString = "select media.id,media.title,media.path,media.servicekeyId,media.serviceKeyPriceId,media.price,media.serviceKeyPriceKey  "
 					+ "from (SELECT distinct m.media_id as id, m.media_title as title , mc.storage_path as path , skp.service_key_id as servicekeyId, skp.service_key_price_id as serviceKeyPriceId, "
 					+ "skp.price as price, skp.service_key_price_key as serviceKeyPriceKey FROM media_group_media mgm join service_media_groups smg join service_key_prices skp   JOIN  media m  JOIN  media_contents mc JOIN "
 					+ "media_specifications ms on smg.service_id = :serviceId and  mgm.`media_group_id` = smg.`media_group_id`  and mgm.media_id  = m.media_id and skp.service_key_id = smg.service_key_id  AND  mc.media_id = mgm.media_id AND mc.media_specification_id = ms.media_specification_id  "
 					+ "AND ms.width = :width  AND ms.height = :height  AND  ms.media_content_purpose_id = :purposeId) as media join (SELECT  distinct mt.media_id  as mediaId FROM tags t  join media_tags mt on t.tag_name like :tagName and t.tag_id = mt.tag_id ) as k on k.mediaId = media.id group by media.id,media.title,"
 					+ " media.servicekeyId,media.serviceKeyPriceId,media.price,media.serviceKeyPriceKey order by media.id";
-			Query query = entityManager.createNativeQuery(queryString);
+*/			
+			
+			
+			
+			final String queryString1 = "SELECT distinct m.media_id as id,m.media_title as title , mc.storage_path as path , skp.service_key_id as servicekeyId, skp.service_key_price_id "
+					+ "as serviceKeyPriceId, skp.price as price, skp.service_key_price_key as serviceKeyPriceKey FROM media_group_media mgm join service_media_groups smg join "
+					+ "service_key_prices skp   JOIN  media m  JOIN  media_contents mc JOIN media_specifications ms on smg.service_id = :serviceId and  mgm.`media_group_id` = smg.`media_group_id` "
+					+ " and mgm.media_id  = m.media_id and skp.service_key_id = smg.service_key_id  AND  mc.media_id = mgm.media_id AND mc.media_specification_id = ms.media_specification_id  "
+					+ "AND ms.width = :width  AND ms.height = :height  AND  ms.media_content_purpose_id = :purposeId and ( m.media_name like :tagName or  m.media_title like :tagName )";
+			
+			Query query = entityManager.createNativeQuery(queryString1);
 			
 			query.setParameter("serviceId", serviceKeyId);
 			query.setParameter("width", width);
@@ -210,4 +220,3 @@ public class MediaTagDao {
 
 	
 }
-
