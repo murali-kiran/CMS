@@ -42,6 +42,8 @@ public class FailPurchas implements Serializable {
 	private Timestamp modifiedTime;
 
 	private BigInteger msisdn;
+	
+	private String identifier;
 
 	@Column(name="network_id")
 	private int networkId;
@@ -183,5 +185,13 @@ public class FailPurchas implements Serializable {
 
 		return failPurchaseDetail;
 	}*/
+
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
 
 }

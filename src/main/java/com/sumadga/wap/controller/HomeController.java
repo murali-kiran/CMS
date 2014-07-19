@@ -15,7 +15,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,18 +22,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.sumadga.dao.MediaDao;
 import com.sumadga.dao.PurchaseAndDownloadDao;
 import com.sumadga.dao.RequestDao;
 import com.sumadga.dao.ResponsDao;
+import com.sumadga.dao.ServiceKeyPriceDao;
+import com.sumadga.dto.Media;
 import com.sumadga.dto.Purchas;
 import com.sumadga.dto.Request;
 import com.sumadga.dto.Respons;
+import com.sumadga.dto.ServiceKeyPrice;
 import com.sumadga.dto.ServiceMediaGroup;
 import com.sumadga.utils.ApplicationProperties;
 import com.sumadga.utils.CommonUtils;
 import com.sumadga.utils.DownloadFile;
 import com.sumadga.utils.RequestUtil;
-import com.sumadga.wap.billing.BillingModel;
 import com.sumadga.wap.billing.BillingUtils;
 import com.sumadga.wap.model.Bean;
 import com.sumadga.wap.model.MediaBean;
@@ -74,6 +76,12 @@ public class HomeController extends BaseController{
 	
 	@Autowired
 	HttpSession session;
+	
+	@Autowired
+	MediaDao mediaDao;
+	
+	@Autowired
+	ServiceKeyPriceDao serviceKeyPriceDao;
 
 	@RequestMapping(value="/service/{serviceId}",method=RequestMethod.GET)
 	public String getService(Model model,@PathVariable Integer serviceId,HttpServletRequest request,@RequestParam(value="channel", required = false,defaultValue="smd") String channel){
@@ -256,18 +264,25 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 			return "views/sampleService/billingModel";
 			}else {*/
 			String msisdn = null;
-			if(session.getAttribute("msisdn") == null && session.getAttribute("operator") == null){
+			String identifier = null;
+			
+			if(session.getAttribute("msisdn") == null && session.getAttribute("operator") == null && session.getAttribute("identifier") == null){
 				String msisdnRespCode = request.getParameter("respCode");
 				msisdn = setMesisdnOperator(msisdnRespCode, request);
-			}else{
+			}else if(session.getAttribute("msisdn") != null){
 				msisdn = (String) session.getAttribute("msisdn");
+			}else if(session.getAttribute("identifier") != null){
+				identifier = (String) session.getAttribute("identifier");
+			} else if (session.getAttribute("identifier") == null){
+				identifier = request.getParameter("respCode");
 			}
 				//String msisdn = request.getSession().
+			logger.info("msisdn:"+msisdn+" identifier:"+identifier+ " operator :");
 				Boolean isTestMobileNumber = false;
 				if(msisdn != null)
 					isTestMobileNumber = serviceLayer.isTestMobileNumber(msisdn);
-				int serviceKeyId = Integer.parseInt(request.getParameter("servicKeyId"));
-				Map<String,String> map =	RequestUtil.INSTANCE.dumpRequestScope(request);
+				int serviceKeyId = Integer.parseInt(request.getParameter("serviceKeyId"));
+				Map<String,String> map = RequestUtil.INSTANCE.dumpRequestScope(request);
 				String responseCode = map.get("responsecode");
 				/*Map<String,String> map =	RequestUtil.INSTANCE.dumpRequestScope(request);
 				logger.info(map);
@@ -275,14 +290,20 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 				Long msisdnLong = 0L;
 				if(msisdn != null)
 					msisdnLong = Long.parseLong(msisdn);
-				if(msisdn != null){
-				Purchas purchase =	purchaseAndDownloadDao.checkPurchaseRecordExistForToday(Long.parseLong((String)session.getAttribute("msisdn")),mediaId);
+				if(msisdn != null || identifier != null){
+				Purchas purchase =	purchaseAndDownloadDao.checkPurchaseRecordExistForToday(msisdnLong,mediaId, identifier);
 				if(!isTestMobileNumber && request.getParameter("responsecode") == null && purchase == null){
-					String billingURL = billingUtils.getPaymentURLIpayy(request, msisdnLong);
+					
+					Media media=mediaDao.findById(mediaId);
+					 List<ServiceKeyPrice> keyPrices=serviceKeyPriceDao.findByServiceIdAndServiceKey(serviceId, serviceKeypriceKey);
+					Integer price=1;
+					if(!keyPrices.isEmpty())
+					price=(int)keyPrices.get(0).getPrice();
+					String billingURL = billingUtils.getPaymentURLIpayy(request, msisdnLong,price+"",mediaId+"",media.getMediaTitle());
 					logger.info("ipay billing url:"+billingURL);
 					return "redirect:"+billingURL;
 				}
-				if(isTestMobileNumber || responseCode.equals("101") || purchase != null){
+				if(isTestMobileNumber || ( responseCode!=null && responseCode.equals("101") ) || purchase != null){
 					logger.info("Billing Success");
 					String remark="";
 					if(isTestMobileNumber)
@@ -291,7 +312,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 						remark="101:SUCCESS";
 					// if purchase is not done for that id
 						if(purchase ==null)
-						purchase =	serviceLayer.savePurchaseAndPurchaseDetails(request,serviceKeyId,channel,msisdn,remark);
+						purchase =	serviceLayer.savePurchaseAndPurchaseDetails(request,serviceKeyId,channel,msisdn,remark,identifier);
 					    
 				
 					//	return "forward:/service2/dwlFile/"+serviceId+"/"+mediaId+"/"+purchase.getPurchaseId();
@@ -303,14 +324,16 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 				}else{
 					String errorCode = billingUtils.getipayErrorMessage(responseCode);
 					String remark=responseCode.equals("101")+":"+errorCode;
-					if(msisdn != null)
-						serviceLayer.saveFailPurchaseAndPFailPurchaseDetails(request,serviceKeyId,errorCode,channel,msisdn,remark);
+					if(msisdn != null || identifier != null)
+						serviceLayer.saveFailPurchaseAndPFailPurchaseDetails(request,serviceKeyId,errorCode,channel,msisdn,remark, identifier);
 					logger.info("Billing Failed due to :"+errorCode);
+					model.addAttribute("message", errorCode);
 				}
-				return "forward:/service/"+serviceId+"?channel="+channel+"&msisdn="+msisdn+"&operator="+session.getAttribute("operator").toString();
+				return "forward:/service/"+serviceId+"?channel="+channel;
 				}
 				else{
 					logger.info("unable to detect MSISDN");
+					model.addAttribute("message", "Unable to detect MSISDN");
 					return "forward:/service/"+serviceId+"?channel="+channel.toString();
 				}
 				
@@ -321,6 +344,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 	public String getServiceByCategory(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer catId,@RequestParam(value = "channel", required = false,defaultValue="smd") String channel){
 		
 		//String msisdn = commonUtils.getMsisdn(request);
+		String serviceKeyId = request.getParameter("serviceKeyId");
 		HttpSession session = request.getSession();
 		String msisdn = (String)session.getAttribute("msisdn");
 		String respCode = request.getParameter("respCode");
@@ -361,7 +385,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 			model.addAttribute("channel",channel);
 			model.addAttribute("previewWidth",deviceMap.get("preview_width"));
 			model.addAttribute("previewHeight",deviceMap.get("preview_height"));
-		
+			model.addAttribute("serviceKeyId",serviceKeyId);
 		return "service2CategoryPage";
 	}
 	
@@ -377,6 +401,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 			model.addAttribute("errorMsg", "Unable to detect");
 			return "errorPage";
 		}*/
+		String serviceKeyId = request.getParameter("serviceKeyId");
 		HttpSession session = request.getSession();
 		String msisdn = (String)session.getAttribute("msisdn");
 		String respCode = request.getParameter("respCode");
@@ -406,7 +431,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 			model.addAttribute("channel",channel);
 			model.addAttribute("previewWidth",deviceMap.get("preview_width"));
 			model.addAttribute("previewHeight",deviceMap.get("preview_height"));
-			
+			model.addAttribute("serviceKeyId",serviceKeyId);
 		
 		return "service2CategoryPage";
 	}
@@ -414,6 +439,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 	@RequestMapping(value="/service2/cat/pageId/pageCount/{serviceId}/{catId}/{pageId}/{pageCount}",method=RequestMethod.GET)
 	public String getServiceByCategorybyPagination(HttpServletRequest request,Model model,@PathVariable Integer serviceId,@PathVariable Integer catId,@PathVariable Integer pageId,@PathVariable Integer pageCount,@RequestParam(value="channel", required = false,defaultValue="smd") String channel){
 		HttpSession session = request.getSession();
+		String serviceKeyId = request.getParameter("serviceKeyId");
 		String msisdn = (String)session.getAttribute("msisdn");
 		String respCode = request.getParameter("respCode");
 		if(msisdn == null && respCode != null){
@@ -450,7 +476,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 			model.addAttribute("channel",channel);
 			model.addAttribute("previewWidth",deviceMap.get("preview_width"));
 			model.addAttribute("previewHeight",deviceMap.get("preview_height"));
-		
+			model.addAttribute("serviceKeyId",serviceKeyId);
 		return "service2CategoryPage";
 	}
 	
@@ -521,7 +547,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 		try
 		{
 		  Map<String, String> paramaterMap = CryptoUtils.getDecryptedString(encryptedString);
-		 System.out.println(paramaterMap );
+		logger.info("Response Parameters from Ipay : "+paramaterMap );
 		
 		String msisdn = paramaterMap.get("mn");
 		String operator = paramaterMap.get("op");
@@ -534,8 +560,10 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 		String billingStatus = paramaterMap.get("ts");
 		String failureReason = paramaterMap.get("tf");
 		String requestId = paramaterMap.get("r");
+		String identifier = paramaterMap.get("cc");
 		
 		httpSession.setAttribute("msisdn", msisdn);
+		httpSession.setAttribute("identifier", identifier);
 		httpSession.setAttribute("operator", operator);
 		String responseCode = null;
 		if(billingStatus != null && billingStatus.equals("S")){
@@ -596,22 +624,27 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 	private String setMesisdnOperator(String respCode,HttpServletRequest request){
 	//	String x = (String)request.getAttribute("name");
 		logger.info("response data:"+respCode);
+		HttpSession httpSession = request.getSession();
+		httpSession.setAttribute("identifier", respCode);
 		try {
 			if(respCode != null){
-				HttpSession httpSession = request.getSession();
+				
 				Map<String, String> paramaterMap = CryptoUtils.getDecryptedString(respCode);
-				logger.info("msisdn:"+paramaterMap.get("mn")+" operator:"+paramaterMap.get("op"));
-				httpSession.setAttribute("msisdn", paramaterMap.get("mn"));
+				String msisdn = paramaterMap.get("mn");
+				logger.info("msisdn:"+msisdn+" operator:"+paramaterMap.get("op"));
+				httpSession.setAttribute("msisdn", msisdn);
 				httpSession.setAttribute("operator", paramaterMap.get("op"));
-				return paramaterMap.get("mn");
+				
+				return msisdn;
 			}
 		} catch (CryptoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
+		
 		return null;
 	}
 }

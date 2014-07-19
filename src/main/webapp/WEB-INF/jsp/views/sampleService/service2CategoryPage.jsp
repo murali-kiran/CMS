@@ -12,7 +12,7 @@
 		<div style="width: 33%; float: left; text-align: center;margin: 2px 0px 2px;">
 			<div>${mediaInfo.mediaName}</div>
 			<div>
-			<a href="${pageContext.servletContext.contextPath}/service2/dwl/${serviceId}/${mediaInfo.mediaId}/${mediaInfo.serviceKeypriceKey}?channel=${channel}">		<img alt="noImage"
+			<a href="${pageContext.servletContext.contextPath}/service2/dwl/${serviceId}/${mediaInfo.mediaId}/${mediaInfo.serviceKeypriceKey}?channel=${channel}&serviceKeyId=${serviceKeyId}">		<img alt="noImage"
 					src="${mediaInfo.storagePath}"
 					width="${previewWidth}" height="${previewHeight}">
 			</a>
@@ -34,7 +34,7 @@
 
 		<c:forEach var="i" begin="1" end="${media.id}">
 	&nbsp;<a
-				href="<c:url value="/service2/cat/pageId/pageCount/${serviceId}/${category.id}/${i}/${PaginationCount}?channel=${channel}"/>">&nbsp;${i}&nbsp;</a>&nbsp;
+				href="<c:url value="/service2/cat/pageId/pageCount/${serviceId}/${category.id}/${i}/${PaginationCount}?channel=${channel}&serviceKeyId=${serviceKeyId}"/>">&nbsp;${i}&nbsp;</a>&nbsp;
 	</c:forEach>
 	</div>
 
@@ -42,4 +42,4 @@
 
 </c:forEach>
 
-<div style="width: 100%;clear: both;"><a href="${pageContext.servletContext.contextPath}/service/${serviceId}?channel=${channel}">&nbsp;Home</a></div>
+<div style="width: 100%;clear: both;"><a href="${pageContext.servletContext.contextPath}/service/${serviceId}?channel=${channel}&serviceKeyId=${serviceKeyId}">&nbsp;Home</a></div>

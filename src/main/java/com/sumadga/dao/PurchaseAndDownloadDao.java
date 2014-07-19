@@ -22,17 +22,27 @@ public class PurchaseAndDownloadDao {
 	@PersistenceContext
 	private EntityManager entityManager;
 	
-	public Purchas checkPurchaseRecordExistForToday(Long msiddn,int mediaId){
+	public Purchas checkPurchaseRecordExistForToday(Long msiddn,int mediaId,String identifier){
 		
 		
 		logger.info("Finding mediaTypeInfo of mediaGroup");
 		try {
 		//	final String queryString = "SELECT * FROM purchases WHERE date(expiry_time) = curdate() and msisdn = ?;";
 			
-			final String queryString ="SELECT p.* FROM purchases p join media_downloads md  on  md.`purchase_id` = p.`purchase_id` and date(expiry_time) = curdate() and p.msisdn = ? and md.`media_id` = ? ";
+			//final String queryString ="SELECT p.* FROM purchases p join media_downloads md  on  md.`purchase_id` = p.`purchase_id` and date(expiry_time) = curdate() and p.msisdn = ? and md.`media_id` = ? ";
+			 String queryString ="" ;
+			 if(msiddn==null  || msiddn==0)
+			 queryString ="SELECT p.* FROM purchases p join media_downloads md  on " +
+					" md.`purchase_id` = p.`purchase_id` and date(expiry_time) = curdate() and p.identifier = ? and md.`media_id` = ? ";
+			 else
+				 queryString ="SELECT p.* FROM purchases p join media_downloads md  on " +
+							" md.`purchase_id` = p.`purchase_id` and date(expiry_time) = curdate() and p.msisdn = ? and md.`media_id` = ? ";
 			
 			Query query = entityManager.createNativeQuery(queryString);
+			if(msiddn!=null && msiddn!=0)
 			query.setParameter(1,msiddn);
+			else
+				query.setParameter(1,identifier);
 			query.setParameter(2,mediaId);
 			
 			List<Object[]> list = query.getResultList();

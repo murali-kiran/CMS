@@ -55,8 +55,11 @@ public class DownloadFile {
 	    MediaDownload download = new MediaDownload();
 	    
 	    download.setPurchas(purchas);
+	    if(session.getAttribute("msisdn")!=null)
 	    download.setMsisdn(new BigInteger((String)session.getAttribute("msisdn")));
-	    
+	    else
+	    	download.setMsisdn(new BigInteger("0"));
+	    download.setIdentifier((String)session.getAttribute("identifier"));
 	    download.setMediaId(mediaBean.getMediaId());
 	    download.setMediaContentId(mediaBean.getMediaContentId());
 	    download.setServiceId(mediaBean.getServiceId());

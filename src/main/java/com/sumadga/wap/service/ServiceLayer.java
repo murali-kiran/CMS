@@ -513,14 +513,21 @@ public Map<Integer,Bean<MediaGroup,ServiceMediaGroup>> getMediaGroupOfService(in
 		return mediaGroupMediaDao.getMediaInfoOfGame(mediaId, mediaContentPurposeId, width, height);
 	}
 	
-	public Purchas savePurchaseAndPurchaseDetails(HttpServletRequest request,int servicKeyId,String channel,String msisdn,String remark){
+	public Purchas savePurchaseAndPurchaseDetails(HttpServletRequest request,int servicKeyId,String channel,String msisdn,String remark,String identifier){
 		
 		Purchas purchase = new Purchas();
 	    purchase.setCircleId(1);
 	    purchase.setExpiryTime(new Date());
 	    purchase.setFirstPurchaseTime(new Date());
 	    purchase.setLastPurchaseTime(new Date());
+	    if(msisdn == null || msisdn.trim().isEmpty())
+	    	purchase.setMsisdn(new BigInteger("0"));
+	    else
 	    purchase.setMsisdn(new BigInteger(msisdn));
+	    if(identifier != null && !identifier.trim().isEmpty())
+	    purchase.setIdentifier(identifier);
+	    else
+	    	purchase.setIdentifier(""+msisdn);
 	    purchase.setNetworkId(getNetworkFromSession());
 	  //  purchase.setNetworkId(1);
 //	    purchase.setPurchaseId(1);
@@ -555,14 +562,22 @@ public	Purchas getPurchas(int purchaseId){
 	}
 
 public FailPurchas saveFailPurchaseAndPFailPurchaseDetails(HttpServletRequest request,
-		int serviceKeyId, String errorCode,String channel,String msisdn,String remark) {
+		int serviceKeyId, String errorCode,String channel,String msisdn,String remark,String identifier) {
 	
 	FailPurchas purchase = new FailPurchas();
     purchase.setCircleId(1);
     purchase.setExpiryTime(new Date());
     purchase.setFirstPurchaseTime(new Date());
     purchase.setLastPurchaseTime(new Date());
+   /* purchase.setMsisdn(new BigInteger(msisdn));*/
+    if(msisdn == null || msisdn.trim().isEmpty())
+    	purchase.setMsisdn(new BigInteger("0"));
+    else
     purchase.setMsisdn(new BigInteger(msisdn));
+    if(identifier != null && !identifier.trim().isEmpty())
+	    purchase.setIdentifier(identifier);
+	    else
+	    	purchase.setIdentifier(""+msisdn);
     purchase.setNetworkId(getNetworkFromSession());
 //    purchase.setPurchaseId(1);
     purchase.setPurchaseStatus((byte)0);

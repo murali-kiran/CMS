@@ -41,6 +41,15 @@ public class MediaDownload implements Serializable {
 	private Timestamp modifiedTime;
 
 	private BigInteger msisdn;
+	private String identifier;
+
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
 
 	private String remarks;
 

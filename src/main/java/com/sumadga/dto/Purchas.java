@@ -43,6 +43,8 @@ public class Purchas implements Serializable {
 	private Timestamp modifiedTime;
 
 	private BigInteger msisdn;
+	
+	private String identifier;
 
 	@Column(name="network_id")
 	private int networkId;
@@ -97,6 +99,14 @@ public class Purchas implements Serializable {
 
 	public Date getFirstPurchaseTime() {
 		return this.firstPurchaseTime;
+	}
+
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
 	}
 
 	public void setFirstPurchaseTime(Date firstPurchaseTime) {

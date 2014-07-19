@@ -27,5 +27,6 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/ipayy-crypto-client-1.0-aio.jar" sourcepath=""/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
