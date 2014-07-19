@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<div style="width: 100%; background-color: red;border-bottom: 1px; border-color: black;">${totalMediaCount}</div>
+<div style="width: 100%; background-color: red;border-bottom: 1px; border-color: black;">${tagName}</div>
 	
 <div style="width: 100%;">
 	<c:forEach var="mediaInfo" items="${mediaBeans}">
