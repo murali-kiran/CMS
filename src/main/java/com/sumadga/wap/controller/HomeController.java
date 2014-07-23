@@ -487,7 +487,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 		Map<String, String> deviceMap = getDeviceCapbilities(request);
 		
 		model.addAttribute("serviceId",serviceId);
-		model.addAttribute("title", "Search");
+//		model.addAttribute("title", "Search");
 		model.addAttribute("channel", channel);
 		return "searchByTag";
 	}
@@ -500,10 +500,12 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 		if(request.getParameter("detect")==null && msisdn==null ){
 			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
 			return "redirect:"+msisdnDetectionUrl;
-		}else if(msisdn==null){
+		}
+		
+		/*else if(msisdn==null){
 			model.addAttribute("errorMsg", "Unable to detect");
 			return "errorPage";
-		}
+		}*/
 		
 		if(channel==null)
 			 channel="smd";
@@ -513,7 +515,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 			 	channel=s[0];
 			 }
 		List<MediaBean> beans = serviceLayer.getMediaInfoUsingTag(tag, serviceId, CommonUtils.MEDIA_CONTENT_PRIVIEW, CommonUtils.PRIVIEW_WIDTH,CommonUtils.PRIVIEW_HEIGHT);
-		model.addAttribute("title", "Search");
+//		model.addAttribute("title", "Search");
 		
 		if(StringUtils.isBlank(tag)){
 			model.addAttribute("error","Enter Something");
