@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.Errors;
 
@@ -353,7 +354,7 @@ public void saveUpload(MediaUploadModel mediaUploadModel) throws Exception{
 			throw new Exception("Upload Failed");
 		}
 		}//for	
-	  
+	 
 	  transcoding(media);
 	  }// mediaContentModelList	
 	 
@@ -552,6 +553,15 @@ public void saveUploadApp(MediaUploadModel mediaUploadModel) throws Exception{
 		
 	}
 	
+	public void processMedias(){
+		
+		
+		List<Media> mediaList=mediaDao.findByProperty("mediaProcessState", 1);
+		for (Media media : mediaList) {
+			transcoding(media);
+		}
+	}
+	
 	public void transcoding(Media media){
 		try{
 		MediaType mediaType=media.getMediaType();
@@ -607,7 +617,7 @@ public void saveUploadApp(MediaUploadModel mediaUploadModel) throws Exception{
 				}
 			}
 			
-			media.setMediaProcessState(mediaProcessStateDao.findById(3));
+			media.setMediaProcessState(mediaProcessStateDao.findById(3)); // completed state
 			media.setMediaCycle(mediaCycleDao.findById(2));
 			mediaDao.update(media);
 		
@@ -635,6 +645,12 @@ public void saveUploadApp(MediaUploadModel mediaUploadModel) throws Exception{
 		model.addAttribute("mediaCycleList",mediaUtils.getMediaCycleList());
 		//model.addAttribute("languageList",mediaUtils.getLanguageList());
 		model.addAttribute("searchMedia", mediaUploadModel);
+	}
+	
+	
+	public Media getMedia(Integer mediaId, ModelMap model){
+		
+		return mediaDao.findById(mediaId);
 	}
 	
 }

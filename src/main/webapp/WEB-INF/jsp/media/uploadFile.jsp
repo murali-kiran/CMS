@@ -119,6 +119,11 @@
 <tr><td>Media EndTime  </td>
 <td><form:input path="mediaEndTime" class="datepicker calender validate" /></td>
 <td><form:errors path="mediaEndTime" cssClass="error" /></tr>
+
+<tr><td> Media TranscodeNow </td>
+<td><form:checkbox path="tags"  value="false"/></td>
+<td><form:errors path="tags" cssClass="error"/></td></tr>
+
 <c:if test="${ empty mediaId}">
   <form:hidden  path="mediaId" />
 </c:if>

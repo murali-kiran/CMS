@@ -88,4 +88,9 @@
         <put-attribute name="title" value="Upload" />
         <put-attribute name="body" value="/WEB-INF/jsp/service/selectServiceMediaGroup.jsp" />
      </definition>
+     
+     <definition name="unAuthorise" extends="base.definition">
+        <put-attribute name="title" value="UnAuthorise" />
+        <put-attribute name="body" value="/WEB-INF/jsp/contents/unAuthorise.jsp" />
+     </definition>
     </tiles-definitions>

@@ -2,6 +2,9 @@ package com.sumadga.dto;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import org.codehaus.jackson.annotate.JsonBackReference;
+
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +38,8 @@ public class MediaType implements Serializable {
 	private Timestamp modifiedTime;
 
 	//bi-directional many-to-one association to Media
-	@OneToMany(mappedBy="mediaType")
+	@OneToMany(mappedBy="mediaType",fetch=FetchType.EAGER)
+	@JsonBackReference
 	private List<Media> medias;
 
 	//bi-directional many-to-one association to MediaSpecification

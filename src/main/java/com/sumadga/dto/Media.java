@@ -2,6 +2,16 @@ package com.sumadga.dto;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
+import scala.annotation.meta.field;
+
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -53,33 +63,41 @@ public class Media implements Serializable {
 	//bi-directional many-to-one association to MediaCycle
 	@ManyToOne
 	@JoinColumn(name="media_cycle_id", nullable=false)
+	@JsonIgnore
 	private MediaCycle mediaCycle;
 
 	@ManyToOne
 	@JoinColumn(name="media_provider_id", nullable=false)
+	@JsonIgnore
 	private MediaProvider mediaProvider;
 	
 	//bi-directional many-to-one association to MediaProcessState
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="media_process_state_id", nullable=false)
+	@JsonIgnore
 	private MediaProcessState mediaProcessState;
 
 	
 	//bi-directional many-to-one association to MediaType
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="media_type_id", nullable=false)
+	@JsonIgnore	
 	private MediaType mediaType;
 
 	//bi-directional many-to-one association to MediaContent
-	@OneToMany(mappedBy="media")
+	@OneToMany(mappedBy="media",fetch=FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
 	private List<MediaContent> mediaContents;
 
 	//bi-directional many-to-one association to MediaGroupMedia
+	
 	@OneToMany(mappedBy="media")
+	@JsonIgnore
 	private List<MediaGroupMedia> mediaGroupMedias;
 
 	//bi-directional many-to-one association to MediaTag
 	@OneToMany(mappedBy="media")
+	@JsonIgnore
 	private List<MediaTag> mediaTags;
 
 	public Media() {

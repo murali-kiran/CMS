@@ -1,6 +1,8 @@
 
 package com.sumadga.upload;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -13,11 +15,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 
+import com.sumadga.dto.Media;
+import com.sumadga.dto.UserPermissions;
 import com.sumadga.utils.MediaUtils;
 
 
@@ -57,6 +63,10 @@ public class MediaUploadController {
 		logger.info("upload");
 		
 		mediaUtils.getUserPermission(request);
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaUpload() ) || userPermissions==null){
+			return "unAuthorise";
+		}
 		
 		mediaUploadService.upload(model);
 		
@@ -64,10 +74,15 @@ public class MediaUploadController {
 		
 	}
 	@RequestMapping("/appUpload")
-	public String appUpload(ModelMap model){
+	public String appUpload(ModelMap model,HttpServletRequest request){
+		
 		
 		logger.info("upload");
 		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isGameUpload() ) || userPermissions==null){
+			return "unAuthorise";
+		}
 		mediaUploadService.uploadApp(model);
 		
 		return "uploadApp";
@@ -75,11 +90,14 @@ public class MediaUploadController {
 	}
 	@RequestMapping(value="/saveapp",  method=RequestMethod.POST)
 	public String saveapp(@ModelAttribute("uploadFile") MediaUploadModel mediaUploadModel,
-			BindingResult result, SessionStatus status,ModelMap model){
+			BindingResult result, SessionStatus status,ModelMap model, HttpServletRequest request){
 		
 		String message = null;		
 		logger.info("uploadfile "+mediaUploadModel.toString()+""+mediaUploadModel.getMediaId());
-		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isGameUpload() ) || userPermissions==null){
+			return "unAuthorise";
+		}
 		
 		mediaUploadService.validate(mediaUploadModel, result);
 		
@@ -112,10 +130,14 @@ public class MediaUploadController {
 		
 	}
 	@RequestMapping("/editMedia")
-	public String upload(@RequestParam("mediaId") Integer mediaId,ModelMap model){
+	public String upload(@RequestParam("mediaId") Integer mediaId,ModelMap model, HttpServletRequest request){
 		
 		logger.info("Edit Media");
 		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaUpload() ) || userPermissions==null){
+			return "unAuthorise";
+		}
 		mediaUploadService.edit( model,mediaId);
 		
 		return "uploadFile";
@@ -123,10 +145,14 @@ public class MediaUploadController {
 	}
 	
 	@RequestMapping("/showMediaContent")
-	public String showMediaFile(@RequestParam("mediaId") Integer mediaId,ModelMap model){
+	public String showMediaFile(@RequestParam("mediaId") Integer mediaId,ModelMap model, HttpServletRequest request){
 		
 		logger.info("show Media Content ");
 		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaUpload() ) || userPermissions==null){
+			return "unAuthorise";
+		}
 		mediaUploadService.showMediaContent( model,mediaId);
 		
 		return "mediaContent";
@@ -135,8 +161,12 @@ public class MediaUploadController {
 		
 	@RequestMapping(value = "/getFiles",  method=RequestMethod.GET)
 	//@ResponseBody
-	public String getFiles(@RequestParam("mediaTypeId") Integer mediaTypeId,ModelMap model){
+	public String getFiles(@RequestParam("mediaTypeId") Integer mediaTypeId,ModelMap model, HttpServletRequest request){
 		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaUpload() ) || userPermissions==null){
+			return "unAuthorise";
+		}
 		mediaUploadService.getFiles(model, mediaTypeId);
 		
 		return "showFile";//MediaContentModelList;
@@ -145,12 +175,18 @@ public class MediaUploadController {
 	
 	@RequestMapping(value="/save",  method=RequestMethod.POST)
 	public String save(@ModelAttribute("uploadFile") MediaUploadModel mediaUploadModel,
-			BindingResult result, SessionStatus status,ModelMap model){
+			BindingResult result, SessionStatus status,ModelMap model, HttpServletRequest request){
 	
+		{
+			
+		}
         String message = null;		
 		logger.info("uploadfile "+mediaUploadModel.toString()+""+mediaUploadModel.getMediaId());
 		
-		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaUpload() ) || userPermissions==null){
+			return "unAuthorise";
+		}
 		mediaUploadService.validate(mediaUploadModel, result);
 		
 		if (result.hasErrors()) {
@@ -183,9 +219,14 @@ public class MediaUploadController {
 	}
 	
 	@RequestMapping("/showSearch")
-	public String showSearch(ModelMap model){
+	public String showSearch(ModelMap model, HttpServletRequest request){
 		
 		logger.info("upload");
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaSearch() ) || userPermissions==null){
+			return "unAuthorise";
+		}
+		
 		UserDetails userDetails = currentUserDetails();
 		mediaUploadService.searchMedia(model,null,userDetails.getUsername());
 		mediaUploadService.search(model);
@@ -195,11 +236,15 @@ public class MediaUploadController {
 	}
 	@RequestMapping(value="/searchMedia",  method=RequestMethod.POST)
 	public String searchMedia(@ModelAttribute("searchMedia") MediaUploadModel mediaUploadModel,
-			BindingResult result, SessionStatus status,ModelMap model){
+			BindingResult result, SessionStatus status,ModelMap model, HttpServletRequest request){
 	
         String message = null;		
 		logger.info("uploadfile "+mediaUploadModel.toString()+""+mediaUploadModel.getMediaId());
 		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaSearch() ) || userPermissions==null){
+			return "unAuthorise";
+		}
 		//mediaUploadService.search(model);
 		UserDetails userDetails = currentUserDetails();
 		mediaUploadService.searchMedia(model,mediaUploadModel, userDetails.getUsername());
@@ -209,17 +254,31 @@ public class MediaUploadController {
 	}
 	@RequestMapping(value="/searchMediaPaging",  method=RequestMethod.GET)
 	public String searchMediaPaging(MediaUploadModel mediaUploadModel,
-			BindingResult result, SessionStatus status,ModelMap model){
+			BindingResult result, SessionStatus status,ModelMap model, HttpServletRequest request){
 	
         String message = null;		
 		logger.info("uploadfile "+mediaUploadModel.toString()+""+mediaUploadModel.getMediaId());
 		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaSearch() ) || userPermissions==null){
+			return "unAuthorise";
+		}
 		//mediaUploadService.search(model);
 		UserDetails userDetails = currentUserDetails();
 		mediaUploadService.searchMedia(model,mediaUploadModel,userDetails.getUsername());
 		
 		return "showSearch";
 		//return "searchList";
+	}
+	@RequestMapping(value="/getMedia")
+	@ResponseBody
+	public Media getMedia(@RequestParam("mediaId") Integer mediaId,ModelMap model){
+		
+		logger.info("show Media Content ");
+		
+		
+		return mediaUploadService.getMedia(mediaId, model);
+		
 	}
 	public static UserDetails currentUserDetails(){
 	    SecurityContext securityContext = SecurityContextHolder.getContext();
@@ -230,6 +289,9 @@ public class MediaUploadController {
 	    }
 	    return null;
 	}
+	
+	
 }
+
 
 

@@ -125,6 +125,22 @@ public void getUserPermission(HttpServletRequest request){
     	}
     	
     }
+
+public UserPermissions getUserPermit(HttpServletRequest request){
+
+	UserPermissions userPermissions=null;
+	try{
+		userPermissions=(UserPermissions)request.getSession().getAttribute("userPermissions");
+		if(userPermissions==null) {
+			getUserPermission(request);
+			userPermissions=(UserPermissions)request.getSession().getAttribute("userPermissions");
+		}
+		
+	}catch(Exception e){
+		logger.error("Exception caught : ",e);
+	}
+	return userPermissions;
+}
     
     public java.util.Date parseDate(String dateString){ 
 		SimpleDateFormat dateFormat=new SimpleDateFormat("dd-MM-yyyy");

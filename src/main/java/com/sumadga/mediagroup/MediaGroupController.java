@@ -1,5 +1,7 @@
 package com.sumadga.mediagroup;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -17,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 
+import com.sumadga.dto.UserPermissions;
 import com.sumadga.model.JqGridInfo;
 import com.sumadga.model.MediaGroupBean;
 import com.sumadga.upload.MediaUploadModel;
+import com.sumadga.utils.MediaUtils;
 
 
 
@@ -31,6 +35,10 @@ public class MediaGroupController {
 	
 	@Autowired
 	MediaGroupService mediaGroupService;
+	
+	
+	@Autowired
+	MediaUtils mediaUtils;
 	
 	/*@RequestMapping("/show")
 	public void show(){
@@ -55,10 +63,13 @@ public class MediaGroupController {
 	}
 	
 	@RequestMapping("/addGroup")
-	public String createGroup(ModelMap model){
+	public String createGroup(ModelMap model, HttpServletRequest request ){
 		
 		logger.info("upload");
-		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaGroup() ) || userPermissions==null){
+			return "unAuthorise";
+		}
 		mediaGroupService.createGroup(model);
 		
 		return "addGroup";
@@ -66,8 +77,14 @@ public class MediaGroupController {
 	}
 	@RequestMapping(value="/saveGroup",  method=RequestMethod.POST)
 	public String saveGroup(@ModelAttribute("addGroup") MediaGroupModel mediaGroupModel,
-			BindingResult result, SessionStatus status,ModelMap model){
+			BindingResult result, SessionStatus status, ModelMap model, HttpServletRequest request ){
 		String message = null;
+		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaGroup() ) || userPermissions==null){
+			return "unAuthorise";
+		}
+		
 			System.out.println("mm"+mediaGroupModel);
 			mediaGroupService.validate(mediaGroupModel, result);
 			
@@ -96,8 +113,14 @@ public class MediaGroupController {
 			}
 	}
 	@RequestMapping("/listMediaGroup")
-	public String listGroup(ModelMap model){
+	public String listGroup(ModelMap model, HttpServletRequest request){
 		logger.info("upload");
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaGroupList() ) || userPermissions==null){
+			return "unAuthorise";
+		}
+		
+		
 		return "mediaGroupList";
 	}
 
@@ -110,23 +133,39 @@ public class MediaGroupController {
 	
 	@RequestMapping(value = "/showSearchMap",  method=RequestMethod.GET)
 	//@ResponseBody
-	public String getFiles(@RequestParam("mgid") Integer mediaGroupId,ModelMap model){
+	public String getFiles(@RequestParam("mgid") Integer mediaGroupId,ModelMap model, HttpServletRequest request){
+		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaSearch() ) || userPermissions==null){
+			return "unAuthorise";
+		}
+		
 		mediaGroupService.getMedia(model, mediaGroupId);
 		model.addAttribute("mgid", mediaGroupId);
 		return "selectMedia";
 	}
 	@RequestMapping(value = "/showMappedGroup",  method=RequestMethod.GET)
 	//@ResponseBody
-	public String getGroups(@RequestParam("mgid") Integer mediaGroupId,ModelMap model){
+	public String getGroups(@RequestParam("mgid") Integer mediaGroupId,ModelMap model, HttpServletRequest request){
+		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaGroup() ) || userPermissions==null){
+			return "unAuthorise";
+		}
 		mediaGroupService.getGroups(model, mediaGroupId);
 		model.addAttribute("mgid", mediaGroupId);
 		return "selectMediaGroup";
 	}
 	@RequestMapping(value = "/showGroupSearch",  method=RequestMethod.GET)
 	//@ResponseBody
-	public String showGroupSearch(@RequestParam("mgid") Integer mediaGroupId,ModelMap model){
+	public String showGroupSearch(@RequestParam("mgid") Integer mediaGroupId,ModelMap model, HttpServletRequest request){
 		//mediaGroupService.getGroups(model, mediaGroupId);
 		//model.addAttribute("mgid", mediaGroupId);
+		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaSearch() ) || userPermissions==null){
+			return "unAuthorise";
+		}
 		MediaGroupModel mediaGroupModel = new MediaGroupModel();
 		model.addAttribute("searchMediaGroup", mediaGroupModel);
 		model.addAttribute("mgid", mediaGroupId);
@@ -134,7 +173,12 @@ public class MediaGroupController {
 	}
 	@RequestMapping(value="/showRemMedia",  method=RequestMethod.POST)
 	public String searchMedia(@ModelAttribute("searchMedia") MediaUploadModel mediaUploadModel,
-			BindingResult result, SessionStatus status,ModelMap model){
+			BindingResult result, SessionStatus status,ModelMap model, HttpServletRequest request){
+		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaSearch() ) || userPermissions==null){
+			return "unAuthorise";
+		}
 		mediaGroupService.getMedia(model, mediaUploadModel.getMgid());
 		UserDetails userDetails = currentUserDetails();
 		mediaGroupService.getRemainingMedia(mediaUploadModel, model, userDetails.getUsername());
@@ -144,7 +188,12 @@ public class MediaGroupController {
 	}
 	@RequestMapping(value="/showRemMediaGroup",  method=RequestMethod.POST)
 	public String searchRemMediaGroup(@ModelAttribute("searchMediaGroup") MediaGroupModel mediaGroupModel,
-			BindingResult result, SessionStatus status,ModelMap model){
+			BindingResult result, SessionStatus status,ModelMap model, HttpServletRequest request){
+		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaSearch() ) || userPermissions==null){
+			return "unAuthorise";
+		}
 		mediaGroupService.getGroups(model, mediaGroupModel.getParentmgId());
 		mediaGroupService.getRemainingMediaGroup(mediaGroupModel, model);
 		
@@ -153,8 +202,13 @@ public class MediaGroupController {
 	}
 	@RequestMapping(value="/remAddOrderMedia",  method=RequestMethod.POST)
 	public String remAddOrderMedia(@ModelAttribute("mediaList") MediaModel mediaModel,
-			BindingResult result, SessionStatus status,ModelMap model){
+			BindingResult result, SessionStatus status,ModelMap model, HttpServletRequest request){
 		String message = null;
+		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaSearch() ) || userPermissions==null){
+			return "unAuthorise";
+		}
 			//System.out.println("mm"+mediaModel.getSelectedMedia().length);
 		if(mediaModel != null && mediaModel.getSelectedMedia() != null && mediaModel.getSelectedMedia().length > 0){
 		try {
@@ -173,8 +227,13 @@ public class MediaGroupController {
 	}
 	@RequestMapping(value="/saveMappedMedia",  method=RequestMethod.POST)
 	public String saveMappedMedia(@ModelAttribute("remMediaList") MediaModel mediaModel,
-			BindingResult result, SessionStatus status,ModelMap model){
+			BindingResult result, SessionStatus status,ModelMap model, HttpServletRequest request){
 		String message = null;
+		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaUpload() ) || userPermissions==null){
+			return "unAuthorise";
+		}
 			//System.out.println("mm"+mediaModel.getSelectedMedia().length);
 		if(mediaModel != null && mediaModel.getSelectedMedia() != null && mediaModel.getSelectedMedia().length > 0){
 		try {
@@ -243,8 +302,13 @@ public class MediaGroupController {
 	}*/
 	@RequestMapping(value = "/editMediaGroup",  method=RequestMethod.GET)
 	//@ResponseBody
-	public String editGroup(@RequestParam("mgid") Integer mediaGroupId,ModelMap model){
+	public String editGroup(@RequestParam("mgid") Integer mediaGroupId,ModelMap model, HttpServletRequest request){
 		//mediaGroupService.getGroups(model, mediaGroupId);
+		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaGroup()) || userPermissions==null){
+			return "unAuthorise";
+		}
 		mediaGroupService.editGroup(model,mediaGroupId);
 		return "addGroup";
 	}

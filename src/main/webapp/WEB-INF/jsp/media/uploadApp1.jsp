@@ -119,6 +119,11 @@ function add(){
 <tr><td>Media EndTime  </td>
 <td><form:input path="mediaEndTime" class="datepicker calender validate" /></td>
 <td><form:errors path="mediaEndTime" cssClass="error" /></tr>
+
+<%-- <tr><td> Media TranscodeNow </td>
+<td><form:checkbox path="transcodeNow" /></td>
+<td><form:errors path="transcodeNow" cssClass="error"/></td></tr> --%>
+
 <c:if test="${ empty mediaId}">
   <form:hidden  path="mediaId" />
 </c:if>

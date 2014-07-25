@@ -1,5 +1,7 @@
 package com.sumadga.service;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,10 +15,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 
+import com.sumadga.dto.UserPermissions;
 import com.sumadga.mediagroup.MediaGroupModel;
 import com.sumadga.model.JqGridInfo;
 import com.sumadga.model.MediaGroupBean;
 import com.sumadga.upload.MediaUploadModel;
+import com.sumadga.utils.MediaUtils;
 
 
 
@@ -35,13 +39,20 @@ public class ServiceController {
 		logger.info("log4j");
 	}*/
 	
+	@Autowired
+	MediaUtils mediaUtils;
 	
 	
 	@RequestMapping("/serviceList")
-	public String serviceList(ModelMap model){
+	public String serviceList(ModelMap model, HttpServletRequest request){
 		
 		logger.info("serviceList");
 		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaService() ) || userPermissions==null){
+			return "unAuthorise";
+		}
+
 		serviceCmsService.getServiceList(model);
 		
 		return "serviceList";
@@ -49,13 +60,24 @@ public class ServiceController {
 	}
 	@RequestMapping(value = "/mapMediaCategories",  method=RequestMethod.GET)
 	//@ResponseBody
-	public String getGroups(@RequestParam("serviceId") Integer serviceId,ModelMap model){
+	public String getGroups(@RequestParam("serviceId") Integer serviceId,ModelMap model, HttpServletRequest request){
+		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaGroup() ) || userPermissions==null){
+			return "unAuthorise";
+		}
+		
 		serviceCmsService.getGroups(model, serviceId);
 		model.addAttribute("srid", serviceId);
 		return "selectServiceMediaGroup";
 	}
 	@RequestMapping(value = "/showServiceGroupSearch",  method=RequestMethod.GET)
-	public String showGroupSearch(@RequestParam("srid") Integer serviceId,ModelMap model){
+	public String showGroupSearch(@RequestParam("srid") Integer serviceId,ModelMap model, HttpServletRequest request){
+		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaGroup() ) || userPermissions==null){
+			return "unAuthorise";
+		}
 		MediaGroupModel mediaGroupModel = new MediaGroupModel();
 		model.addAttribute("searchMediaGroup", mediaGroupModel);
 		model.addAttribute("srid", serviceId);
@@ -64,7 +86,13 @@ public class ServiceController {
 	
 	@RequestMapping(value="/showServiceRemMediaGroup",  method=RequestMethod.POST)
 	public String searchRemMediaGroup(@ModelAttribute("searchMediaGroup") MediaGroupModel mediaGroupModel,
-			BindingResult result, SessionStatus status,ModelMap model){
+			BindingResult result, SessionStatus status,ModelMap model, HttpServletRequest request ){
+		
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaGroup() ) || userPermissions==null){
+			return "unAuthorise";
+		}
+		
 		serviceCmsService.getGroups(model, mediaGroupModel.getServiceId());
 		serviceCmsService.getRemainingMediaGroup(mediaGroupModel, model);
 		model.addAttribute("srid", mediaGroupModel.getServiceId());
@@ -73,9 +101,14 @@ public class ServiceController {
 	}
 	@RequestMapping(value="/saveServiceMappedMediaGroup",  method=RequestMethod.POST)
 	public String saveMappedMediaGroup(@ModelAttribute("remMediaList") MediaGroupModel mediaGroupModel,
-			BindingResult result, SessionStatus status,ModelMap model){
+			BindingResult result, SessionStatus status,ModelMap model, HttpServletRequest request){
 		String message = null;
 			//System.out.println("mm"+mediaModel.getSelectedMedia().length);
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaGroup() ) || userPermissions==null){
+			return "unAuthorise";
+		}
+		
 		if(mediaGroupModel != null && mediaGroupModel.getSelectedMediaGroup() != null && mediaGroupModel.getSelectedMediaGroup().length > 0){
 		try {
 			serviceCmsService.addMediaGroup(mediaGroupModel);
@@ -93,9 +126,14 @@ public class ServiceController {
 	
 	@RequestMapping(value="/remAddOrderServiceMediaGroup",  method=RequestMethod.POST)
 	public String remAddOrderMediaGroup(@ModelAttribute("mediaGroupList") MediaGroupModel mediaGroupModel,
-			BindingResult result, SessionStatus status,ModelMap model){
+			BindingResult result, SessionStatus status,ModelMap model, HttpServletRequest request){
 		String message = null;
 			//System.out.println("mm"+mediaModel.getSelectedMedia().length);
+		UserPermissions userPermissions=mediaUtils.getUserPermit(request);
+		if(( userPermissions!=null && !userPermissions.isMediaService() ) || userPermissions==null){
+			return "unAuthorise";
+		}
+		
 		if(mediaGroupModel != null && mediaGroupModel.getSelectedMediaGroup() != null && mediaGroupModel.getSelectedMediaGroup().length > 0){
 		try {
 			serviceCmsService.remAddOrderMediaGroup(mediaGroupModel);
