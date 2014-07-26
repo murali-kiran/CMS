@@ -35,7 +35,7 @@ public class Language implements Serializable {
 	private Timestamp modifiedTime;
 
 	//bi-directional many-to-one association to Media
-	@OneToMany(mappedBy="language")
+	@OneToMany(mappedBy="language",fetch=FetchType.EAGER)
 	private List<Media> medias;
 
 	public Language() {
