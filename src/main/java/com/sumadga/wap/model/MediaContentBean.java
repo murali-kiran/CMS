@@ -2,43 +2,24 @@ package com.sumadga.wap.model;
 
 public class MediaContentBean {
 	
-	private int mediacontentId;
-	private int mediaspecificationId;
+	private Integer mediacontentId;
+	private Integer mediaspecificationId;
 	private String storagepath;
 	private String md5;
 	private String mimeType;
-	private int width;
-	private int height;
-	 
-	
-	public String getMimeType() {
-		return mimeType;
-	}
-	public void setMimeType(String mimeType) {
-		this.mimeType = mimeType;
-	}
-	public int getWidth() {
-		return width;
-	}
-	public void setWidth(int width) {
-		this.width = width;
-	}
-	public int getHeight() {
-		return height;
-	}
-	public void setHeight(int height) {
-		this.height = height;
-	}
-	public int getMediacontentId() {
+	private Integer width;
+	private Integer height;
+	private Integer bitrate;
+	public Integer getMediacontentId() {
 		return mediacontentId;
 	}
-	public void setMediacontentId(int mediacontentId) {
+	public void setMediacontentId(Integer mediacontentId) {
 		this.mediacontentId = mediacontentId;
 	}
-	public int getMediaspecificationId() {
+	public Integer getMediaspecificationId() {
 		return mediaspecificationId;
 	}
-	public void setMediaspecificationId(int mediaspecificationId) {
+	public void setMediaspecificationId(Integer mediaspecificationId) {
 		this.mediaspecificationId = mediaspecificationId;
 	}
 	public String getStoragepath() {
@@ -53,7 +34,32 @@ public class MediaContentBean {
 	public void setMd5(String md5) {
 		this.md5 = md5;
 	}
+	public String getMimeType() {
+		return mimeType;
+	}
+	public void setMimeType(String mimeType) {
+		this.mimeType = mimeType;
+	}
+	public Integer getWidth() {
+		return width;
+	}
+	public void setWidth(Integer width) {
+		this.width = width;
+	}
+	public Integer getHeight() {
+		return height;
+	}
+	public void setHeight(Integer height) {
+		this.height = height;
+	}
+	public Integer getBitrate() {
+		return bitrate;
+	}
+	public void setBitrate(Integer bitrate) {
+		this.bitrate = bitrate;
+	}
+	 
 	
-	
+		
 
 }

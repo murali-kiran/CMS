@@ -718,6 +718,7 @@ public MediaInfoBean getMediaInfo(Media media){
 		contentBean.setHeight(content.getMediaSpecification().getHeight());
 		contentBean.setStoragepath(applicationProperties.getMediaCompletePath()+content.getStoragePath());
 		contentBean.setMd5(content.getMd5());
+		contentBean.setBitrate(content.getMediaSpecification().getBitrate());
 		
 		mediaContentBeans.add(contentBean);
 	}
