@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Sumadga | <tiles:insertAttribute name="title" /> </title>
+<title>MMS | <tiles:insertAttribute name="title" /> </title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache"/>
 <style type="text/css">
