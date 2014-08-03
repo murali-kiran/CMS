@@ -1,6 +1,8 @@
 package com.sumadga.dao;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -144,8 +146,9 @@ public class MediaDao  {
 	public List<Media> search(MediaUploadModel mediaUploadModel, String userName) {
 		// TODO Auto-generated method stub
 		logger.info("search media");
-		String mediaProvList = getMediaProviderFromUser(userName);
+		
 		StringBuffer queryString = new StringBuffer("select model from Media model where 1=1 ");
+		int mediaProviderId = 0;
 		if(mediaUploadModel != null){
 			if(mediaUploadModel.getLanguageId() != null && mediaUploadModel.getLanguageId() != -1)
 				queryString.append(" and model.language="+mediaUploadModel.getLanguageId());
@@ -159,7 +162,19 @@ public class MediaDao  {
 				queryString.append(" and model.mediaTitle like '%"+mediaUploadModel.getMediaTitle()+"%'");
 			if(mediaUploadModel.getMediaTypeId() != null && mediaUploadModel.getMediaTypeId() != -1)
 				queryString.append(" and model.mediaType="+mediaUploadModel.getMediaTypeId());
+			//added later
+			if(mediaUploadModel.getMediaProviderId() != null && mediaUploadModel.getMediaProviderId() != -1)
+				mediaProviderId = mediaUploadModel.getMediaProviderId();
+			if(mediaUploadModel.getMediaStartTime() != null && !mediaUploadModel.getMediaStartTime().equals("")){
+				String date = getDateFromString(mediaUploadModel.getMediaStartTime());
+				queryString.append(" and model.mediaStartTime like '%"+date+"%'");
+			}
+			if(mediaUploadModel.getMediaEndTime() != null && !mediaUploadModel.getMediaEndTime().equals("")){
+				String date = getDateFromString(mediaUploadModel.getMediaEndTime());
+				queryString.append(" and model.mediaEndTime like '%"+date+"%'");
+			}
 		}
+		String mediaProvList = getMediaProviderFromUser(userName, mediaProviderId);
 		if(mediaProvList != null)
 			queryString.append("and model.mediaProvider.mediaProviderId in ("+mediaProvList+")");
 		queryString.append(" order by model.createdTime desc, model.modifiedTime desc");
@@ -172,7 +187,7 @@ public class MediaDao  {
 	public List<Media> findRemainingMedia(MediaUploadModel mediaUploadModel, String userName) {
 		// TODO Auto-generated method stub
 		StringBuffer queryString = new StringBuffer("select model from Media model where 1=1 ");
-		String mediaProvList = getMediaProviderFromUser(userName);
+		int mediaProviderId = 0;
 		if(mediaUploadModel != null){
 			if(mediaUploadModel.getLanguageId() != null && mediaUploadModel.getLanguageId() != -1)
 				queryString.append(" and model.language="+mediaUploadModel.getLanguageId());
@@ -186,8 +201,20 @@ public class MediaDao  {
 				queryString.append(" and model.mediaTitle like '%"+mediaUploadModel.getMediaTitle()+"%'");
 			if(mediaUploadModel.getMediaTypeId() != null && mediaUploadModel.getMediaTypeId() != -1)
 				queryString.append(" and model.mediaType="+mediaUploadModel.getMediaTypeId());
+			//added later
+			if(mediaUploadModel.getMediaProviderId() != null && mediaUploadModel.getMediaProviderId() != -1)
+				mediaProviderId = mediaUploadModel.getMediaProviderId();
+			if(mediaUploadModel.getMediaStartTime() != null && !mediaUploadModel.getMediaStartTime().equals("")){
+				String date = getDateFromString(mediaUploadModel.getMediaStartTime());
+				queryString.append(" and model.mediaStartTime like '%"+date+"%'");
+			}
+			if(mediaUploadModel.getMediaEndTime() != null && !mediaUploadModel.getMediaEndTime().equals("")){
+				String date = getDateFromString(mediaUploadModel.getMediaEndTime());
+				queryString.append(" and model.mediaEndTime like '%"+date+"%'");
+			}
 		}
 		queryString.append("and model.mediaId not in (select mgm.media.mediaId from MediaGroupMedia mgm where mgm.mediaGroup.mediaGroupId="+mediaUploadModel.getMgid()+")");
+		String mediaProvList = getMediaProviderFromUser(userName,mediaProviderId);
 		if(mediaProvList != null)
 			queryString.append("and model.mediaProvider.mediaProviderId in ("+mediaProvList+")");
 		Query query = entityManager
@@ -220,7 +247,8 @@ public class MediaDao  {
 		return query.getResultList();
 	}
 	
-	public String getMediaProviderFromUser(String userName){
+	public String getMediaProviderFromUser(String userName, int mediaProviderId){
+		if(mediaProviderId == 0){
 		Query query = entityManager.createNativeQuery("Select ump.media_provider_id from user_media_providers ump " +
 				" where ump.user_name='"+userName+"'");
 		List<Object> ls = query.getResultList();
@@ -233,6 +261,23 @@ public class MediaDao  {
 			x++;
 		}
 		return s;
+		}
+		else
+			return mediaProviderId+"";
+	}
+	
+	private String getDateFromString(String date){
+		String str=null;
+		try {
+			SimpleDateFormat sdf=new SimpleDateFormat("MM/dd/yyyy");
+			Date formatedDate = sdf.parse(date);
+			SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd");
+			str=sdf1.format(formatedDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return str;
 	}
 }
 

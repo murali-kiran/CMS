@@ -613,7 +613,7 @@ public void saveUploadApp(MediaUploadModel mediaUploadModel) throws Exception{
 		model.addAttribute("mediaTypeList",mediaUtils.getMediaTypeList());
 		model.addAttribute("mediaCycleList",mediaUtils.getMediaCycleList());
 		model.addAttribute("languageList",mediaUtils.getLanguageList());
-		
+		model.addAttribute("mediaProviderList",mediaUtils.getMediaProviderList());
 		
         MediaUploadModel mediaUploadModel = new MediaUploadModel();
         
@@ -626,7 +626,8 @@ public void saveUploadApp(MediaUploadModel mediaUploadModel) throws Exception{
 		
 		model.addAttribute("mediaTypeList",mediaUtils.getMediaTypeList());
 		model.addAttribute("mediaCycleList",mediaUtils.getMediaCycleList());
-		//model.addAttribute("languageList",mediaUtils.getLanguageList());
+		model.addAttribute("languageList",mediaUtils.getLanguageList());
+		model.addAttribute("mediaProviderList",mediaUtils.getMediaProviderList());
 		model.addAttribute("searchMedia", mediaUploadModel);
 	}
 	
