@@ -1,13 +1,13 @@
-import java.math.BigInteger;
+/*import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 
 public class Sample {
 
-	/**
+	/ 
 	 * @param args
-	 */
+	 *//*
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		try {
@@ -30,3 +30,58 @@ public class Sample {
 	}
 
 }
+*/
+
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
+//import org.jdom.Document;
+//import org.jdom.Element;
+
+public class Sample {
+
+  public static void main(String args[]) {/*
+     // Create request xml 
+	  HttpClient httpclient = new HttpClient();
+
+      HttpPost httppost = new HttpPost(urlStr);
+
+      try {
+
+          List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+                  1);
+          nameValuePairs.add(new BasicNameValuePair("xml", xmlStr));
+
+          httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+          HttpResponse response = httpclient.exec
+
+          Log.d("Vivek", response.toString());
+
+          HttpEntity entity = response.getEntity();
+          InputStream i = entity.getContent();
+
+          Log.d("Vivek", i.toString());
+          InputStreamReader isr = new InputStreamReader(i);
+
+          BufferedReader br = new BufferedReader(isr);
+
+          String s = null;
+
+          while ((s = br.readLine()) != null) {
+
+              Log.d("YumZing", s);
+              sb.append(s);
+          }
+
+          Log.d("Check Now", sb + "");
+
+      } catch (ClientProtocolException e) {
+
+          e.printStackTrace();
+      } catch (IOException e) {
+          e.printStackTrace();
+      } 
+  }*/
+}}

@@ -491,7 +491,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 		Map<String, String> deviceMap = getDeviceCapbilities(request);
 		
 		model.addAttribute("serviceId",serviceId);
-		model.addAttribute("title", "Search");
+//		model.addAttribute("title", "Search");
 		model.addAttribute("channel", channel);
 		return "searchByTag";
 	}
@@ -513,6 +513,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 		//String msisdn = (String)session.getAttribute("msisdn");
 		String respCode = request.getParameter("respCode");
 		
+		
 		String iden = (String)session.getAttribute("identifier");
 		if(iden == null && respCode != null){
 			setMesisdnOperator(respCode, request);
@@ -529,7 +530,7 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 			 	channel=s[0];
 			 }
 		List<MediaBean> beans = serviceLayer.getMediaInfoUsingTag(tag, serviceId, CommonUtils.MEDIA_CONTENT_PRIVIEW, CommonUtils.PRIVIEW_WIDTH,CommonUtils.PRIVIEW_HEIGHT);
-		model.addAttribute("title", "Search");
+//		model.addAttribute("title", "Search");
 		
 		if(StringUtils.isBlank(tag)){
 			model.addAttribute("error","Enter Something");

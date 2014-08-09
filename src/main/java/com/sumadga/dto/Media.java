@@ -77,12 +77,26 @@ public class Media implements Serializable {
 	//bi-directional many-to-one association to MediaTag
 	@OneToMany(mappedBy="media")
 	private List<MediaTag> mediaTags;
+	
+	@ManyToOne
+	@JoinColumn(name="media_provider_id")
+	private MediaProvider mediaProvider;
+	
+	
 
 	public Media() {
 	}
 
 	public Integer getMediaId() {
 		return this.mediaId;
+	}
+	
+	public MediaProvider getMediaProvider() {
+		return this.mediaProvider;
+	}
+
+	public void setMediaProvider(MediaProvider mediaProvider) {
+		this.mediaProvider = mediaProvider;
 	}
 
 	public void setMediaId(Integer mediaId) {

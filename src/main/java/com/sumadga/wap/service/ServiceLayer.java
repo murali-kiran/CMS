@@ -21,6 +21,9 @@ import org.springframework.ui.Model;
 
 import com.sumadga.dao.FailPurchasDao;
 import com.sumadga.dao.FailPurchaseDetailDao;
+import com.sumadga.dao.LanguageDao;
+import com.sumadga.dao.MediaContentDao;
+import com.sumadga.dao.MediaDao;
 import com.sumadga.dao.MediaGroupDao;
 import com.sumadga.dao.MediaGroupMediaDao;
 import com.sumadga.dao.MediaSubGroupDao;
@@ -34,9 +37,12 @@ import com.sumadga.dao.ServicePropertyDao;
 import com.sumadga.dao.TestMobileDao;
 import com.sumadga.dto.FailPurchas;
 import com.sumadga.dto.FailPurchaseDetail;
+import com.sumadga.dto.Media;
+import com.sumadga.dto.MediaContent;
 import com.sumadga.dto.MediaGroup;
 import com.sumadga.dto.MediaGroupMedia;
 import com.sumadga.dto.MediaSubGroup;
+import com.sumadga.dto.MediaTag;
 import com.sumadga.dto.MediaType;
 import com.sumadga.dto.Network;
 import com.sumadga.dto.Purchas;
@@ -45,13 +51,19 @@ import com.sumadga.dto.ServiceKeyPrice;
 import com.sumadga.dto.ServiceMediaGroup;
 import com.sumadga.dto.ServiceProperty;
 import com.sumadga.dto.TestMobile;
+import com.sumadga.utils.ApplicationProperties;
 import com.sumadga.utils.CommonUtils;
 import com.sumadga.wap.model.Bean;
 import com.sumadga.wap.model.MediaBean;
+import com.sumadga.wap.model.MediaContentBean;
+import com.sumadga.wap.model.MediaInfoBean;
 
 @Component
 public class ServiceLayer {
-
+	
+	
+	@Autowired
+	private ApplicationProperties applicationProperties;
 	
 	@Autowired
 	private ServiceMediaGroupDao serviceMediaGroupDao;
@@ -95,6 +107,17 @@ public class ServiceLayer {
 	
 	@Autowired
 	NetworkDao networkDao;
+	
+	@Autowired
+	MediaDao mediaDao;
+	
+	@Autowired
+	LanguageDao languageDao;
+	
+	@Autowired
+	MediaContentDao mediaContentDao;
+	
+	
 
 	 
 
@@ -624,11 +647,94 @@ public List<MediaBean> getMediaInfoUsingTag(String tagName,int serviceId,int med
 	return mediaBeans;
 }
 
-/*public List<MediaBean> getMediaInfoUsingTag(String tagName,int serviceId,int mediaContentPurposeId,int width,int height,final int... rowStartIdxAndCount) {
-	List<MediaBean> mediaBeans = mediaTagDao.getMediaInfoUsingTag(tagName, serviceId, mediaContentPurposeId, width, height,rowStartIdxAndCount);
+
+public List<MediaInfoBean> getAllMediaInfo(){
 	
-	return mediaBeans;
-}*/
+	List<MediaInfoBean> beans = new ArrayList<MediaInfoBean>();
+	List<Media> medias = mediaDao.findAll();
+	
+	for(Media media : medias){
+		beans.add(getMediaInfo(media));
+	}
+	
+	return beans;
+	
+}
+
+public List<MediaInfoBean> getAllMediaInfoFilterByTag(String tag){
+	
+	List<MediaInfoBean> beans = new ArrayList<MediaInfoBean>();
+	List<Media> medias = mediaDao.findAll();
+	
+	for(Media media : medias){
+		MediaInfoBean mediaInfoBean = getMediaInfo(media);
+		for(String tagName : mediaInfoBean.getTags()){
+			if(tagName.toLowerCase().equalsIgnoreCase(tag.toLowerCase()) || tagName.toLowerCase().contains(tag.toLowerCase())){
+				beans.add(getMediaInfo(media));
+			}
+		}
+		
+	}
+	
+	return beans;
+	
+}
+
+public MediaInfoBean getMediaInfoOfMedia(int mediaId){
+	Media media = mediaDao.findById(mediaId);
+	
+	return getMediaInfo(media);
+}
+
+
+public MediaInfoBean getMediaInfo(Media media){
+	
+	MediaInfoBean bean = new MediaInfoBean();
+	
+	List<MediaContent> mediaContents = mediaContentDao.findByProperty("media", media.getMediaId());
+	List<MediaTag> mediaTags = mediaTagDao.findByProperty("media",  media.getMediaId());
+	
+	bean.setMediaId(media.getMediaId());
+	bean.setMedianame(media.getMediaName());
+	bean.setMediatitle(media.getMediaTitle());
+	bean.setDescription(media.getDescription());
+	bean.setCreatedtime(media.getCreatedTime().toString());
+	bean.setModifiedtime(media.getModifiedTime().toString());
+	bean.setMediatype(media.getMediaType().getMediaTypeName());
+	bean.setMediaprocessstate(media.getMediaProcessState().getMediaProcessStateName());
+	bean.setMediastarttime(media.getMediaStartTime().toString());
+	bean.setMediaendtime(media.getMediaEndTime().toString());
+	bean.setLanguage(media.getLanguage().getLanguageName());
+	bean.setMediaprovider(media.getMediaProvider().getMediaProviderName());
+	
+	
+	List<MediaContentBean> mediaContentBeans = new ArrayList<MediaContentBean>(); 
+	for(MediaContent content : mediaContents){
+		
+		MediaContentBean contentBean = new MediaContentBean();
+		contentBean.setMediacontentId(content.getMediaContentId());
+		contentBean.setMimeType(content.getMediaSpecification().getMimeType().getMimeType());
+		contentBean.setWidth(content.getMediaSpecification().getWidth());
+		contentBean.setHeight(content.getMediaSpecification().getHeight());
+		contentBean.setStoragepath(applicationProperties.getMediaCompletePath()+content.getStoragePath());
+		contentBean.setMd5(content.getMd5());
+		contentBean.setBitrate(content.getMediaSpecification().getBitrate());
+		
+		mediaContentBeans.add(contentBean);
+	}
+	
+	List<String> tagNames = new ArrayList<String>();
+	
+	for(MediaTag mediaTag : mediaTags){
+		tagNames.add(mediaTag.getTag().getTagName());
+	}
+	
+	bean.setMediacontents(mediaContentBeans);
+	bean.setTags(tagNames);
+	
+	return bean;
+	
+}
 
 
 private int getNetworkFromSession(){

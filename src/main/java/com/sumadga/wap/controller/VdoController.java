@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -234,13 +235,67 @@ public class VdoController {
 				}
 				
 				 
-				return "forward:/service/"+serviceId+"?channel="+channel+"&msisdn="+msisdn+"&operator="+session.getAttribute("operator").toString()+"&mediaTypeId="+request.getParameter("mediaTypeId");
+				return "forward:/service/vdo/"+serviceId+"?channel="+channel+"&msisdn="+msisdn+"&operator="+session.getAttribute("operator").toString()+"&mediaTypeId="+request.getParameter("mediaTypeId");
 				
 			}
 
 		
 	}
 	
+	
+	@RequestMapping(value="/vdo/searchMediaByTag/{serviceId}/{pageId}",method=RequestMethod.GET)
+	public String searchMediaByTag(HttpServletRequest request,HttpServletResponse response,Model model,@PathVariable Integer serviceId,@PathVariable Integer pageId,@RequestParam(value="channel", required = false,defaultValue="smd") String channel,@RequestParam(value="tag", required = false,defaultValue="") String tag){
+		
+//		String msisdn = commonUtils.getMsisdn(request);
+		
+		String msisdn = "911234567890";
+		
+		/*if(request.getParameter("detect")==null && msisdn==null ){
+			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
+			return "redirect:"+msisdnDetectionUrl;
+		}*/
+		
+		/*else if(msisdn==null){
+			model.addAttribute("errorMsg", "Unable to detect");
+			return "errorPage";
+		}*/
+		
+		if(channel==null)
+			 channel="smd";
+		 else if(channel.contains(","))
+			 {
+			 	String[] s=channel.split(",");
+			 	channel=s[0];
+			 }
+		List<MediaBean> beans = serviceLayer.getMediaInfoUsingTag(tag, serviceId, CommonUtils.MEDIA_CONTENT_PRIVIEW, CommonUtils.PRIVIEW_WIDTH,CommonUtils.PRIVIEW_HEIGHT);
+//		model.addAttribute("title", "Search");
+		
+		if(StringUtils.isBlank(tag)){
+			model.addAttribute("error","Enter Something");
+			return "forward:/service/vdo/"+serviceId+"?channel="+channel+"&msisdn="+msisdn;
+		}else if(beans.isEmpty()){
+			model.addAttribute("error","No Match Found");
+			return "forward:/service/vdo/"+serviceId+"?channel="+channel+"&msisdn="+msisdn;
+		}else{
+			
+			Map<String, String> deviceMap = commonUtils.getDeviceCapbilities(request);
+			int pageCount = Integer.parseInt(serviceLayer.getServiceProprety(serviceId, "pageCount_non_LP"));
+		
+			List<MediaBean> mediaBeans = serviceLayer.getMediaInfoUsingTag(tag, serviceId, CommonUtils.MEDIA_CONTENT_PRIVIEW, CommonUtils.PRIVIEW_WIDTH,CommonUtils.PRIVIEW_HEIGHT,(pageId-1)*pageCount,pageCount);
+		
+			model.addAttribute("serviceId",serviceId);
+			model.addAttribute("tagName",tag);
+			model.addAttribute("mediaBeans", mediaBeans);
+			model.addAttribute("totalMediaCount",beans.size());
+			model.addAttribute("paginationCount",Math.ceil((beans.size())/(float)pageCount));
+			model.addAttribute("channel",channel);
+			model.addAttribute("previewWidth",deviceMap.get("preview_width"));
+			model.addAttribute("previewHeight",deviceMap.get("preview_height"));
+		
+			return "vdoTagPage";
+			
+		}
+	}
 	
 	
 

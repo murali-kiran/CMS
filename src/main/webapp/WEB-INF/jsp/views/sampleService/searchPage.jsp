@@ -8,3 +8,5 @@
 
 </div>
 </form>
+
+<div style="width: 100%;clear: both;"><a href="${pageContext.servletContext.contextPath}/service/${serviceId}?channel=${channel}">&nbsp;Home</a></div>
