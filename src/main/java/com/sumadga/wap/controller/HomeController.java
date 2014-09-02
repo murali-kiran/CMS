@@ -348,13 +348,15 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 		HttpSession session = request.getSession();
 		String msisdn = (String)session.getAttribute("msisdn");
 		String respCode = request.getParameter("respCode");
-		if(msisdn == null && respCode != null){
+		String iden = (String)session.getAttribute("identifier");
+		logger.info("iden:"+iden+"resp code:"+request.getParameter("respCode"));
+		if(iden == null && respCode != null){
 			setMesisdnOperator(respCode, request);
 		}
-		else{
-			logger.info("Unable to detect msisdn");
-			return "forward:/service/"+serviceId+"?channel="+channel;
-		}
+//		else{
+//			logger.info("Unable to detect msisdn");
+//			return "forward:/service/"+serviceId+"?channel="+channel;
+//		}
 		if(channel==null)
 			 channel="smd";
 		 else if(channel.contains(","))
@@ -405,13 +407,14 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 		HttpSession session = request.getSession();
 		String msisdn = (String)session.getAttribute("msisdn");
 		String respCode = request.getParameter("respCode");
-		if(msisdn == null && respCode != null){
+		String iden = (String)session.getAttribute("identifier");
+		if(iden == null && respCode != null){
 			setMesisdnOperator(respCode, request);
 		}
-		else{
-			logger.info("Unable to detect msisdn");
-			return "forward:/service/"+serviceId+"?channel="+channel;
-		}//
+//		else{
+//			logger.info("Unable to detect msisdn");
+//			return "forward:/service/"+serviceId+"?channel="+channel;
+//		}//
 		if(channel==null)
 			 channel="smd";
 		 else if(channel.contains(","))
@@ -442,13 +445,14 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 		String serviceKeyId = request.getParameter("serviceKeyId");
 		String msisdn = (String)session.getAttribute("msisdn");
 		String respCode = request.getParameter("respCode");
-		if(msisdn == null && respCode != null){
+		String iden = (String)session.getAttribute("identifier");
+		if(iden == null && respCode != null){
 			setMesisdnOperator(respCode, request);
 		}
-		else{
-			logger.info("Unable to detect msisdn");
-			return "forward:/service/"+serviceId+"?channel="+channel;
-		}
+//		else{
+//			logger.info("Unable to detect msisdn");
+//			return "forward:/service/"+serviceId+"?channel="+channel;
+//		}
 			
 		
 		/*if(request.getParameter("detect")==null && msisdn==null ){
@@ -495,18 +499,29 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 	@RequestMapping(value="/service/searchMediaByTag/{serviceId}/{pageId}",method=RequestMethod.GET)
 	public String searchMediaByTag(HttpServletRequest request,HttpServletResponse response,Model model,@PathVariable Integer serviceId,@PathVariable Integer pageId,@RequestParam(value="channel", required = false,defaultValue="smd") String channel,@RequestParam(value="tag", required = false,defaultValue="") String tag){
 		
-		String msisdn = commonUtils.getMsisdn(request);
+//		String msisdn = commonUtils.getMsisdn(request);
 		
-		if(request.getParameter("detect")==null && msisdn==null ){
-			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
-			return "redirect:"+msisdnDetectionUrl;
+//		if(request.getParameter("detect")==null && msisdn==null ){
+//			String msisdnDetectionUrl = billingUtils.getMsisdnDetectionURL(request);
+//			return "redirect:"+msisdnDetectionUrl;
+//		}else if(msisdn==null){
+//			model.addAttribute("errorMsg", "Unable to detect");
+//			return "errorPage";
+//		}
+		HttpSession session = request.getSession();
+		//String serviceKeyId = request.getParameter("serviceKeyId");
+		//String msisdn = (String)session.getAttribute("msisdn");
+		String respCode = request.getParameter("respCode");
+		
+		
+		String iden = (String)session.getAttribute("identifier");
+		if(iden == null && respCode != null){
+			setMesisdnOperator(respCode, request);
 		}
-		
-		/*else if(msisdn==null){
-			model.addAttribute("errorMsg", "Unable to detect");
-			return "errorPage";
-		}*/
-		
+		else{
+			logger.info("Unable to detect msisdn");
+			//return "forward:/service/"+serviceId+"?channel="+channel;
+		}
 		if(channel==null)
 			 channel="smd";
 		 else if(channel.contains(","))
@@ -628,24 +643,24 @@ public String downloadMedia(HttpServletRequest request,HttpServletResponse respo
 		logger.info("response data:"+respCode);
 		HttpSession httpSession = request.getSession();
 		httpSession.setAttribute("identifier", respCode);
-		try {
-			if(respCode != null){
-				
-				Map<String, String> paramaterMap = CryptoUtils.getDecryptedString(respCode);
-				String msisdn = paramaterMap.get("mn");
-				logger.info("msisdn:"+msisdn+" operator:"+paramaterMap.get("op"));
-				httpSession.setAttribute("msisdn", msisdn);
-				httpSession.setAttribute("operator", paramaterMap.get("op"));
-				
-				return msisdn;
-			}
-		} catch (CryptoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Throwable e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
+//		try {
+//			if(respCode != null){
+//				
+//				Map<String, String> paramaterMap = CryptoUtils.getDecryptedString(respCode);
+//				String msisdn = paramaterMap.get("mn");
+//				logger.info("msisdn:"+msisdn+" operator:"+paramaterMap.get("op"));
+//				httpSession.setAttribute("msisdn", msisdn);
+//				httpSession.setAttribute("operator", paramaterMap.get("op"));
+//				
+//				return msisdn;
+//			}
+//		} catch (CryptoException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (Throwable e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//		}
 		
 		return null;
 	}
