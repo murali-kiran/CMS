@@ -21,6 +21,15 @@
 		<put-attribute name="footer"
 			value="/WEB-INF/jsp/tiles/vdo/vdoFooter.jsp" />
 	</definition>
+	
+	<definition name="stv.definition" template="/WEB-INF/jsp/tiles/stv/sTvLayout.jsp">
+		<put-attribute name="title" value="" />
+		<put-attribute name="header"
+			value="/WEB-INF/jsp/tiles/stv/sTvHeader.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer"
+			value="/WEB-INF/jsp/tiles/stv/sTvFooter.jsp" />
+	</definition>
 
 	<definition name="sampleLandingPage" extends="base.definition">
 		<put-attribute name="title" value="Sample Service" />
@@ -32,6 +41,10 @@
 		<put-attribute name="title" value="Sample Service" />
 		<put-attribute name="body"  value="/WEB-INF/jsp/views/sampleService/landingPage2.jsp" />
 	</definition>
+	
+	
+	
+	
 	
 	<definition name="searchByTag" extends="base.definition">
 		<put-attribute name="title" value="Search Media" />
@@ -77,6 +90,32 @@
 		<put-attribute name="title" value="Video Service" />
 		<put-attribute name="body"  value="/WEB-INF/jsp/views/vdo/vdoTagMediaPage.jsp" />
 	</definition>
+	
+	
+	<!-- STV -->
+	
+	<definition name="stvLandingPage" extends="stv.definition">
+		<put-attribute name="title" value="Sample Service" />
+		<put-attribute name="body"  value="/WEB-INF/jsp/views/stv/stvLandingPage.jsp" />
+	</definition>
+	
+	<definition name="stvService2CategoryPage" extends="stv.definition">
+		<put-attribute name="title" value="Sample Service" />
+		<put-attribute name="body"  value="/WEB-INF/jsp/views/stv/stvService2CategoryPage.jsp" />
+	</definition>
+	
+	
+	<definition name="stvSearchByTag" extends="stv.definition">
+		<put-attribute name="title" value="Search Media" />
+		<put-attribute name="body"  value="/WEB-INF/jsp/views/stv/stvSearchPage.jsp" />
+	</definition>
+	
+	<definition name="stvTagMediaPage" extends="stv.definition">
+		<put-attribute name="title" value="Search Media" />
+		<put-attribute name="body"  value="/WEB-INF/jsp/views/stv/stvTagMediaPage.jsp" />
+	</definition>
+	
+	
 	
 	
 </tiles-definitions>

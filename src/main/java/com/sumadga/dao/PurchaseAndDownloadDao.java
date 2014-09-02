@@ -108,4 +108,46 @@ public class PurchaseAndDownloadDao {
 	}
 
 
+	public Purchas checkPurchaseRecordOfMediaGroupExistForToday(Long msisdn,String mediaIdsStr, String identifier) {
+		
+		logger.info("Finding mediaTypeInfo of mediaGroup");
+		try {
+			 String queryString ="" ;			 
+			 if(msisdn==null  || msisdn==0)
+			 queryString ="SELECT p.* FROM purchases p join media_downloads md  on " +
+					" md.`purchase_id` = p.`purchase_id` and date(expiry_time) = curdate() and p.identifier = ? and md.`media_id` in ("+mediaIdsStr+")";
+			 else
+				 queryString ="SELECT p.* FROM purchases p join media_downloads md  on " +
+							" md.`purchase_id` = p.`purchase_id` and date(expiry_time) = curdate() and p.msisdn = ? and md.`media_id` in ("+mediaIdsStr+")";
+			 
+			 
+			
+			Query query = entityManager.createNativeQuery(queryString);
+			
+			if(msisdn!=null && msisdn!=0)
+			query.setParameter(1,msisdn);
+			else
+				query.setParameter(1,identifier);
+			
+			
+			List<Object[]> list = query.getResultList();
+			
+			if(!list.isEmpty()){
+				Object [] obj = list.get(0);
+				Purchas purchas = new Purchas();
+				purchas.setPurchaseId((Integer)obj[0]);
+				
+				return purchas;
+			}else{
+				return null;
+			}
+					
+		} catch (RuntimeException re) {
+			re.printStackTrace();
+			return null;
+		}
+		
+	}
+
+
 }

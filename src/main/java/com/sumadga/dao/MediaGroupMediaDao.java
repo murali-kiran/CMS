@@ -20,6 +20,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sumadga.dto.Media;
 import com.sumadga.dto.MediaGroupMedia;
 import com.sumadga.dto.MediaType;
 import com.sumadga.utils.ApplicationProperties;
@@ -635,6 +636,42 @@ public class MediaGroupMediaDao  {
 			throw re;
 		}
 	}
+	
+	
+@SuppressWarnings("unchecked")
+public List<Media>	getMediaOfMediaGroup(int catId,final int... rowStartIdxAndCount){
+	
+	
+	logger.info("finding all MediaGroupMedia instances");
+	try {
+		final String queryString = "select media from MediaGroupMedia mgm where mgm.mediaGroup.mediaGroupId = :catId";
+		Query query = entityManager.createQuery(queryString, Media.class);
+		query.setParameter("catId", catId);
+		
+		if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
+			int rowStartIdx = Math.max(0, rowStartIdxAndCount[0]);
+			if (rowStartIdx > 0) {
+				query.setFirstResult(rowStartIdx);
+			}
+
+			if (rowStartIdxAndCount.length > 1) {
+				int rowCount = Math.max(0, rowStartIdxAndCount[1]);
+				if (rowCount > 0) {
+					query.setMaxResults(rowCount);
+				}
+			}
+		}
+		
+		return query.getResultList();
+	} catch (RuntimeException re) {
+		logger.error("find all failed", re);
+		throw re;
+	}
+		
+	}
+	
+	
+	
 	
 	
 	

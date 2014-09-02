@@ -29,6 +29,7 @@ import com.sumadga.dao.MediaGroupMediaDao;
 import com.sumadga.dao.MediaSubGroupDao;
 import com.sumadga.dao.MediaTagDao;
 import com.sumadga.dao.NetworkDao;
+import com.sumadga.dao.PurchaseAndDownloadDao;
 import com.sumadga.dao.PurchaseDetailDao;
 import com.sumadga.dao.PurchasesDao;
 import com.sumadga.dao.ServiceKeyPriceDao;
@@ -116,6 +117,9 @@ public class ServiceLayer {
 	
 	@Autowired
 	MediaContentDao mediaContentDao;
+	
+	@Autowired
+	PurchaseAndDownloadDao purchaseAndDownloadDao;
 	
 	
 
@@ -751,6 +755,25 @@ private int getNetworkFromSession(){
 	}
 	return 1;//hard coded value 
 	
+}
+
+public String getAllMediaIdInStringFormat(Integer catId) {
+	
+	List<Media> medias = mediaGroupMediaDao.getMediaOfMediaGroup(catId);
+	
+	StringBuffer strBuff = new StringBuffer();
+	
+	for(Media media : medias){
+		strBuff.append(","+media.getMediaId());
+	}
+	
+	return strBuff.toString().replaceFirst(",", "");
+}
+
+public Purchas checkPurchaseRecordOfMediaGroupExistForToday(Long msisdnLong,Integer catId, String identifier) {
+	
+	String mediaIdsStr = getAllMediaIdInStringFormat(catId);
+	return	purchaseAndDownloadDao.checkPurchaseRecordOfMediaGroupExistForToday(msisdnLong,mediaIdsStr, identifier);
 }
 
 
