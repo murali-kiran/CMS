@@ -71,7 +71,7 @@ jQuery("#list").jqGrid({
 		<td><c:out value="${service.serviceName}" /></td>
 		<td><c:out value="${service.serviceTitle}" /></td>
 		
-		<%-- <td><a href="mapMediaCategories?serviceId=<c:out value="${service.serviceId}" />">Map Categories </a></td> --%>
+		 <td><a href="mapMediaCategories?serviceId=<c:out value="${service.serviceId}" />">Map Categories </a></td>
 	</tr>
 </c:forEach>
 </table>

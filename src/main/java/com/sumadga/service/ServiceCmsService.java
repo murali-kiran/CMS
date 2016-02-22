@@ -123,6 +123,7 @@ public class ServiceCmsService {
 						//Values hard coded check once
 						serviceMediaGroup.setServiceKeyId(1);
 						serviceMediaGroup.setIsOneTimeCharge((byte)1);
+						serviceMediaGroup.setGroupOrder(1);
 						serviceMediaGroupDao.save(serviceMediaGroup);
 					}
 						
