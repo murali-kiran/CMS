@@ -29,12 +29,13 @@
                 <li><a href="${pageContext.servletContext.contextPath}/addGroup">Group</a></li>
                 <li><a href="${pageContext.servletContext.contextPath}/listMediaGroup">Group List</a></li>
                 <li><a href="${pageContext.servletContext.contextPath}/serviceList">Services</a></li>
+                <li><a href="${pageContext.servletContext.contextPath}/serviceKeyList">Packages</a></li>
                 <li><a href="${pageContext.servletContext.contextPath}/mis/show">MIS</a></li>
                 </sec:authorize>
                 
                 <sec:authorize access="hasAnyRole('ROLE_USER')">
-                <li><a href="${pageContext.servletContext.contextPath}/upload">Upload</a></li>
-                <li><a href="${pageContext.servletContext.contextPath}/showSearch">Search</a></li>
+                <!--  <li><a href="${pageContext.servletContext.contextPath}/upload">Upload</a></li>
+                <li><a href="${pageContext.servletContext.contextPath}/showSearch">Search</a></li> -->
                 
                 <%-- <li><a href="${pageContext.servletContext.contextPath}/appUpload">Game Upload</a></li>
                 <li><a href="${pageContext.servletContext.contextPath}/addGroup">Group</a></li>

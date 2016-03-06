@@ -88,4 +88,14 @@
         <put-attribute name="title" value="Upload" />
         <put-attribute name="body" value="/WEB-INF/jsp/service/selectServiceMediaGroup.jsp" />
      </definition>
+     
+      <definition name="serviceKeyList" extends="base.definition">
+        <put-attribute name="title" value="Service Key List" />
+        <put-attribute name="body" value="/WEB-INF/jsp/service/serviceKeyList.jsp" />
+     </definition>
+     
+     <definition name="serviceKeyPriceList" extends="base.definition">
+        <put-attribute name="title" value="Service Key Price List" />
+        <put-attribute name="body" value="/WEB-INF/jsp/service/serviceKeyPrices.jsp" />
+     </definition>
     </tiles-definitions>

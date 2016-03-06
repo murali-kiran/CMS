@@ -5,6 +5,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -27,6 +28,26 @@ public class MediaGroupModel implements Serializable {
 	private Integer mediaSubGroupId;
 	private Integer serviceMediaGroupId;
 	private Integer serviceId;
+	private Integer serviceKeyId;
+	private String[] serviceKeys;
+	
+
+	public String[] getServiceKeys() {
+		return serviceKeys;
+	}
+
+	public void setServiceKeys(String[] serviceKeys) {
+		this.serviceKeys = serviceKeys;
+	}
+
+	public Integer getServiceKeyId() {
+		return serviceKeyId;
+	}
+
+	public void setServiceKeyId(Integer serviceKeyId) {
+		this.serviceKeyId = serviceKeyId;
+	}
+
 	public Integer getServiceId() {
 		return serviceId;
 	}
@@ -143,6 +164,7 @@ public class MediaGroupModel implements Serializable {
 		this.mediaId = mediaId;
 	}
 
+	
 	
 
 }

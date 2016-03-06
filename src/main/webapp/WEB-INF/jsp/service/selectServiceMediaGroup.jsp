@@ -9,6 +9,9 @@
     <c:otherwise> 
 <form:form method="post" id="mapMediaGroup" name="mapMediaGroup"  commandName="mediaGroupList"
                            action="${pageContext.servletContext.contextPath}/remAddOrderServiceMediaGroup" >
+                           
+                           
+
 <table border="1" id="sort" class="grid">
 <thead>
 <tr>
@@ -17,6 +20,7 @@
 	<th>Media Group Id</th>
 	<th>Media Group Name</th>
 	<th>Media Group Title</th>
+	<th>Map Packages</th>
 	<th>status</th>
 	
 </tr>
@@ -29,6 +33,14 @@
 		<td><c:out value="${mediaGroup.mediaGroupId}" /></td>
 		<td><c:out value="${mediaGroup.mediaGroupName}" /></td>
 		<td><c:out value="${mediaGroup.mediaGroupTitle}" /></td>
+		<!-- <td><a href="mapPackages?serviceId=<c:out value="${mediaGroup.serviceId}" />">Map Packages </a></td> -->
+		<td><select id="serviceKeys" name="serviceKeys"><option value="-1" >Select</option>
+		<c:forEach items="${serviceKeyList}" var="serviceKey" varStatus="status">
+			
+			<option value="${serviceKey.serviceKeyId}" ${serviceKey.serviceKeyId == mediaGroup.serviceKeyId ? 'selected="selected"' : ''}>${serviceKey.serviceKeyTitle}</option>
+		</c:forEach> 
+  
+</select> </td>
 		<td>
 		<c:choose>
 		  <c:when test="${mediaGroup.checkStatus}"><input type="checkbox" name="selectedMediaGroup" value="${mediaGroup.serviceMediaGroupId}" checked="${mediaGroup.checkStatus}"/></c:when>
@@ -88,6 +100,8 @@
 </c:forEach>
 </table>
 <div><input type="submit" value="Add"/></div>
+
+
 </form:form>
 </c:otherwise>
 </c:choose> 

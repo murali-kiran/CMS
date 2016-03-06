@@ -1,5 +1,7 @@
 package com.sumadga.service;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -47,13 +49,39 @@ public class ServiceController {
 		return "serviceList";
 		
 	}
+	
+
+	@RequestMapping("/serviceKeyList")
+	public String serviceKeyList(ModelMap model){
+		
+		logger.info("serviceKeyList");
+		
+		serviceCmsService.getServiceKeyList(model);
+		
+		return "serviceKeyList";
+		
+	}@RequestMapping("/mapPackagePrices")
+	public String serviceKeyPriceList(@RequestParam("serviceKeyId") Integer serviceKeyId, ModelMap model){
+		
+		logger.info("serviceKeyList");
+		
+		serviceCmsService.getServiceKeyPriceList(model, serviceKeyId);
+		
+		return "serviceKeyPriceList";
+		
+	}
+	
+	
+	
 	@RequestMapping(value = "/mapMediaCategories",  method=RequestMethod.GET)
 	//@ResponseBody
 	public String getGroups(@RequestParam("serviceId") Integer serviceId,ModelMap model){
 		serviceCmsService.getGroups(model, serviceId);
 		model.addAttribute("srid", serviceId);
+		model.addAttribute("serviceKeyList", serviceCmsService.getServiceKeyList());
 		return "selectServiceMediaGroup";
 	}
+	
 	@RequestMapping(value = "/showServiceGroupSearch",  method=RequestMethod.GET)
 	public String showGroupSearch(@RequestParam("srid") Integer serviceId,ModelMap model){
 		MediaGroupModel mediaGroupModel = new MediaGroupModel();
@@ -108,6 +136,7 @@ public class ServiceController {
 		}
 		serviceCmsService.getGroups(model, mediaGroupModel.getServiceId());
 		model.addAttribute("srid", mediaGroupModel.getServiceId());
+		model.addAttribute("serviceKeyList", serviceCmsService.getServiceKeyList());
 		model.addAttribute("message",message);
 		return "selectServiceMediaGroup";
 	}
@@ -167,5 +196,20 @@ public class ServiceController {
 		model.addAttribute("mgid", mediaGroupId);
 		return "showGroupSearch";
 	}*/
+	
+	
+	@RequestMapping(value="/saveServiceKeyPrices",  method=RequestMethod.POST)
+	public String saveServiceKeyPrices(@ModelAttribute("serviceKeyPriceList") ServiceKeyPriceListContainer serviceKeyPriceListContainer,
+			BindingResult result, SessionStatus status,ModelMap model){
+		List<ServiceKeyPriceModel> serviceKeyPriceModels = serviceKeyPriceListContainer.getServiceKeyPriceList();
+		for (ServiceKeyPriceModel serviceKeyPriceModel : serviceKeyPriceModels) {
+			System.out.println(serviceKeyPriceModel.getDuration());
+		}
+		
+		serviceCmsService.getServiceList(model);
+		//model.addAttribute("message",message);
+		return "serviceList";
+	}
+	
 	
 }
