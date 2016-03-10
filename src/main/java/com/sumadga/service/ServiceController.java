@@ -202,9 +202,10 @@ public class ServiceController {
 	public String saveServiceKeyPrices(@ModelAttribute("serviceKeyPriceList") ServiceKeyPriceListContainer serviceKeyPriceListContainer,
 			BindingResult result, SessionStatus status,ModelMap model){
 		List<ServiceKeyPriceModel> serviceKeyPriceModels = serviceKeyPriceListContainer.getServiceKeyPriceList();
-		for (ServiceKeyPriceModel serviceKeyPriceModel : serviceKeyPriceModels) {
-			System.out.println(serviceKeyPriceModel.getDuration());
-		}
+//		for (ServiceKeyPriceModel serviceKeyPriceModel : serviceKeyPriceModels) {
+//			System.out.println(serviceKeyPriceModel.getDuration());
+//		}
+		serviceCmsService.saveServiceKeyPrices(serviceKeyPriceModels);
 		
 		serviceCmsService.getServiceList(model);
 		//model.addAttribute("message",message);

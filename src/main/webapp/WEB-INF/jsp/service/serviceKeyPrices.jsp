@@ -20,10 +20,9 @@ table {
 
 var j = 0;
 $(document).ready(function(){
-	var k = $('#listsize').val(); 
-	//alert(k);
+	var k = $('#listsize').val();
     $('.plusbtn').click(function() {
-    	//alert("k:"+k);
+    	
         $(".test").append('<tr><td><input name="serviceKeyPriceList['+k+'].serviceKeyPriceId" type="text" class="txtbox" value="${serviceKeyPrice.serviceKeyPriceId}" /></td><td><input name="serviceKeyPriceList['+k+'].serviceKeyPriceName" type="text" class="txtbox" value="${serviceKeyPrice.serviceKeyPriceName}" /></td><td><input name="serviceKeyPriceList['+k+'].serviceKeyPriceType" type="text" class="txtbox" value="${serviceKeyPrice.serviceKeyPriceType}" /></td><td><input name="serviceKeyPriceList['+k+'].price" type="text" class="txtbox" value="${serviceKeyPrice.price}" /></td><td><input name="serviceKeyPriceList['+k+'].duration" type="text" class="txtbox" value="${serviceKeyPrice.duration}" /></td><td><input name="serviceKeyPriceList['+k+'].tokens" type="text" class="txtbox" value="${serviceKeyPrice.tokens}" /></td></tr>');
         k++;
     });
@@ -31,7 +30,7 @@ $(document).ready(function(){
       if($(".test tr").length != 2)
         {
            $(".test tr:last-child").remove();
-           k = k--;alert("rem::"+k);
+           k = k-1;
         }
      else
         {

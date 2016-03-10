@@ -259,4 +259,24 @@ public class ServiceCmsService {
 		//model.addAttribute("serviceKeyPriceList",serviceKeyPriceModels); 
 		model.addAttribute("serviceKeyPriceListContainer", container);
 	}
+
+
+
+	public void saveServiceKeyPrices(
+			List<ServiceKeyPriceModel> serviceKeyPriceModels) {
+		// TODO Auto-generated method stub
+		for (ServiceKeyPriceModel serviceKeyPriceModel : serviceKeyPriceModels) {
+			System.out.println(serviceKeyPriceModel.getDuration());
+			ServiceKeyPrice serviceKeyPrice = new ServiceKeyPrice();
+			ServiceKey serviceKey = new ServiceKey();
+			serviceKey.setServiceKeyId(serviceKeyPriceModel.getServiceKeyId());
+			serviceKeyPrice.setServiceKey(serviceKey);
+			serviceKeyPrice.setDuration(serviceKeyPriceModel.getDuration());
+			serviceKeyPrice.setPrice(serviceKeyPriceModel.getPrice());
+			serviceKeyPrice.setServiceKeyPriceKey(serviceKeyPriceModel.getServiceKeyPriceName());
+			serviceKeyPrice.setServiceKeyPriceType((byte)serviceKeyPriceModel.getServiceKeyPriceType());
+			serviceKeyPrice.setTokens(serviceKeyPriceModel.getTokens());
+			serviceKeyPriceDao.save(serviceKeyPrice);
+		}
+	}
 }
